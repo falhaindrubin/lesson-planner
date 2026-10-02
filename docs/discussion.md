@@ -1,6 +1,6 @@
 # Lesson Planner — Discussion Log
 
-Living record of decisions. Updated as we talk; the spec comes later.
+Living record of decisions. Updated as we talk; the spec comes later. How the parts fit together: [architecture.md](architecture.md).
 
 _Last updated: 2026-10-02_
 
@@ -69,17 +69,18 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 - **Holidays** (cuti, cuti peristiwa, public holidays on weekdays) → no lessons, no RPH.
 - **School events** on weekdays → RPH flagged "event day"; I decide whether to cancel.
 - **Exams** → RPH still generated, marked "Peperiksaan", SP doesn't advance. Applies **per form** (PPT T4–5 in M17 doesn't touch Form 1/2).
-- **Syllabus deadline** is a per-form setting (try these first, adjust later):
+- **Syllabus deadline** (decided 2026-10-02, replaces the earlier fixed M30 / M25): every form teaches up to its **final exam minus 2 revision weeks**. The final exam is the form's last exam block in the takwim: PAT (Form 4), UASA (Form 1–3), Percubaan SPM (Form 5). Computed from the takwim each year, so no per-form week to maintain.
 
-| Form | Syllabus done by | Teaching weeks left (before part-week losses) |
-|---|---|---|
-| 1–4 | end of **M30** (28 Aug, before Cuti Penggal 2) | Form 4 ≈ 27 (M1–M30 minus M6, M17, M18) · Form 1/2 ≈ 28 (minus M6, M18) |
-| 5 | end of **M25** (24 Jul 2026; ~2 weeks before Percubaan SPM) | ≈ 22 (M1–M25 minus M6, M17, M18) — no Form 5 now; likely Matematik T5 in 2027 |
+| Form | Final exam (2026) | Syllabus done by | Revision |
+|---|---|---|---|
+| 1–3 | UASA M38 | end of **M35** | M36–M37 |
+| 4 | PAT T4 M37–M38 | end of **M34** | M35–M36 |
+| 5 | Percubaan SPM M28 | end of **M25** | M26–M27 |
 
-- Deadline = a fixed week per form, editable each year.
-- Percubaan SPM is ignored for Form 1–4 but **matters for Form 5** (those weeks are exam weeks).
-
-- **After the deadline until the final exam** (Form 1–4: M31 to PAT/UASA) → default: revision + catch-up buffer for classes that fell behind. Not used by the RPT. _(Default, not confirmed.)_
+- **Revision before the final exam is a must** (confirmed 2026-10-02): **2 weeks for every form** for now (`--ulang-kaji <n>` to change; `--tamat <week>` to fix the end week by hand).
+- Percubaan SPM is ignored for Form 1–4 but **matters for Form 5** (it is Form 5's final exam).
+- **Half the topics must be done before PPT** (confirmed 2026-10-02): first ⌈topics ÷ 2⌉ topics fit before the mid-year exam, the rest after it. Counted by topic, not SP.
+- **Fixed weeks per topic** can be set in the difficulty file; Matematik T4 topic 10.0 = **2 weeks** (confirmed).
 - **Post-exam weeks (M41–M43)** → excluded from the RPT.
 - Meetings (Mesyuarat, Penyeliaan, Kemaskini IdME) are ignored — they don't cancel lessons.
 - Hari Sarawak (22 Jul) is a normal school day in Sabah.
@@ -115,6 +116,7 @@ School week Mon–Fri. M1 = 12 Jan, M43 = 30 Nov. Week numbers continue across b
 | M10 | 19–20 Mar | Cuti Tambahan KPM |
 | M11 | 30 Mar | Hari Lahir TYT Sabah |
 | M11 | 2–3 Apr | Cuti Peristiwa 1, Good Friday |
+| M15 | 1 May | Hari Pekerja |
 | M20 | 16–17 Jun | Cuti Peristiwa 2, Maal Hijrah |
 | M30 | 24–25 Aug | Cuti Peristiwa 3, Maulidur Rasul |
 | M32 | 16 Sep | Hari Malaysia |
@@ -134,9 +136,29 @@ School week Mon–Fri. M1 = 12 Jan, M43 = 30 Nov. Week numbers continue across b
 
 **Weekday events to flag** (may cancel lessons): Sukaneka 14 Jan · Sambutan TBC 13 Feb · Sambutan Hari Raya 10 Apr · Kejohanan Olahraga 16–17 Apr · Karnival Koko/STEM 29 Apr · Hari Guru & Kaamatan 8 May · Merentas Desa 10 Jun · Lok Yuk Day 12 Jun · Dirgahayu MK / Festival Bot Naga 18–19 Jun · Perkhemahan 3 Jul · Penangguhan Bulan Kebangsaan 15 Sep · Zai Jian Jie Jie 18 Sep · Mid-Autumn 25 Sep · Majlis Graduasi 2 Oct · Annual Dinner 3 Dec · **X-Break** (school activity, Mondays): 19 Jan, 2 Feb, 6 Apr, 4 May, 8 Jun, 6 Jul, 3 Aug, 7 Sep, 12 Oct, 16 Nov.
 
-**Rough teaching weeks:** see the syllabus-deadline table under Calendar. Note the SK T4 RPT spreads the syllabus to M40; with an M30 deadline the same content must fit ~27 weeks (4H is already ahead, so it fits in practice).
+**Rough teaching weeks:** see the syllabus-deadline table under Calendar. Note the SK T4 RPT spreads the syllabus to M40, past PAT; with the M34 deadline the same content must fit 31 takwim weeks (4H is already ahead, so it fits in practice).
 
 **Checks against the SK T4 RPT:** RPT plans teaching in M6 (actually a full holiday week) and dates M19 as 2025 (actually 8 Jun 2026). The app would catch both.
+
+### RPT prototype (`rpt/`, 2026-10-02)
+First piece of the app: `node rpt/rpt.js` builds an RPT from DSKP.md + Takwim.md + a difficulty file. Tried on **Matematik T4 2026** (`output/rpt-mat-t4-2026.md` / `.html`).
+- **Difficulty** = relative teaching time per SP, 1 (light) / 2 / 3 (heavy), one file per subject (`rpt/kesukaran-mat-t4.md`). AI drafts it with a reason per SP; I override by editing the number.
+- **Capacity** = whole takwim weeks (decided 2026-10-02, replaces teaching days ÷ 5): any week with at least one teaching day counts as 1; full holiday / exam weeks count 0. Form 4 2026 = **31 weeks** (to M34).
+- SPs keep DSKP order. Each SP gets capacity in proportion to its difficulty; an SP spilling into the next week is listed there too, marked "(samb.)", if it takes at least 0.2 of that week.
+- After the deadline: "Ulang kaji & pengukuhan" until the form's final exam, then "Pasca peperiksaan".
+- Takwim rule: any weekday entry in **Cuti / Perayaan** closes school, except Hari Sarawak.
+- Output: markdown + printable HTML (A4 landscape; print to PDF from the browser).
+- Matematik T4 2026 (`output/rpt-mat-t4-2026.*`): topics 1.0–5.0 by M16, PPT M17–M18, topics 6.0–10.0 in M19–M34, revision M35–M36, PAT M37.
+
+## Takwim 2027 (draft, layer 1 only)
+`sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
+
+- **44 weeks** (M1 = 4 Jan … M44 = 29 Nov), **203 KPM days** (Penggal 1: 19 weeks / 84 days; Penggal 2: 25 weeks / 119 days). School starts 8 days earlier than 2026.
+- Breaks: Cuti Penggal 1 **6–14 Mar** (covers Hari Raya Aidilfitri 10–11 Mar) · Pertengahan 22 May – 6 Jun · Penggal 2 28 Aug – 5 Sep · Akhir from 4 Dec.
+- KPM counts subtract national holidays + Cuti Tambahan KPM (checked against 2026). The 18 missing weekdays are filled as: national holidays (Haji 17 May, Wesak 20 May, Agong 7 Jun, Hari Malaysia 16 Sep, Deepavali 28 Oct) + **estimates** (5 Feb, 8–12 Feb, 18–19 + 21 May, 16 Aug, 27 + 29 Oct). Every Lampiran B row count matches.
+- Likely full holiday weeks: **M6** (CNY) and **M19** (Haji + Wesak, last week before the mid-year break).
+- Sabah state holidays in school weeks: Good Friday 26 Mar (M11), TYT 30 Mar (M12). Teaching days = 201.
+- Still needed: Lampiran C of the 2027 circular (confirms the estimates) and the SM Lok Yuk takwim 2027 (exams, events, Cuti Peristiwa). Without exam weeks the RPT generator stops (PPT / revision rules need them).
 
 ### History
 - Import M12–M35 from the existing Sheets so the dashboard starts with this year's data.
@@ -146,15 +168,19 @@ School week Mon–Fri. M1 = 12 Jan, M43 = 30 Nov. Week numbers continue across b
 - aSc "B" mark (e.g. Fri period 9) = after-school duty note, not a lesson → no RPH.
 - SK T4 RPT 2026 (docx): plans time per SK ("3 MINGGU"), groups Standard Prestasi TP1–2 then TP3–6 — useful calibration for AI difficulty. Has errors the app should prevent (M19 dated 2025, malformed week numbers).
 - DSKP PDFs (ASK T1, SK T4) have clean text; same table structure for both.
+- DSKP Matematik T4 & T5: three columns (SK, SP, Catatan); Standard Prestasi given **per topic**; math symbols are missing from the PDF text layer (read from the page image). Form 4 = 10 topics, 26 SK, 70 SP. Two conversions exist: `sample/dskp-mat-t4.md` (Form 4 only, same heading levels as ASK; used by the RPT generator) and `sample/dskp-mat-t4-t5.md` (Form 4 + 5 with Catatan, 127 SP; for Matematik T5 in 2027 — headings are one level deeper, so the parser needs a small change before using it).
+- Takwim: Hari Pekerja (Fri 1 May, M15) is a weekday holiday.
 - ASK Sheet: `data` tab (Tajuk/SK/SP), chapter tabs with MINGGU column, week tabs in fixed blocks.
 
 ## Open
 - [x] Takwim 2026 file (analysed 2026-10-02)
-- [x] Form 5 cutoff: end of M25
-- [ ] Yearly rollover: each year brings new classes/subjects (e.g. MAT T5 in 2027) — new year = new KPM calendar + takwim + class list, DSKPs reused
-- [ ] M31 → final exam for Form 1–4: revision + catch-up buffer? (current default)
+- [x] Form 5 cutoff: end of M25 (now derived: Percubaan SPM M28 minus 2 revision weeks)
+- [ ] Yearly rollover: each year brings new classes/subjects (e.g. MAT T5 in 2027) — new year = new KPM calendar + takwim + class list, DSKPs reused. 2027 KPM layer drafted (`sample/takwim-kpm-2027.md`)
+- [x] M31 → final exam for Form 1–4: revision before PAT is a must (2 weeks in the full-year RPT)
+- [x] Default RPT end: final exam minus 2 revision weeks, every form
 - [x] "X-Break" = school activity → treated as a flagged event day (same rule as other events)
-- [ ] DSKP + a sample week for Matematik and PJPK (check same structure)
+- [ ] DSKP + a sample week for Matematik and PJPK (check same structure) — Matematik T4 DSKP done (`sample/dskp-mat-t4.md`); TP is per topic, not per SK
+- [ ] Review AI difficulty ratings for Matematik T4 (`rpt/kesukaran-mat-t4.md`)
 - [ ] Sheets for SK, MAT, PJPK (for history import)
 - [ ] Exact markdown formats for DSKP / Jadual / Takwim (goes in spec)
 - [ ] Sync approach and stack (goes in spec)

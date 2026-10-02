@@ -3,10 +3,13 @@
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
 ## Now
-- [ ] Add the **DSKP for Matematik T4** and **PJPK T2** to `sample/`
+- [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
+- [ ] Add the **DSKP for PJPK T2** to `sample/`
+- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `rpt/kesukaran-mat-t4.md`, then re-run `node rpt/rpt.js ...`
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
-- [ ] Decide: **M31 → final exam** (Form 1–4) — revision + catch-up buffer, or something else?
+- [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
+- [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
 - [ ] Optional: try the stopgap script ([apps-script/Code.gs](apps-script/Code.gs)) on the ASK Sheet for M36
 
 ## When I'm ready
@@ -23,4 +26,6 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - Converting RPT, RPH PDF or the KPM calendar to markdown — reference only
 
 ## Later (next year)
-- [ ] 2027 rollover: new KPM calendar + school takwim + class list; add **Matematik T5 DSKP** if teaching Form 5
+- [x] 2027 KPM calendar → `sample/takwim-kpm-2027.md` (draft; some leave days estimated)
+- [ ] 2027: get the full KPM circular with **Lampiran C** (Cuti Tambahan KPM) to confirm the estimated days
+- [ ] 2027 rollover: school takwim (exam weeks) + class list; add **Matematik T5 DSKP** if teaching Form 5
