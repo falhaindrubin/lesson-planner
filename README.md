@@ -24,6 +24,7 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 ## Repository layout
 | Path | What |
 |---|---|
+| [TODO.md](TODO.md) | What I (the teacher) need to do next |
 | [docs/discussion.md](docs/discussion.md) | Living log of every decision, findings from samples, open questions |
 | [apps-script/](apps-script/) | Stopgap: Google Apps Script that generates next week's RPH tab in the existing Sheets |
 | [sample/](sample/) | Real inputs used for analysis: DSKPs, aSc timetables, RPT, RPH PDF, school takwim, KPM academic calendar |
