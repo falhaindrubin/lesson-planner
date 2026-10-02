@@ -13,10 +13,10 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] Say **"go"** to start the design spec (data model, RPT algorithm, screens, sync, markdown formats)
 
 ## After the spec
-- [ ] Convert **one of each** input to the spec's markdown format and drop it in `sample/`:
-  - [ ] ASK T1 DSKP
-  - [ ] Timetable 5.10.2026
-  - [ ] Takwim 2026
+- [x] Convert **one of each** input to markdown and drop it in `sample/` (done early, 2026-10-02; recheck once the spec fixes the formats):
+  - [x] ASK T1 DSKP → `sample/dskp-ask-t1.md`
+  - [x] Timetable 5.10.2026 → `sample/jwg-20261002.md`
+  - [x] Takwim 2026 → `sample/takwim-smly-2026.md`
 - [ ] Review the test results, then convert the rest (other DSKPs, older timetable)
 
 ## Not needed

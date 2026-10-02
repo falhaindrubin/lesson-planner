@@ -90,7 +90,7 @@ Two sources, two layers:
 | Layer | Source | Gives | Scope |
 |---|---|---|---|
 | 1. KPM calendar | `sample/Surat Siaran KPM Bil. 3 2025 - Kalendar Akademik 2026.pdf` (Kumpulan B, incl. Sabah) | Term dates, school breaks, KPM extra festive leave (Cuti Tambahan KPM) | Same for every Kumpulan B school; issued yearly |
-| 2. School takwim | `sample/TAKWIM 2026.docx` (SM Lok Yuk) | Sabah state holidays, Cuti Peristiwa, exams, events | This school only |
+| 2. School takwim | `sample/takwim-smly-2026.docx` (SM Lok Yuk) | Sabah state holidays, Cuti Peristiwa, exams, events | This school only |
 
 The app should take layer 1 first, then apply layer 2 on top.
 
@@ -143,6 +143,7 @@ School week Mon–Fri. M1 = 12 Jan, M43 = 30 Nov. Week numbers continue across b
 
 ## Findings from samples (`sample/`)
 - Two aSc timetables (10.8.2026, 5.10.2026): slots move between versions; 2C dropped.
+- aSc "B" mark (e.g. Fri period 9) = after-school duty note, not a lesson → no RPH.
 - SK T4 RPT 2026 (docx): plans time per SK ("3 MINGGU"), groups Standard Prestasi TP1–2 then TP3–6 — useful calibration for AI difficulty. Has errors the app should prevent (M19 dated 2025, malformed week numbers).
 - DSKP PDFs (ASK T1, SK T4) have clean text; same table structure for both.
 - ASK Sheet: `data` tab (Tajuk/SK/SP), chapter tabs with MINGGU column, week tabs in fixed blocks.
