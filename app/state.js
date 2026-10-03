@@ -2,7 +2,7 @@
 // Planning always goes through runWeek (W1); a failed run stores nothing and undoes the change (W4).
 import * as C from '../src/core/index.js';
 import * as store from './store.js';
-import { dirOf, baseName, resolvePath, findFile } from './logic/paths.js';
+import { dirOf, baseName, resolvePath, findFile, importKey } from './logic/paths.js';
 import { applyMark } from './logic/marking.js';
 import { diffRekod } from './logic/rekod-diff.js';
 
@@ -125,12 +125,11 @@ async function importFiles(list) {
     if (role) {
       try { PARSERS[role](text, path); } catch (e) { res.rejected.push({ path, error: e.message }); continue; }
     }
-    // A file from a picked folder keeps its own path (two folders may hold the same name; W8 / Review Focus 2).
-    // A dropped file has only its name: it replaces the stored file of that name, if there is exactly one.
+    // See importKey: folder files keep their path; a drop (or a folder file matching the one dropped copy) updates that copy.
     let key;
-    try { key = path.includes('/') ? path : (findFile([...state.files.keys()], path) ?? path); } catch (e) { res.rejected.push({ path, error: e.message }); continue; }
+    try { key = importKey([...state.files.keys()], path); } catch (e) { res.rejected.push({ path, error: e.message }); continue; }
     if (role === 'rekod' && state.files.has(key) && state.files.get(key) !== text) {
-      const diff = diffRekod(state.files.get(key), text, path);
+      const diff = diffRekod(state.files.get(key), text, path, state.today);
       if (diff.length) { res.conflicts.push({ path: key, text, diff }); continue; }
     }
     accept.push([key, text]);

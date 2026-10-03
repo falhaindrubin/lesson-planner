@@ -1,4 +1,6 @@
-// "Save rekod": download every rekod changed since the last save, exactly as stored (W2).
+// "Save rekod": download a rekod changed since the last save, exactly as stored (W2).
+// One file per click: Chrome may block several downloads at once, and a flag is cleared only for a file
+// that was handed to the browser, so a blocked download is never reported as saved.
 // The teacher saves it over the file in the Rekod folder, so the CLI and git see it.
 import { state, emit } from './state.js';
 import { setSetting } from './store.js';
@@ -16,8 +18,10 @@ function download(name, text) {
 }
 
 async function saveRekod() {
-  for (const path of Object.keys(state.unsaved)) if (state.files.has(path)) download(baseName(path), state.files.get(path));
-  state.unsaved = {};
+  const path = Object.keys(state.unsaved).find(p => state.files.has(p));
+  if (path) download(baseName(path), state.files.get(path));
+  if (path) delete state.unsaved[path];
+  else state.unsaved = {};
   await setSetting('unsaved', state.unsaved);
   emit();
 }

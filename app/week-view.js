@@ -112,6 +112,9 @@ function renderWeek(view) {
     view.dataset.screen = 'week';
     view.innerHTML = '<div class="week"><section id="cards"></section><section id="previews"></section></div>';
     const cards = view.querySelector('#cards');
+    // A button press must not blur the focused input first: the blur would commit and redraw the cards
+    // under the pointer, and the click would be lost. onClick reads the typed values itself.
+    cards.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
     cards.addEventListener('click', onClick);
     cards.addEventListener('change', onChangeField);
   }

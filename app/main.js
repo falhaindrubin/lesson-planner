@@ -34,7 +34,7 @@ ${info.todayWeek == null ? `<span class="note">Today is not in the ${info.year} 
 <span class="spacer"></span>
 ${(state.result ? state.result.classes : []).map(s => { const p = positionWords(s); return `<span class="badge tone-${p.tone}">${esc(classLabel(s))}: ${esc(p.text)}</span>`; }).join(' ')}
 ${unsaved.length ? `<span class="unsaved ${old ? 'old' : ''}">● Unsaved changes</span>` : ''}
-<button data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod</button>`;
+<button data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod${unsaved.length > 1 ? ` (${unsaved.length} files)` : ''}</button>`;
 }
 
 function renderBanner() {
@@ -51,15 +51,20 @@ function draw() {
   else renderWeek(view);
 }
 
+// Keep the focus where it is on press; the click then commits a half-typed field itself (see below)
+top.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
 top.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
+  const { tab, act } = b.dataset;
+  // Commit a half-typed field first (its change event redraws the screen), then act
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   const info = weekInfo();
-  if (b.dataset.tab) setTab(b.dataset.tab);
-  else if (b.dataset.act === 'today') goToday();
-  else if (b.dataset.act === 'save') saveRekod();
-  else if (info && (b.dataset.act === 'prev' || b.dataset.act === 'next')) {
-    const i = info.weeks.indexOf(state.week) + (b.dataset.act === 'next' ? 1 : -1);
+  if (tab) setTab(tab);
+  else if (act === 'today') goToday();
+  else if (act === 'save') saveRekod();
+  else if (info && (act === 'prev' || act === 'next')) {
+    const i = info.weeks.indexOf(state.week) + (act === 'next' ? 1 : -1);
     if (i >= 0 && i < info.weeks.length) setWeek(info.weeks[i]);
   }
 });

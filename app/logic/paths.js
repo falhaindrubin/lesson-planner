@@ -24,4 +24,15 @@ function findFile(paths, wanted) {
   return same[0] || null;
 }
 
-export { dirOf, baseName, resolvePath, findFile };
+// The key a picked file is stored under. A file from a picked folder keeps its own path, except when the
+// only stored copy of that name came from a drop (bare name): then it updates that copy in place, so
+// planning and the unsaved flag keep pointing at one file. A dropped file replaces the one stored copy.
+function importKey(paths, path) {
+  if (!path.includes('/')) return findFile(paths, path) ?? path;
+  if (paths.includes(path)) return path;
+  const same = paths.filter(p => baseName(p) === baseName(path));
+  const bare = same.filter(p => !p.includes('/'));
+  return bare.length === 1 && same.length === 1 ? bare[0] : path;
+}
+
+export { dirOf, baseName, resolvePath, findFile, importKey };

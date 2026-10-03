@@ -1,6 +1,6 @@
 // node test/app-logic.js — the app's pure modules (paths, statuses, wording, marking, rekod diff)
 import assert from 'node:assert';
-import { dirOf, baseName, resolvePath, findFile } from '../app/logic/paths.js';
+import { dirOf, baseName, resolvePath, findFile, importKey } from '../app/logic/paths.js';
 import { STATUS_OPTIONS, statusLabel, needsReason } from '../app/logic/status.js';
 import { classLabel, positionWords, rptWeeksWords, percentDone, fitWords } from '../app/logic/words.js';
 import { applyMark } from '../app/logic/marking.js';
@@ -20,6 +20,14 @@ assert.strictEqual(findFile(stored, 'sample/acara-2026.md'), 'acara-2026.md'); /
 assert.strictEqual(findFile(stored, 'sample/none.md'), null);
 assert.throws(() => findFile(stored, 'z/rekod-4S-M3.md'), /More than one file named rekod-4S-M3\.md: x\/rekod-4S-M3\.md, y\/rekod-4S-M3\.md/);
 assert.strictEqual(findFile(stored, 'x/rekod-4S-M3.md'), 'x/rekod-4S-M3.md'); // exact match wins over a clash
+
+// importKey: a folder file whose name matches the only dropped (bare-name) file updates that file in place
+assert.strictEqual(importKey(['rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'rekod-4S-M3.md');
+assert.strictEqual(importKey(['rekod-4S-M3.md', 'x/rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'output/sim/rekod-4S-M3.md'); // ambiguous: keep own path
+assert.strictEqual(importKey(['output/sim/rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'output/sim/rekod-4S-M3.md');
+assert.strictEqual(importKey(['a.md'], 'sample/b.md'), 'sample/b.md');
+assert.strictEqual(importKey(['x/rekod-4S-M3.md'], 'rekod-4S-M3.md'), 'x/rekod-4S-M3.md'); // dropped file replaces the one stored copy
+assert.strictEqual(importKey([], 'new.md'), 'new.md');
 
 // status
 assert.deepStrictEqual(STATUS_OPTIONS.map(statusLabel), ['Taught', 'Postponed', 'Cancelled']);
@@ -84,5 +92,18 @@ assert.strictEqual(d[1].stored, null);
 assert.strictEqual(diffSummary(d), '2 lessons differ: M35 Tue, M36 Mon');
 assert.strictEqual(diffSummary(d.slice(0, 1)), '1 lesson differs: M35 Tue');
 assert.throws(() => diffRekod(rekod, rekod.replace('| diajar | 35 |  |', '| tunda | 35 |  |'), 'f.md'), /f\.md:5: Status "tunda" not recognised/);
+
+// diff with today: rows rebuilt by runWeek (future, not edited) are not differences; a future row's SP / attendance are not compared
+const extra = '| M36 | 2026-10-12 | Isnin | 2–3 | 7:30–8:30 | pdp | X-Break | 7.1.3 | diajar | 35 |  |\n';
+assert.strictEqual(diffRekod(rekod + extra, rekod, 'f.md').length, 1); // no today: strict
+assert.deepStrictEqual(diffRekod(rekod + extra, rekod, 'f.md', '2026-10-07'), []);
+assert.deepStrictEqual(diffRekod(rekod, rekod + extra, 'f.md', '2026-10-07'), []);
+assert.strictEqual(diffRekod(rekod + extra, rekod, 'f.md', '2026-10-12').length, 1); // not future any more
+const futureSp = rekod + extra.replace('7.1.3', '7.1.4').replace('| 35 |', '| 30 |');
+assert.deepStrictEqual(diffRekod(rekod + extra, futureSp, 'f.md', '2026-10-07'), []);
+const futureEdited = rekod + extra.replace('| diajar | 35 |  |', '| ditunda | 35 | Kursus |');
+assert.strictEqual(diffRekod(rekod + extra, futureEdited, 'f.md', '2026-10-07').length, 1); // an edited future row still differs
+assert.strictEqual(diffRekod(rekod, futureEdited, 'f.md', '2026-10-07').length, 1); // one-sided but edited
+assert.strictEqual(diffRekod(rekod, rekod.replace('| 7.1.2 | diajar | 35 |  |', '| 7.1.2 | ditunda | 35 | Y |'), 'f.md', '2026-10-07').length, 1); // past rows always compared
 
 console.log('app-logic: all tests passed');
