@@ -219,7 +219,7 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Fix (my choice) | **SP time follows the RPT's actual weeks**: each SP gets 4S's real minutes in the RPT weeks where it sits (M20 has only 60 min). Now `ikut RPT` every week M1–M34, DSKP done end of M34, revision M35–M36, PAT M37. RPT file unchanged. |
 | Ahead / behind | Measured in **minutes** (content taught − PdP minutes so far) and shown in weeks of 210 min, so a short week (M20) doesn't turn 10 minutes into "1 week ahead". Test: all three M10 lessons ditunda → `1 minggu ke belakang` from M11, "pertimbang gabung SP" warning, DSKP done in M35. |
 
-### Web app — first slice (2026-10-03, brainstorming paused)
+### Web app — first slice (2026-10-03; spec: [web-app-weekly-loop-design.md](superpowers/specs/2026-10-03-web-app-weekly-loop-design.md))
 | Topic | Decision |
 |---|---|
 | Next sub-project | The web app (PWA), before Progress |
@@ -228,6 +228,19 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Hosting | GitHub Pages (needs a public repo, or a paid plan) |
 | Rekod | In the browser, with export/import of `rekod-*.md`; Drive sync later |
 | Main device | Laptop; tablet for viewing |
+| Screen layout | Weekly screen = layout A: lesson cards with diajar/ditunda/batal on the left, live RPH preview on the right, Print below (2026-10-03, later session) |
+| Language | **Everything in the app UI is English** (buttons, labels, statuses: taught / postponed / cancelled, messages). RPH and RPT content stay in Malay. Rekod files keep `diajar`/`ditunda`/`batal`; the app maps them (same session) |
+| Recalculation | Live: every mark updates the coming weeks and ahead/behind immediately (same session) |
+| Re-picked file vs browser | **The file wins, with a warning**: the app lists the lessons that differ (e.g. "3 lessons differ: M5 Mon, …") and asks to confirm before replacing (same session) |
+| Code sharing | **Approach 1**: core becomes ES modules (CLI too, `"type": "module"`); the CLI's week orchestration moves into one pure core function used by both CLI and app; no build step, no framework; ahead/behind returned as numbers, each shell words it (CLI Malay, app English) (same session) |
+| RPH pages | **Each lesson starts on a new A4 page.** A lesson too long for one page continues on the next page(s); the next lesson still starts on a fresh page. A table row is not split across pages unless it is taller than a page. Same in the app preview and in print (same session) |
+| Code language | **All development terms in English**: files, functions, variables, comments. Existing Malay core and CLI are renamed during the ES-module conversion (e.g. `kedudukan.js` → `position.js`); tests prove behaviour unchanged. Markdown formats and Malay content unchanged; domain words (RPH, RPT, SP, DSKP, takwim, rekod, diajar/ditunda/batal) kept (same session) |
+| CLI language | CLI messages (warnings, position line, errors) switch to **English**. Only RPT and RPH content stays Malay (same session) |
+| Rekod file language | Rekod files **stay Malay** (headers, `diajar`/`ditunda`/`batal`, file name `rekod-*.md`); the app shows them in English. No conversion needed (same session) |
+| Marking reasons | Postponed and Cancelled **require a reason**, typed by hand (free text, no preset list), saved in Catatan. Taught: note optional (same session) |
+| RPH output in the app | **Print only** (or Save as PDF from the print dialog); the app writes no `output/*.html` files (same session) |
+| Weekly screen detail | Mockup approved for now (revisit later). **"Open in new tab"** button shows the week's RPH pages in their own browser tab (print from there too); the side preview stays (same session) |
+| Dashboard in first slice | **Yes, a simple Classes dashboard**: per class current SP, % DSKP done, weeks ahead/behind, RPT week of that SP, "won't fit before RPT ends" warning. Charts and Sheets history import stay in sub-project 2 (same session) |
 
 ## Takwim 2027 (draft, layer 1 only)
 `sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
