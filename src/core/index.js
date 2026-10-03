@@ -9,6 +9,7 @@ module.exports = {
   ...require('./parse/kelas'),
   ...require('./parse/acara'),
   ...require('./parse/rekod'),
+  ...require('./parse/aktiviti'),
   ...require('./calendar'),
   ...require('./timetable'),
   ...require('./scheduler'),
@@ -19,4 +20,5 @@ module.exports = {
   ...require('./rpt-planner'),
   ...require('./render/rpt'),
   ...require('./render/rekod'),
+  ...require('./render/rph'),
 };
