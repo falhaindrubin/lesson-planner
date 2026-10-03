@@ -8,9 +8,11 @@ module.exports = {
   ...require('./parse/jadual'),
   ...require('./parse/kelas'),
   ...require('./parse/acara'),
+  ...require('./parse/rekod'),
   ...require('./calendar'),
   ...require('./timetable'),
   ...require('./scheduler'),
   ...require('./rpt-planner'),
   ...require('./render/rpt'),
+  ...require('./render/rekod'),
 };
