@@ -219,6 +219,16 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Fix (my choice) | **SP time follows the RPT's actual weeks**: each SP gets 4S's real minutes in the RPT weeks where it sits (M20 has only 60 min). Now `ikut RPT` every week M1–M34, DSKP done end of M34, revision M35–M36, PAT M37. RPT file unchanged. |
 | Ahead / behind | Measured in **minutes** (content taught − PdP minutes so far) and shown in weeks of 210 min, so a short week (M20) doesn't turn 10 minutes into "1 week ahead". Test: all three M10 lessons ditunda → `1 minggu ke belakang` from M11, "pertimbang gabung SP" warning, DSKP done in M35. |
 
+### Web app — first slice (2026-10-03, brainstorming paused)
+| Topic | Decision |
+|---|---|
+| Next sub-project | The web app (PWA), before Progress |
+| First slice | Weekly RPH loop: pick week → view/print RPH → mark diajar/ditunda/batal + reason → ahead/behind |
+| Inputs | Pick `sample/` and `output/` folders once; copied into the browser; markdown stays the source of truth |
+| Hosting | GitHub Pages (needs a public repo, or a paid plan) |
+| Rekod | In the browser, with export/import of `rekod-*.md`; Drive sync later |
+| Main device | Laptop; tablet for viewing |
+
 ## Takwim 2027 (draft, layer 1 only)
 `sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
 

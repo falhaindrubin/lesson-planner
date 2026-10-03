@@ -20,9 +20,14 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [x] Say **"go"** for the design spec — RPH pipeline spec, plan and code done ([spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md))
 - [ ] Open the **pull request** and merge `rph-pipeline` into `main`: https://github.com/falhaindrubin/lesson-planner/pull/new/rph-pipeline
 - [ ] Open a few files in `output/simulasi-4S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
-- [ ] Decide the **next sub-project** (see [docs/next-session.md](docs/next-session.md)): Progress (dashboard + history import) or the PWA app
+- [x] Decide the **next sub-project** — the **web app** (see below)
 - [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
 - [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu <n>`
+
+## Web app (brainstorming started 2026-10-03, paused)
+Decided so far: first slice = **weekly RPH loop** (pick a week → view/print RPH → mark diajar/ditunda/batal + reason → ahead/behind) · inputs: **pick the sample/ and output/ folders once**, copied into the browser · hosting: **GitHub Pages** · rekod: **kept in the browser, with export/import of `rekod-*.md`** (no Drive sync yet) · main device: **laptop**.
+- [ ] Check the repo is **public** (GitHub Pages is free only for public repos; private needs a paid plan)
+- [ ] Next session: answer whether to use the visual companion (screen mockups in a browser tab), then design the screens → written spec → plan
 
 ## After the spec
 - [x] Convert **one of each** input to markdown and drop it in `sample/` (done early, 2026-10-02; recheck once the spec fixes the formats):

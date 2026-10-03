@@ -24,6 +24,19 @@ Inputs are hand-checked markdown: DSKP, takwim, jadual (timetable versions by ef
 Minors: text in Kehadiran is reduced to its number on rewrite · blank Status on a lesson counts as not taught, silently · `--hari-ini` only regex-checked (a wrong year rewrites unedited past hand merges) · UTF-8 BOM breaks a kelas file whose first line is metadata · "files written" list also prints rekod files when Rekod and Output share a folder · bad Mula is reported against the rekod file · `simulasi.js` ignores a failed run · writes are not atomic if a file is locked.
 Judgement calls kept as is: re-teaching an earlier SP by hand rewinds pacing · duplicate rows (same date + first period) print twice · tutorial before any taught lesson has no SP · two rows sharing one Tutorial code → only the first gets it · an all-batal week keeps its old HTML · Hari/Masa in the rekod aren't validated · `4.2.7–4.2.9` reads as 4.2.7 and 4.2.9 · blank Mula with only ditunda rows starts at the first SP.
 
+## Web app brainstorming (in progress — resume here)
+The teacher chose the **web app** (sub-project 3, PWA) next. Brainstorming path: architectural (questions → design → written spec → plan). Answered so far:
+
+| Question | Answer |
+|---|---|
+| First slice | Weekly RPH loop: pick a week, view/print its RPH pages, mark each lesson diajar / ditunda / batal with a reason, see ahead/behind |
+| Inputs | Pick the `sample/` and `output/` folders (or drop the .md files) once; copied into browser storage; re-pick a file to update it; markdown stays the source of truth |
+| Hosting | GitHub Pages (`https://falhaindrubin.github.io/lesson-planner/`); free only if the repo is public |
+| Rekod | Kept in the browser (IndexedDB) with "Simpan rekod" export and import of `rekod-*.md`; one main device until Drive sync (later slice) |
+| Main device | Laptop (tablet for viewing) |
+
+Pending: the visual-companion offer (screen mockups in a browser tab) was made and not answered; then design the screens and data flow, write the spec in `docs/superpowers/specs/`, then the plan. Known prerequisite: `src/core` is CommonJS and must become ES modules for the browser (decided earlier as a one-time change).
+
 ## Suggested next steps (pick one with the teacher)
 1. Open and merge the PR; teacher reviews the simulation and prints one RPH to PDF.
 2. **Real use**: switch `sample/kelas-2026.md` to real folders and 4S's current SP; run it for a real week; fix what the teacher finds.
