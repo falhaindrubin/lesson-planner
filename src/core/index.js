@@ -13,6 +13,7 @@ module.exports = {
   ...require('./timetable'),
   ...require('./scheduler'),
   ...require('./rph-planner'),
+  ...require('./rekod-sync'),
   ...require('./rpt-planner'),
   ...require('./render/rpt'),
   ...require('./render/rekod'),
