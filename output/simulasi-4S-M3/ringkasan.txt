@@ -1,43 +1,43 @@
-M1 (2026-01-10) 4S M3: SP 1.1.1 · RPT M1 · ikut RPT
-M2 (2026-01-17) 4S M3: SP 1.1.3 · RPT M2 · ikut RPT
-M3 (2026-01-24) 4S M3: SP 1.1.5 · RPT M3 · ikut RPT
-M4 (2026-01-31) 4S M3: SP 1.1.7 · RPT M3 · ikut RPT
-M5 (2026-02-07) 4S M3: SP 2.1.1 · RPT M5 · ikut RPT
-M6 (2026-02-14) 4S M3: SP 2.1.3 · RPT M7 · ikut RPT
-M7 (2026-02-21) 4S M3: SP 2.1.3 · RPT M7 · ikut RPT
-M8 (2026-02-28) 4S M3: SP 3.1.1 · RPT M8 · ikut RPT
-M9 (2026-03-07) 4S M3: SP 3.1.5 · RPT M9 · ikut RPT
-M10 (2026-03-14) 4S M3: SP 3.2.2 · RPT M10 · ikut RPT
-M11 (2026-03-28) 4S M3: SP 3.2.4 · RPT M11 · ikut RPT
-M12 (2026-04-04) 4S M3: SP 4.1.1 · RPT M12 · ikut RPT
-M13 (2026-04-11) 4S M3: SP 4.2.1 · RPT M13 · ikut RPT
-M14 (2026-04-18) 4S M3: SP 4.3.1 · RPT M14 · ikut RPT
-M15 (2026-04-25) 4S M3: SP 4.3.3 · RPT M15 · ikut RPT
-M16 (2026-05-02) 4S M3: SP 5.1.4 · RPT M16 · ikut RPT
-M17 (2026-05-09) 4S M3: SP 6.1.1 · RPT M19 · ikut RPT
-M18 (2026-05-16) 4S M3: SP 6.1.1 · RPT M19 · ikut RPT
-M19 (2026-06-06) 4S M3: SP 6.1.1 · RPT M19 · ikut RPT
-M20 (2026-06-13) 4S M3: SP 6.2.2 · RPT M20 · ikut RPT
-M21 (2026-06-20) 4S M3: SP 6.2.3 · RPT M21 · ikut RPT
-M22 (2026-06-27) 4S M3: SP 7.1.1 · RPT M22 · ikut RPT
-M23 (2026-07-04) 4S M3: SP 7.1.3 · RPT M23 · ikut RPT
-M24 (2026-07-11) 4S M3: SP 7.2.3 · RPT M24 · ikut RPT
-M25 (2026-07-18) 4S M3: SP 7.2.4 · RPT M24–M25 · ikut RPT
-M26 (2026-07-25) 4S M3: SP 8.2.1 · RPT M26 · ikut RPT
-M27 (2026-08-01) 4S M3: SP 8.2.2 · RPT M27 · ikut RPT
-M28 (2026-08-08) 4S M3: SP 8.2.4 · RPT M27–M28 · ikut RPT
-M29 (2026-08-15) 4S M3: SP 8.2.6 · RPT M29 · ikut RPT
-M30 (2026-08-22) 4S M3: SP 9.2.3 · RPT M30 · ikut RPT
-M31 (2026-09-05) 4S M3: SP 9.3.2 · RPT M31 · ikut RPT
-M32 (2026-09-12) 4S M3: SP 9.3.3 · RPT M31–M32 · ikut RPT
-M33 (2026-09-19) 4S M3: SP 10.1.1 · RPT M33 · ikut RPT
-M34 (2026-09-26) 4S M3: SP 10.1.2 · RPT M33–M34 · ikut RPT
-M35 (2026-10-03) 4S M3: DSKP selesai · ulang kaji
-M36 (2026-10-10) 4S M3: DSKP selesai · ulang kaji
-M37 (2026-10-17) 4S M3: DSKP selesai · ulang kaji
-M38 (2026-10-24) 4S M3: DSKP selesai · ulang kaji
-M39 (2026-10-31) 4S M3: DSKP selesai · ulang kaji
-M40 (2026-11-07) 4S M3: DSKP selesai · ulang kaji
-M41 (2026-11-14) 4S M3: DSKP selesai · ulang kaji
-M42 (2026-11-21) 4S M3: DSKP selesai · ulang kaji
-M43 (2026-11-28) 4S M3: DSKP selesai · ulang kaji
+M1 (2026-01-10) 4S M3: SP 1.1.1 · RPT M1 · on track
+M2 (2026-01-17) 4S M3: SP 1.1.3 · RPT M2 · on track
+M3 (2026-01-24) 4S M3: SP 1.1.5 · RPT M3 · on track
+M4 (2026-01-31) 4S M3: SP 1.1.7 · RPT M3 · on track
+M5 (2026-02-07) 4S M3: SP 2.1.1 · RPT M5 · on track
+M6 (2026-02-14) 4S M3: SP 2.1.3 · RPT M7 · on track
+M7 (2026-02-21) 4S M3: SP 2.1.3 · RPT M7 · on track
+M8 (2026-02-28) 4S M3: SP 3.1.1 · RPT M8 · on track
+M9 (2026-03-07) 4S M3: SP 3.1.5 · RPT M9 · on track
+M10 (2026-03-14) 4S M3: SP 3.2.2 · RPT M10 · on track
+M11 (2026-03-28) 4S M3: SP 3.2.4 · RPT M11 · on track
+M12 (2026-04-04) 4S M3: SP 4.1.1 · RPT M12 · on track
+M13 (2026-04-11) 4S M3: SP 4.2.1 · RPT M13 · on track
+M14 (2026-04-18) 4S M3: SP 4.3.1 · RPT M14 · on track
+M15 (2026-04-25) 4S M3: SP 4.3.3 · RPT M15 · on track
+M16 (2026-05-02) 4S M3: SP 5.1.4 · RPT M16 · on track
+M17 (2026-05-09) 4S M3: SP 6.1.1 · RPT M19 · on track
+M18 (2026-05-16) 4S M3: SP 6.1.1 · RPT M19 · on track
+M19 (2026-06-06) 4S M3: SP 6.1.1 · RPT M19 · on track
+M20 (2026-06-13) 4S M3: SP 6.2.2 · RPT M20 · on track
+M21 (2026-06-20) 4S M3: SP 6.2.3 · RPT M21 · on track
+M22 (2026-06-27) 4S M3: SP 7.1.1 · RPT M22 · on track
+M23 (2026-07-04) 4S M3: SP 7.1.3 · RPT M23 · on track
+M24 (2026-07-11) 4S M3: SP 7.2.3 · RPT M24 · on track
+M25 (2026-07-18) 4S M3: SP 7.2.4 · RPT M24–M25 · on track
+M26 (2026-07-25) 4S M3: SP 8.2.1 · RPT M26 · on track
+M27 (2026-08-01) 4S M3: SP 8.2.2 · RPT M27 · on track
+M28 (2026-08-08) 4S M3: SP 8.2.4 · RPT M27–M28 · on track
+M29 (2026-08-15) 4S M3: SP 8.2.6 · RPT M29 · on track
+M30 (2026-08-22) 4S M3: SP 9.2.3 · RPT M30 · on track
+M31 (2026-09-05) 4S M3: SP 9.3.2 · RPT M31 · on track
+M32 (2026-09-12) 4S M3: SP 9.3.3 · RPT M31–M32 · on track
+M33 (2026-09-19) 4S M3: SP 10.1.1 · RPT M33 · on track
+M34 (2026-09-26) 4S M3: SP 10.1.2 · RPT M33–M34 · on track
+M35 (2026-10-03) 4S M3: DSKP finished · revision
+M36 (2026-10-10) 4S M3: DSKP finished · revision
+M37 (2026-10-17) 4S M3: DSKP finished · revision
+M38 (2026-10-24) 4S M3: DSKP finished · revision
+M39 (2026-10-31) 4S M3: DSKP finished · revision
+M40 (2026-11-07) 4S M3: DSKP finished · revision
+M41 (2026-11-14) 4S M3: DSKP finished · revision
+M42 (2026-11-21) 4S M3: DSKP finished · revision
+M43 (2026-11-28) 4S M3: DSKP finished · revision

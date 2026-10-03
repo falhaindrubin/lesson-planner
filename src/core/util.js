@@ -1,7 +1,8 @@
-// Fungsi kecil yang dikongsi oleh parser, kalendar dan renderer. Tiada I/O.
+// Small helpers shared by the parsers, calendar and renderers. No I/O.
 
-const BULAN = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
-const HARI_BEKERJA = ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
+// Month and weekday names are file content (Malay), so the values stay Malay
+const MONTHS = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
+const WEEKDAYS = ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
 
 // '| a | b |' -> ['a', 'b']
 function cells(line) {
@@ -13,7 +14,7 @@ function daysBetween(a, b) {
 }
 function fmtDate(iso) {
   const [, m, d] = iso.split('-').map(Number);
-  return `${d} ${BULAN[m - 1]}`;
+  return `${d} ${MONTHS[m - 1]}`;
 }
 function fmtRange(a, b) {
   const [, ma] = a.split('-'), [, mb] = b.split('-');
@@ -21,25 +22,25 @@ function fmtRange(a, b) {
 }
 const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 
-// Waktu jadual: 30 minit setiap satu, waktu 0 bermula 6:30.
-// '2–3' -> [2, 3]; '9' -> [9, 9] (sempang biasa juga diterima)
-function waktuRange(s) {
+// Timetable periods: 30 minutes each, period 0 starts at 6:30.
+// '2–3' -> [2, 3]; '9' -> [9, 9] (a plain hyphen is accepted too)
+function periodRange(s) {
   const m = String(s).trim().match(/^(\d+)(?:\s*[–-]\s*(\d+))?$/);
   const a = m && Number(m[1]), b = m && (m[2] != null ? Number(m[2]) : a);
-  if (!m || b < a) throw new Error(`Waktu tidak sah: "${s}"`);
+  if (!m || b < a) throw new Error(`Invalid period: "${s}"`);
   return [a, b];
 }
-const fmtWaktu = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
-const minitMula = p => 6 * 60 + 30 + 30 * p; // minit dari tengah malam
-const minitWaktu = ([a, b]) => (b - a + 1) * 30;
-// Jam 12 jam seperti cetakan aSc (1:00 = 13:00) dan jam 24 jam seperti RPH (0800)
-const jam12 = min => `${((Math.floor(min / 60) + 11) % 12) + 1}:${String(min % 60).padStart(2, '0')}`;
-const jam24 = min => String(Math.floor(min / 60)).padStart(2, '0') + String(min % 60).padStart(2, '0');
-const masaWaktu = ([a, b]) => `${jam12(minitMula(a))}–${jam12(minitMula(b + 1))}`;
+const fmtPeriods = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
+const periodStart = p => 6 * 60 + 30 + 30 * p; // minutes after midnight
+const periodMinutes = ([a, b]) => (b - a + 1) * 30;
+// 12-hour clock as printed by aSc (1:00 = 13:00) and 24-hour clock as on the RPH (0800)
+const clock12 = min => `${((Math.floor(min / 60) + 11) % 12) + 1}:${String(min % 60).padStart(2, '0')}`;
+const clock24 = min => String(Math.floor(min / 60)).padStart(2, '0') + String(min % 60).padStart(2, '0');
+const periodTime = ([a, b]) => `${clock12(periodStart(a))}–${clock12(periodStart(b + 1))}`;
 // '2026-10-05' -> '05/10/2026'
-const fmtTarikh = iso => iso.split('-').reverse().join('/');
+const fmtDateDmy = iso => iso.split('-').reverse().join('/');
 
 export {
-  BULAN, HARI_BEKERJA, cells, daysBetween, fmtDate, fmtRange, range,
-  waktuRange, fmtWaktu, minitMula, minitWaktu, jam12, jam24, masaWaktu, fmtTarikh,
+  MONTHS, WEEKDAYS, cells, daysBetween, fmtDate, fmtRange, range,
+  periodRange, fmtPeriods, periodStart, periodMinutes, clock12, clock24, periodTime, fmtDateDmy,
 };

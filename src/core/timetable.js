@@ -1,20 +1,20 @@
-// Penyelesai jadual: versi jadual yang berkuat kuasa pada satu tarikh.
-// Pertukaran jadual = fail baharu dengan tarikh berkuat kuasa sendiri; tarikh lama tidak diubah.
-import { minitWaktu } from './util.js';
+// Timetable resolver: the timetable version in force on a date.
+// A timetable change = a new file with its own effective date; old dates are never changed.
+import { periodMinutes } from './util.js';
 
-// Versi terkini dengan berkuatKuasa <= tarikh
-function versionFor(versions, tarikh) {
+// The latest version with effectiveFrom <= date
+function versionFor(versions, date) {
   let best = null;
-  for (const v of versions) if (v.berkuatKuasa <= tarikh && (!best || v.berkuatKuasa > best.berkuatKuasa)) best = v;
-  if (!best) throw new Error(`Tiada jadual berkuat kuasa pada ${tarikh}`);
+  for (const v of versions) if (v.effectiveFrom <= date && (!best || v.effectiveFrom > best.effectiveFrom)) best = v;
+  if (!best) throw new Error(`No timetable in force on ${date}`);
   return best;
 }
 
-// Minit PdP seminggu bagi kelas × subjek dalam satu versi (slot tutorial tidak dikira)
-function minitSeminggu(version, kelas, subjek) {
+// PdP minutes per week for a class × subject in one version (tutorial slots do not count)
+function weeklyMinutes(version, classCode, subject) {
   return version.slots
-    .filter(s => s.kelas === kelas && s.subjek === subjek)
-    .reduce((a, s) => a + minitWaktu(s.waktu), 0);
+    .filter(s => s.classCode === classCode && s.subject === subject)
+    .reduce((a, s) => a + periodMinutes(s.periods), 0);
 }
 
-export { versionFor, minitSeminggu };
+export { versionFor, weeklyMinutes };

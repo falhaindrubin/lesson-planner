@@ -1,89 +1,88 @@
-// Perancang RPT: agih SP ke atas minggu takwim bagi satu tingkatan.
-// Setiap minggu yang ada sekurang-kurangnya satu hari PdP = 1 minggu (minggu cuti penuh /
-// peperiksaan penuh = 0).
-// - Separuh pertama tajuk (dibundarkan ke atas) mesti selesai sebelum peperiksaan
-//   pertengahan tahun (PPT); separuh lagi selepasnya.
-// - Dalam setiap bahagian, tajuk yang ada minggu tetap mengambil kapasiti itu; tajuk lain
-//   berkongsi baki ikut kesukaran SP.
-// SP disenaraikan dalam minggu yang bertindih sekurang-kurangnya MIN_OVERLAP minggu,
-// atau minggu tindihan terbesarnya.
+// RPT planner: spread the SPs over the takwim weeks for one form.
+// Every week with at least one PdP day = 1 week (a full holiday / full exam week = 0).
+// - The first half of the topics (rounded up) must be finished before the mid-year
+//   exam (PPT); the other half after it.
+// - Within each part, topics with fixed weeks take that capacity; the other topics
+//   share the rest by SP difficulty.
+// An SP is listed in every week it overlaps by at least MIN_OVERLAP weeks,
+// or in its largest overlap week.
 import { weekFor, examBlocks, breaks } from './calendar.js';
 
 const MIN_OVERLAP = 0.2;
-const ULANG_KAJI = 2; // minggu ulang kaji sebelum peperiksaan akhir (bagi tamat 'akhir')
+const REVISION_WEEKS = 2; // revision weeks before the final exam (for end 'final')
 
-function plan({ sp, kesukaran, kalendar, tingkatan, tamat = 'akhir', ulangKaji = ULANG_KAJI }) {
+function plan({ sp, difficulty, calendar, form, end = 'final', revisionWeeks = REVISION_WEEKS }) {
   const warnings = [];
   const rated = sp.map(s => {
-    const k = kesukaran.sp.get(s.code);
-    if (!k) warnings.push(`Tiada kesukaran untuk SP ${s.code}; guna 2`);
-    return { ...s, nilai: k ? k.nilai : 2, sebab: k ? k.sebab : '' };
+    const k = difficulty.sp.get(s.code);
+    if (!k) warnings.push(`No difficulty for SP ${s.code}; using 2`);
+    return { ...s, value: k ? k.value : 2, reason: k ? k.reason : '' };
   });
-  for (const code of kesukaran.sp.keys())
-    if (!sp.some(s => s.code === code)) warnings.push(`Kesukaran untuk SP ${code} tiada dalam DSKP`);
-  for (const code of kesukaran.tajuk.keys())
-    if (!sp.some(s => s.bidang.code === code)) warnings.push(`Minggu tetap untuk tajuk ${code} tiada dalam DSKP`);
+  for (const code of difficulty.sp.keys())
+    if (!sp.some(s => s.code === code)) warnings.push(`Difficulty for SP ${code} is not in the DSKP`);
+  for (const code of difficulty.topics.keys())
+    if (!sp.some(s => s.topic.code === code)) warnings.push(`Fixed weeks for topic ${code} is not in the DSKP`);
 
-  const exams = examBlocks(kalendar, tingkatan);
-  // 'akhir' = sebelum peperiksaan akhir tahun, tolak minggu ulang kaji
-  if (tamat === 'akhir') {
-    if (!exams.length) throw new Error(`Tiada peperiksaan untuk Tingkatan ${tingkatan} dalam takwim`);
-    tamat = exams[exams.length - 1].mula - 1 - ulangKaji;
+  const exams = examBlocks(calendar, form);
+  // 'final' = before the final exam of the year, minus the revision weeks
+  if (end === 'final') {
+    if (!exams.length) throw new Error(`No exam for Form ${form} in the takwim`);
+    end = exams[exams.length - 1].start - 1 - revisionWeeks;
   }
 
-  const rows = kalendar.weeks.map(w => {
-    const x = weekFor(w, tingkatan);
-    return { ...x, kapasiti: x.n <= tamat && x.pdp > 0 ? 1 : 0, sp: [] };
+  const rows = calendar.weeks.map(w => {
+    const x = weekFor(w, form);
+    return { ...x, capacity: x.n <= end && x.pdp > 0 ? 1 : 0, sp: [] };
   });
 
-  const jumlahKapasiti = rows.reduce((a, r) => a + r.kapasiti, 0);
-  const jumlahNilai = rated.reduce((a, s) => a + s.nilai, 0);
-  if (!jumlahKapasiti) throw new Error('Tiada minggu PdP sebelum minggu tamat sukatan');
-  const kapasitiHingga = n => rows.filter(r => r.n <= n).reduce((a, r) => a + r.kapasiti, 0);
+  const totalCapacity = rows.reduce((a, r) => a + r.capacity, 0);
+  const totalValue = rated.reduce((a, s) => a + s.value, 0);
+  if (!totalCapacity) throw new Error('No PdP weeks before the end week');
+  const capacityUntil = n => rows.filter(r => r.n <= n).reduce((a, r) => a + r.capacity, 0);
 
-  // Bahagian: [tajuk sebelum PPT] dan [tajuk selepas PPT], jika PPT jatuh sebelum tamat
-  const tajuk = [...new Set(rated.map(s => s.bidang.code))];
-  const ppt = exams.length > 1 && exams[0].mula <= tamat ? exams[0] : null;
-  const potong = ppt ? Math.ceil(tajuk.length / 2) : tajuk.length;
+  // Parts: [topics before the PPT] and [topics after the PPT], if the PPT falls before the end
+  const topics = [...new Set(rated.map(s => s.topic.code))];
+  const midYear = exams.length > 1 && exams[0].start <= end ? exams[0] : null;
+  const cut = midYear ? Math.ceil(topics.length / 2) : topics.length;
   const parts = [
-    { tajuk: tajuk.slice(0, potong), mula: 0, akhir: ppt ? kapasitiHingga(ppt.mula - 1) : jumlahKapasiti },
-    { tajuk: tajuk.slice(potong), mula: ppt ? kapasitiHingga(ppt.mula - 1) : jumlahKapasiti, akhir: jumlahKapasiti },
-  ].filter(p => p.tajuk.length);
+    { topics: topics.slice(0, cut), start: 0, end: midYear ? capacityUntil(midYear.start - 1) : totalCapacity },
+    { topics: topics.slice(cut), start: midYear ? capacityUntil(midYear.start - 1) : totalCapacity, end: totalCapacity },
+  ].filter(p => p.topics.length);
 
-  // Panjang setiap SP (dalam minggu takwim)
+  // Length of every SP (in takwim weeks)
   for (const p of parts) {
-    const sps = rated.filter(s => p.tajuk.includes(s.bidang.code));
-    const tetap = p.tajuk.filter(t => kesukaran.tajuk.has(t));
-    const kapasitiTetap = tetap.reduce((a, t) => a + kesukaran.tajuk.get(t), 0);
-    const bebas = sps.filter(s => !tetap.includes(s.bidang.code));
-    const baki = p.akhir - p.mula - kapasitiTetap;
-    if (baki < 0 || (baki === 0 && bebas.length)) throw new Error(`Minggu tetap (${kapasitiTetap}) melebihi kapasiti bahagian ${p.tajuk[0]}–${p.tajuk[p.tajuk.length - 1]} (${(p.akhir - p.mula).toFixed(1)})`);
-    const skala = baki / (bebas.reduce((a, s) => a + s.nilai, 0) || 1);
+    const sps = rated.filter(s => p.topics.includes(s.topic.code));
+    const fixed = p.topics.filter(t => difficulty.topics.has(t));
+    const fixedCapacity = fixed.reduce((a, t) => a + difficulty.topics.get(t), 0);
+    const free = sps.filter(s => !fixed.includes(s.topic.code));
+    const rest = p.end - p.start - fixedCapacity;
+    if (rest < 0 || (rest === 0 && free.length)) throw new Error(`Fixed weeks (${fixedCapacity}) exceed the capacity of part ${p.topics[0]}–${p.topics[p.topics.length - 1]} (${(p.end - p.start).toFixed(1)})`);
+    const scale = rest / (free.reduce((a, s) => a + s.value, 0) || 1);
     for (const s of sps) {
-      const t = s.bidang.code;
-      s.panjang = tetap.includes(t)
-        ? kesukaran.tajuk.get(t) * s.nilai / sps.filter(x => x.bidang.code === t).reduce((a, x) => a + x.nilai, 0)
-        : s.nilai * skala;
+      const t = s.topic.code;
+      s.length = fixed.includes(t)
+        ? difficulty.topics.get(t) * s.value / sps.filter(x => x.topic.code === t).reduce((a, x) => a + x.value, 0)
+        : s.value * scale;
     }
   }
 
-  // Kapasiti terkumpul pada awal setiap minggu
+  // Cumulative capacity at the start of every week
   let c = 0;
-  const bounds = rows.map(r => { const b = [c, c + r.kapasiti]; c += r.kapasiti; return b; });
+  const bounds = rows.map(r => { const b = [c, c + r.capacity]; c += r.capacity; return b; });
   let pos = 0;
   for (const s of rated) {
-    const a = pos, b = (pos += s.panjang);
+    const a = pos, b = (pos += s.length);
     const overlaps = bounds.map(([x, y], i) => ({ i, o: Math.min(b, y) - Math.max(a, x) })).filter(o => o.o > 1e-9);
     const best = overlaps.reduce((p, q) => (q.o > p.o ? q : p));
     const chosen = overlaps.filter(o => o.o >= MIN_OVERLAP - 1e-9 || o === best);
-    chosen.forEach((o, k) => rows[o.i].sp.push({ ...s, samb: k > 0 }));
-    s.minggu = chosen.map(o => rows[o.i].n);
+    chosen.forEach((o, k) => rows[o.i].sp.push({ ...s, cont: k > 0 }));
+    s.weeks = chosen.map(o => rows[o.i].n);
   }
 
   return {
-    rows, rated, breaks: breaks(kalendar), tamat, tingkatan, jumlahKapasiti, jumlahNilai,
-    warnings, exams, ppt, parts, tetap: kesukaran.tajuk,
+    rows, rated, breaks: breaks(calendar), end, form, totalCapacity, totalValue,
+    warnings, exams, midYear, parts, fixed: difficulty.topics,
   };
 }
 
-export { MIN_OVERLAP, ULANG_KAJI, plan };
+export { MIN_OVERLAP, REVISION_WEEKS, plan };

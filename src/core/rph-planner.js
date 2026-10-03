@@ -1,88 +1,88 @@
-// Perancang RPH: isi SP bagi baris rekod baharu (baru: true) dan kira kedudukan kelas.
-// Masa setiap SP (minit) daripada masaSp (src/core/masa-sp.js): minit sebenar kelas itu dalam
-// minggu RPT tempat SP itu diletakkan. Tanpa RPT (masaSp null): satu SP satu PdP.
-// SP diajar ikut tertib DSKP: SP ringan berkongsi satu PdP, SP berat merentas beberapa PdP
-// (ditulis biasa pada setiap PdP — tiada tanda "bersambung").
-//   - PdP diajar: minit PdP diberi kepada SP dalam sel ikut tertib; semua kecuali yang terakhir
-//     selesai; yang terakhir mengambil baki dan selesai jika tinggal < MIN_SISA minit.
-//   - ditunda / batal / peperiksaan / tutorial: tiada masa digunakan.
-//   - tutorial baharu: ulang SP PdP diajar yang terakhir.
-//   - DSKP habis: ulang kaji ikut tajuk, satu tajuk satu PdP (kod tajuk, contoh 1.0).
-//   - Tanpa RPT: satu SP satu PdP; semua SP dalam baris diajar dikira selesai.
-const MIN_SISA = 15;
+// RPH planner: fill in the SP of new rekod rows (isNew: true) and work out where the class stands.
+// Time of each SP (minutes) comes from spTime (src/core/sp-time.js): the class's real minutes in the
+// RPT weeks where the SP sits. Without an RPT (spTime null): one SP per PdP.
+// SPs are taught in DSKP order: light SPs share one PdP, heavy SPs span several PdP
+// (written normally on every PdP — there is no "continued" mark).
+//   - a taught PdP: its minutes go to the SPs in the cell in order; all but the last are
+//     finished; the last takes the remainder and is finished if less than MIN_REMAINDER minutes are left.
+//   - ditunda / batal / peperiksaan / tutorial: no time is used.
+//   - a new tutorial: repeats the SPs of the last taught PdP.
+//   - DSKP finished: revision by topic, one topic per PdP (topic code, e.g. 1.0).
+//   - Without an RPT: one SP per PdP; every SP in a taught row counts as finished.
+const MIN_REMAINDER = 15;
 
-const kodTajuk = k => /\.0$/.test(k);
+const isTopicCode = k => /\.0$/.test(k);
 
-function planRows({ rows, sp, masaSp = null, mula = '', fail = 'rekod' }) {
+function planRows({ rows, sp, spTime = null, start = '', file = 'rekod' }) {
   const index = new Map(sp.map((s, i) => [s.code, i]));
-  const tajuk = [...new Set(sp.map(s => s.bidang.code))];
+  const topics = [...new Set(sp.map(s => s.topic.code))];
   const warnings = [];
-  let idx = mula ? index.get(mula) : 0;
-  if (idx == null) throw new Error(`${fail}: SP Mula ${mula} tiada dalam DSKP`);
-  let sisa = null;       // minit berbaki bagi sp[idx]; null = belum bermula
-  let ulang = 0;         // bilangan PdP ulang kaji setakat ini
-  let akhirDiajar = [];  // SP PdP diajar yang terakhir (untuk tutorial)
+  let idx = start ? index.get(start) : 0;
+  if (idx == null) throw new Error(`${file}: SP Mula ${start} is not in the DSKP`);
+  let remaining = null;   // minutes left for sp[idx]; null = not started
+  let revisions = 0;      // revision PdP so far
+  let lastTaught = [];    // SPs of the last taught PdP (for tutorials)
 
-  const perlu = (i, r) => {
-    if (!masaSp) return r.minit;
-    const m = masaSp.get(sp[i].code);
-    if (m == null) { warnings.push(`SP ${sp[i].code} tiada dalam Peruntukan SP; guna ${r.minit} minit`); return r.minit; }
+  const needed = (i, r) => {
+    if (!spTime) return r.minutes;
+    const m = spTime.get(sp[i].code);
+    if (m == null) { warnings.push(`SP ${sp[i].code} is not in Peruntukan SP; using ${r.minutes} min`); return r.minutes; }
     return m;
   };
-  const baki = (i, r) => (i === idx && sisa != null ? sisa : perlu(i, r));
+  const left = (i, r) => (i === idx && remaining != null ? remaining : needed(i, r));
 
-  // SP bagi PdP baharu, bermula dari kedudukan semasa (tidak mengubah keadaan)
-  function jana(r) {
-    if (idx >= sp.length) return [tajuk[ulang % tajuk.length]];
+  // SPs for a new PdP, starting from the current position (does not change state)
+  function generate(r) {
+    if (idx >= sp.length) return [topics[revisions % topics.length]];
     const out = [];
-    let ada = r.minit, i = idx, s = baki(idx, r);
+    let have = r.minutes, i = idx, s = left(idx, r);
     for (;;) {
       out.push(sp[i].code);
-      if (s - ada >= MIN_SISA) break; // SP ini berterusan ke PdP seterusnya
-      ada -= s;
+      if (s - have >= MIN_REMAINDER) break; // this SP continues into the next PdP
+      have -= s;
       i++;
-      if (i >= sp.length || ada < MIN_SISA) break;
-      s = perlu(i, r);
+      if (i >= sp.length || have < MIN_REMAINDER) break;
+      s = needed(i, r);
     }
     return out;
   }
 
-  // Kemas kini keadaan daripada satu PdP diajar (baharu atau sedia ada / diubah guru)
-  function guna(r) {
-    const kod = r.sp;
-    if (!kod.length) return;
-    if (kodTajuk(kod[0])) {
-      for (const k of kod) if (!tajuk.includes(k)) throw new Error(`${fail}:${r.line}: tajuk ${k} tiada dalam DSKP`);
-      ulang += kod.length;
-      akhirDiajar = kod;
+  // Update the state from one taught PdP (new, or existing / edited by the teacher)
+  function use(r) {
+    const codes = r.sp;
+    if (!codes.length) return;
+    if (isTopicCode(codes[0])) {
+      for (const k of codes) if (!topics.includes(k)) throw new Error(`${file}:${r.line}: topic ${k} is not in the DSKP`);
+      revisions += codes.length;
+      lastTaught = codes;
       return;
     }
-    const is = kod.map(k => {
+    const is = codes.map(k => {
       const i = index.get(k);
-      if (i == null) throw new Error(`${fail}:${r.line}: SP ${k} tiada dalam DSKP`);
+      if (i == null) throw new Error(`${file}:${r.line}: SP ${k} is not in the DSKP`);
       return i;
     });
     const last = is[is.length - 1];
-    akhirDiajar = kod;
-    // Tanpa RPT tiada SP yang merentas PdP: semua SP dalam baris selesai
-    if (!masaSp) { idx = last + 1; sisa = null; return; }
-    let ada = r.minit;
-    for (const i of is.slice(0, -1)) ada -= baki(i, r);
-    const s = baki(last, r) - Math.max(0, ada);
-    if (s < MIN_SISA) { idx = last + 1; sisa = null; } else { idx = last; sisa = s; }
+    lastTaught = codes;
+    // Without an RPT no SP spans PdP: every SP in the row is finished
+    if (!spTime) { idx = last + 1; remaining = null; return; }
+    let have = r.minutes;
+    for (const i of is.slice(0, -1)) have -= left(i, r);
+    const s = left(last, r) - Math.max(0, have);
+    if (s < MIN_REMAINDER) { idx = last + 1; remaining = null; } else { idx = last; remaining = s; }
   }
 
   const out = rows.map(r0 => {
     const r = { ...r0 };
-    if (r.baru) {
-      if (r.jenis === 'pdp') r.sp = sp.length ? jana(r) : [];
-      else if (r.jenis === 'tutorial') r.sp = [...akhirDiajar];
+    if (r.isNew) {
+      if (r.kind === 'pdp') r.sp = sp.length ? generate(r) : [];
+      else if (r.kind === 'tutorial') r.sp = [...lastTaught];
       else r.sp = [];
     }
-    if (r.jenis === 'pdp' && r.status === 'diajar' && sp.length) guna(r);
+    if (r.kind === 'pdp' && r.status === 'diajar' && sp.length) use(r);
     return r;
   });
-  return { rows: out, warnings: [...new Set(warnings)], akhir: { idx, sisa, ulang, selesai: idx >= sp.length } };
+  return { rows: out, warnings: [...new Set(warnings)], end: { idx, remaining, revisions, finished: idx >= sp.length } };
 }
 
-export { MIN_SISA, planRows };
+export { MIN_REMAINDER, planRows };

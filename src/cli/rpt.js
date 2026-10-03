@@ -1,14 +1,14 @@
-// Jana RPT (Rancangan Pengajaran Tahunan) satu subjek daripada DSKP.md, Takwim.md
-// dan fail kesukaran SP. SP diagihkan ikut kesukaran ke atas minggu PdP sebenar
-// (tolak cuti dan peperiksaan tingkatan itu) sehingga minggu tamat sukatan.
+// Generate the RPT (yearly teaching plan) of one subject from DSKP.md, Takwim.md
+// and the SP difficulty file. SPs are spread by difficulty over the real PdP weeks
+// (minus holidays and that form's exams) up to the end week of the syllabus.
 //
 //   node src/cli/rpt.js --dskp sample/dskp-mat-t4.md --takwim sample/takwim-smly-2026.md \
-//     --kesukaran sample/kesukaran-mat-t4.md --tingkatan 4 --out output/rpt-mat-t4-2026
+//     --difficulty sample/kesukaran-mat-t4.md --form 4 --out output/rpt-mat-t4-2026
 //
-// Lalai: sukatan tamat sebelum peperiksaan akhir tingkatan itu (PAT / UASA; Percubaan SPM
-// bagi Tingkatan 5), tolak minggu ulang kaji.
-// --ulang-kaji <n>    minggu ulang kaji sebelum peperiksaan akhir (lalai 2, semua tingkatan)
-// --tamat <minggu>    tetapkan minggu terakhir sukatan secara manual
+// Default: the syllabus ends before that form's final exam (PAT / UASA; Percubaan SPM
+// for Form 5), minus the revision weeks.
+// --revision-weeks <n>  revision weeks before the final exam (default 2, all forms)
+// --end <week|final>    set the last week of the syllabus by hand
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,23 +17,23 @@ import * as C from '../core/index.js';
 function main(argv) {
   const a = {};
   for (let i = 0; i < argv.length; i += 2) a[argv[i].replace(/^--/, '')] = argv[i + 1];
-  for (const k of ['dskp', 'takwim', 'kesukaran', 'tingkatan', 'out'])
-    if (!a[k]) throw new Error(`Perlu --${k}`);
+  for (const k of ['dskp', 'takwim', 'difficulty', 'form', 'out'])
+    if (!a[k]) throw new Error(`--${k} is required`);
   const read = f => fs.readFileSync(f, 'utf8');
   const dskpMd = read(a.dskp), takwimMd = read(a.takwim);
-  const subjek = a.subjek || (dskpMd.match(/^# DSKP (.+?) Tingkatan/m) || [])[1] || 'Subjek';
-  const tahun = (takwimMd.match(/\| (\d{4})-\d\d-\d\d/) || [])[1];
+  const subject = a.subject || (dskpMd.match(/^# DSKP (.+?) Tingkatan/m) || [])[1] || 'Subjek';
+  const year = (takwimMd.match(/\| (\d{4})-\d\d-\d\d/) || [])[1];
   const p = C.plan({
-    sp: C.parseDskp(dskpMd), kesukaran: C.parseKesukaran(read(a.kesukaran)),
-    kalendar: C.buildCalendar(C.parseTakwim(takwimMd)),
-    tingkatan: Number(a.tingkatan), tamat: a.tamat === 'akhir' ? 'akhir' : a.tamat ? Number(a.tamat) : undefined,
-    ulangKaji: a['ulang-kaji'] != null ? Number(a['ulang-kaji']) : undefined,
+    sp: C.parseDskp(dskpMd), difficulty: C.parseDifficulty(read(a.difficulty)),
+    calendar: C.buildCalendar(C.parseTakwim(takwimMd)),
+    form: Number(a.form), end: a.end === 'final' ? 'final' : a.end ? Number(a.end) : undefined,
+    revisionWeeks: a['revision-weeks'] != null ? Number(a['revision-weeks']) : undefined,
   });
-  const meta = { subjek, tahun, dskp: a.dskp, takwim: a.takwim, kesukaran: a.kesukaran };
+  const meta = { subject, year, dskp: a.dskp, takwim: a.takwim, difficulty: a.difficulty };
   fs.mkdirSync(path.dirname(a.out), { recursive: true });
   fs.writeFileSync(a.out + '.md', C.renderMd(p, meta));
   fs.writeFileSync(a.out + '.html', C.renderHtml(p, meta));
-  p.warnings.forEach(w => console.warn('Amaran:', w));
+  p.warnings.forEach(w => console.warn('Warning:', w));
   console.log(`${a.out}.md, ${a.out}.html`);
 }
 

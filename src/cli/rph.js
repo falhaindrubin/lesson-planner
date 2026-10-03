@@ -1,18 +1,18 @@
-// Jana RPH seminggu bagi semua kelas dalam fail kelas dan kemas kini rekod setiap kelas × subjek.
+// Weekly RPH for every class in the class file; updates each class × subject rekod.
 //
-//   node src/cli/rph.js --kelas sample/kelas-2026.md --minggu 35 [--hari-ini 2026-10-03]
+//   node src/cli/rph.js --classes sample/kelas-2026.md --week 35 [--today 2026-10-03]
 //
-// Fail kelas menamakan takwim, jadual, acara, folder rekod dan folder output (relatif kepada fail kelas).
-// Baris rekod sebelum / pada hari ini tidak diubah. Baris selepas hari ini dibina semula
-// kecuali jika guru mengubah Status, Kehadiran atau Catatan.
-// Output: <Output>/<tahun>-M<n>-<SUBJEK>.html bagi setiap subjek dan minggu yang dirancang,
-// kemudian amaran (stderr) dan satu baris kedudukan bagi setiap kelas.
+// The class file names the takwim, timetables, events, rekod folder and output folder (relative to it).
+// Rekod rows up to today are never changed; later rows are rebuilt unless the teacher changed
+// Status, Attendance or Catatan.
+// Output: <Output>/<year>-M<n>-<SUBJECT>.html per subject and planned week,
+// then warnings (stderr) and one position line per class.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import * as C from '../core/index.js';
 
-function hariIniTempatan() {
+function localToday() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
 }
@@ -20,79 +20,79 @@ function hariIniTempatan() {
 function main(argv) {
   const a = {};
   for (let i = 0; i < argv.length; i += 2) a[argv[i].replace(/^--/, '')] = argv[i + 1];
-  if (!a.kelas || !a.minggu) throw new Error('Guna: node src/cli/rph.js --kelas <fail kelas> --minggu <n> [--hari-ini yyyy-mm-dd]');
-  const minggu = Number(String(a.minggu).replace(/^M/i, ''));
-  const hariIni = a['hari-ini'] || hariIniTempatan();
-  if (!/^\d{4}-\d\d-\d\d$/.test(hariIni)) throw new Error(`--hari-ini "${hariIni}" bukan yyyy-mm-dd`);
+  if (!a.classes || !a.week) throw new Error('Usage: node src/cli/rph.js --classes <class file> --week <n> [--today yyyy-mm-dd]');
+  const week = Number(String(a.week).replace(/^M/i, ''));
+  const today = a.today || localToday();
+  if (!/^\d{4}-\d\d-\d\d$/.test(today)) throw new Error(`--today "${today}" is not yyyy-mm-dd`);
 
-  const failKelas = path.resolve(a.kelas);
-  const dir = path.dirname(failKelas);
-  const nama = f => path.relative(process.cwd(), f) || f;
-  const baca = f => fs.readFileSync(path.resolve(dir, f), 'utf8');
-  const K = C.parseKelas(fs.readFileSync(failKelas, 'utf8'), nama(failKelas));
-  const kalendar = C.buildCalendar(C.parseTakwim(baca(K.takwim)));
-  const versions = K.jadual.map(f => C.parseJadual(baca(f), f));
-  const acara = C.parseAcara(baca(K.acara), K.acara);
+  const classFile = path.resolve(a.classes);
+  const dir = path.dirname(classFile);
+  const shown = f => path.relative(process.cwd(), f) || f;
+  const read = f => fs.readFileSync(path.resolve(dir, f), 'utf8');
+  const K = C.parseClasses(fs.readFileSync(classFile, 'utf8'), shown(classFile));
+  const calendar = C.buildCalendar(C.parseTakwim(read(K.takwim)));
+  const versions = K.timetables.map(f => C.parseTimetable(read(f), f));
+  const events = C.parseEvents(read(K.events), K.events);
   const rekodDir = path.resolve(dir, K.rekod), outDir = path.resolve(dir, K.output);
 
   const cache = new Map();
-  const sekali = (f, fn) => {
-    if (!cache.has(f)) cache.set(f, fn(baca(f), f));
+  const once = (f, fn) => {
+    if (!cache.has(f)) cache.set(f, fn(read(f), f));
     return cache.get(f);
   };
 
-  // Semua fail ditulis selepas setiap kelas berjaya: ralat pada satu kelas tidak meninggalkan fail separuh siap
-  const tulis = [];
-  // Fail HTML dikongsi oleh semua kelas satu subjek: kumpul hasil semua kelas dahulu, kemudian tulis
-  // setiap (subjek, minggu) yang dirancang oleh mana-mana kelas dengan baris semua kelas subjek itu
-  const hasil = [];
-  const kunci = new Set(); // 'SUBJEK|n'
-  const amaran = [], ringkasan = [];
-  for (const k of K.kelas) {
-    const sp = k.dskp ? sekali(k.dskp, C.parseDskp) : [];
-    const rpt = k.rpt ? sekali(k.rpt, C.parseRpt) : null;
-    const aktiviti = sekali(k.aktiviti, C.parseAktiviti);
-    // Masa setiap SP: minit sebenar kelas ini dalam minggu RPT tempat SP itu diletakkan
-    const minitMinggu = C.minitPdpMinggu({ kalendar, versions, kelas: k, semuaKelas: K.kelas, acara });
-    const masaSp = rpt ? C.masaSp({ rpt, sp, minitMinggu }) : null;
-    if (minitMinggu.lalai) amaran.push(`${k.kelas} ${k.subjek}: tiada jadual sebelum ${minitMinggu.awal}; masa SP bagi minggu lebih awal dikira dengan jadual itu`);
-    const failRekod = path.join(rekodDir, `rekod-${k.kelas}-${k.subjek}.md`);
-    const rows = fs.existsSync(failRekod) ? C.parseRekod(fs.readFileSync(failRekod, 'utf8'), nama(failRekod)) : [];
+  // Every file is written after all classes succeeded: an error in one class leaves no half-written files
+  const writes = [];
+  // The HTML file is shared by all classes of a subject: collect every class first, then write each
+  // (subject, week) planned by any class with the rows of all classes of that subject
+  const results = [];
+  const keys = new Set(); // 'SUBJECT|n'
+  const warnings = [], summaries = [];
+  for (const cls of K.classes) {
+    const sp = cls.dskp ? once(cls.dskp, C.parseDskp) : [];
+    const rpt = cls.rpt ? once(cls.rpt, C.parseRpt) : null;
+    const activities = once(cls.activities, C.parseActivities);
+    // Time of each SP: this class's real minutes in the RPT weeks where the SP sits
+    const weeklyPdp = C.weeklyPdpMinutes({ calendar, versions, cls, classes: K.classes, events });
+    const spTime = rpt ? C.spTime({ rpt, sp, weeklyPdp }) : null;
+    if (weeklyPdp.usedFallback) warnings.push(`${cls.classCode} ${cls.subject}: no timetable before ${weeklyPdp.earliest}; SP time for earlier weeks uses that timetable`);
+    const rekodFile = path.join(rekodDir, `rekod-${cls.classCode}-${cls.subject}.md`);
+    const rows = fs.existsSync(rekodFile) ? C.parseRekod(fs.readFileSync(rekodFile, 'utf8'), shown(rekodFile)) : [];
     const s = C.syncRekod({
-      rows, kelas: k, semuaKelas: K.kelas, sp, masaSp,
-      kalendar, versions, acara, minggu, hariIni, fail: nama(failRekod),
+      rows, cls, classes: K.classes, sp, spTime,
+      calendar, versions, events, week, today, file: shown(rekodFile),
     });
-    tulis.push([failRekod, C.renderRekod(k, K.tahun, s.rows)]);
-    amaran.push(...s.warnings);
-    hasil.push({ kelas: k, sp, aktiviti, rows: s.rows });
-    for (const n of new Set([...s.minggu, minggu])) kunci.add(`${k.subjek}|${n}`);
-    const r = C.ringkasanKelas({ kelas: k, rows: s.rows, sp, rpt, masaSp, minitMinggu, kalendar, versions, acara, semuaKelas: K.kelas, minggu });
-    ringkasan.push(r.teks);
-    amaran.push(...r.amaran);
+    writes.push([rekodFile, C.renderRekod(cls, K.year, s.rows)]);
+    warnings.push(...s.warnings);
+    results.push({ cls, sp, activities, rows: s.rows });
+    for (const n of new Set([...s.weeks, week])) keys.add(`${cls.subject}|${n}`);
+    const r = C.classSummary({ cls, rows: s.rows, sp, rpt, spTime, weeklyPdp, calendar, versions, events, classes: K.classes, week });
+    summaries.push(r.text);
+    warnings.push(...r.warnings);
   }
 
-  for (const key of [...kunci].sort((x, y) => x.localeCompare(y))) {
-    const [subjek, n] = key.split('|');
-    const pages = hasil.filter(h => h.kelas.subjek === subjek)
-      .flatMap(h => h.rows.filter(r => r.minggu === Number(n)).map(row => ({ kelas: h.kelas, row, sp: h.sp, aktiviti: h.aktiviti })));
+  for (const key of [...keys].sort((x, y) => x.localeCompare(y))) {
+    const [subject, n] = key.split('|');
+    const pages = results.filter(h => h.cls.subject === subject)
+      .flatMap(h => h.rows.filter(r => r.week === Number(n)).map(row => ({ cls: h.cls, row, sp: h.sp, activities: h.activities })));
     if (!pages.some(p => p.row.status !== 'batal')) continue;
-    pages.sort((x, y) => C.ikutMasa(x.row, y.row));
-    const f = path.join(outDir, `${K.tahun}-M${n}-${subjek}.html`);
-    tulis.push([f, C.renderRph({ tahun: K.tahun, minggu: Number(n), guru: K.guru, pages })]);
+    pages.sort((x, y) => C.byTime(x.row, y.row));
+    const f = path.join(outDir, `${K.year}-M${n}-${subject}.html`);
+    writes.push([f, C.renderRph({ year: K.year, week: Number(n), teacher: K.teacher, pages })]);
   }
   fs.mkdirSync(rekodDir, { recursive: true });
   fs.mkdirSync(outDir, { recursive: true });
-  for (const [f, isi] of tulis) fs.writeFileSync(f, isi);
-  tulis.filter(([f]) => f.startsWith(outDir)).forEach(([f]) => console.log(nama(f)));
-  const tanpa = C.slotTanpaKelas(versions, K.kelas);
-  if (tanpa.length) console.log(`Tidak dirancang (tiada dalam fail kelas): ${tanpa.join(', ')}`);
-  amaran.forEach(w => console.warn('Amaran:', w));
-  ringkasan.forEach(l => console.log(l));
+  for (const [f, text] of writes) fs.writeFileSync(f, text);
+  writes.filter(([f]) => f.startsWith(outDir)).forEach(([f]) => console.log(shown(f)));
+  const unplanned = C.unplannedSlots(versions, K.classes);
+  if (unplanned.length) console.log(`Not planned (not in the class file): ${unplanned.join(', ')}`);
+  warnings.forEach(w => console.warn('Warning:', w));
+  summaries.forEach(l => console.log(l));
 }
 
 try {
   main(process.argv.slice(2));
 } catch (e) {
-  console.error('Ralat:', e.message);
+  console.error('Error:', e.message);
   process.exit(1);
 }

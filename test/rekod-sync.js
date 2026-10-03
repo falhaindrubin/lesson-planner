@@ -1,4 +1,4 @@
-// node test/rekod-sync.js — selaras rekod 1S ASK dan 4S M3 dengan takwim, jadual dan acara 2026 sebenar
+// node test/rekod-sync.js — sync the rekod of 1S ASK and 4S M3 with the real 2026 takwim, timetable and events
 import fs from 'node:fs';
 import assert from 'node:assert';
 import * as R from '../src/core/index.js';
@@ -7,122 +7,122 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
-const kalendar = R.buildCalendar(R.parseTakwim(read('takwim-smly-2026.md')));
-const versions = [R.parseJadual(read('jwg-20261002.md'))];
-const semuaKelas = R.parseKelas(fs.readFileSync(__dirname + '/data/kelas-semua.md', 'utf8')).kelas.map(k => ({ ...k, bilMurid: 30 }));
-const acara = R.parseAcara(read('acara-2026.md'));
+const calendar = R.buildCalendar(R.parseTakwim(read('takwim-smly-2026.md')));
+const versions = [R.parseTimetable(read('jwg-20261002.md'))];
+const allClasses = R.parseClasses(fs.readFileSync(__dirname + '/data/kelas-semua.md', 'utf8')).classes.map(c => ({ ...c, pupils: 30 }));
+const events = R.parseEvents(read('acara-2026.md'));
 const ask = R.parseDskp(read('dskp-ask-t1.md'));
-const kelas = { ...semuaKelas.find(k => k.kelas === '1S'), bilMurid: 35, mula: '4.2.5' };
+const cls = { ...allClasses.find(c => c.classCode === '1S'), pupils: 35, start: '4.2.5' };
 
-// 1S ASK, tiada RPT: satu SP satu PdP (Isnin 8–9, Rabu 11–12)
-const sync = (rows, minggu, hariIni, o = {}) => R.syncRekod({
-  rows, kelas, semuaKelas, sp: ask, masaSp: null,
-  kalendar, versions, acara, minggu, hariIni, fail: 'rekod-1S-ASK.md', ...o,
+// 1S ASK, no RPT: one SP per PdP (Monday 8–9, Wednesday 11–12)
+const sync = (rows, week, today, o = {}) => R.syncRekod({
+  rows, cls, classes: allClasses, sp: ask, spTime: null,
+  calendar, versions, events, week, today, file: 'rekod-1S-ASK.md', ...o,
 });
-const lihat = rows => rows.map(r => `M${r.minggu} ${r.tarikh} ${r.jenis} ${r.sp.join(',')} ${r.status} ${r.kehadiran}${r.acara ? ' ' + r.acara : ''}${r.catatan ? ' (' + r.catatan + ')' : ''}`);
-const viaFail = rows => R.parseRekod(R.renderRekod(kelas, 2026, rows), 'rekod-1S-ASK.md'); // seperti CLI: tulis, baca semula
+const show = rows => rows.map(r => `M${r.week} ${r.date} ${r.kind} ${r.sp.join(',')} ${r.status} ${r.attendance}${r.event ? ' ' + r.event : ''}${r.note ? ' (' + r.note + ')' : ''}`);
+const viaFile = rows => R.parseRekod(R.renderRekod(cls, 2026, rows), 'rekod-1S-ASK.md'); // like the CLI: write, read back
 
-// Rekod kosong: rancang minggu diminta sahaja
+// Empty rekod: plan only the requested week
 const s1 = sync([], 35, '2026-10-03');
-assert.deepStrictEqual(lihat(s1.rows), [
+assert.deepStrictEqual(show(s1.rows), [
   'M35 2026-10-05 pdp 4.2.5 diajar 35',
   'M35 2026-10-07 pdp 4.2.6 diajar 35',
 ]);
-assert.deepStrictEqual(s1.minggu, [35]);
+assert.deepStrictEqual(s1.weeks, [35]);
 assert.deepStrictEqual(s1.warnings, []);
 
-// Dijalankan semula tanpa perubahan: rekod sama
-const r1 = viaFail(s1.rows);
+// Run again without changes: same rekod
+const r1 = viaFile(s1.rows);
 const s1b = sync(r1, 35, '2026-10-03');
-assert.strictEqual(R.renderRekod(kelas, 2026, s1b.rows), R.renderRekod(kelas, 2026, s1.rows));
+assert.strictEqual(R.renderRekod(cls, 2026, s1b.rows), R.renderRekod(cls, 2026, s1.rows));
 
-// Isnin ditunda (ditanda selepas mengajar); minggu 36 dirancang pada 5 Okt petang.
-// Rabu 7 Okt (akan datang, belum diubah) dibina semula: 4.2.5 diajar dahulu.
-r1[0].status = 'ditunda'; r1[0].catatan = 'Mesyuarat';
+// Monday postponed (marked after teaching); week 36 planned on the evening of 5 Oct.
+// Wednesday 7 Oct (future, not edited) is rebuilt: 4.2.5 is taught first.
+r1[0].status = 'ditunda'; r1[0].note = 'Mesyuarat';
 const s2 = sync(r1, 36, '2026-10-05');
-assert.deepStrictEqual(lihat(s2.rows), [
+assert.deepStrictEqual(show(s2.rows), [
   'M35 2026-10-05 pdp 4.2.5 ditunda 35 (Mesyuarat)',
   'M35 2026-10-07 pdp 4.2.5 diajar 35',
   'M36 2026-10-12 pdp 4.2.6 diajar 35 X-Break',
   'M36 2026-10-14 pdp 4.2.7 diajar 35',
 ]);
-assert.deepStrictEqual(s2.minggu, [35, 36]);
+assert.deepStrictEqual(s2.weeks, [35, 36]);
 
-// Baris akan datang yang diubah guru (Catatan diisi) dikekalkan dengan SP gurunya
-const r2 = viaFail(s2.rows);
-r2[2].sp = ['4.2.6', '4.2.7']; r2[2].catatan = 'gabung';
+// A future row edited by the teacher (Catatan filled) is kept with the teacher's SP
+const r2 = viaFile(s2.rows);
+r2[2].sp = ['4.2.6', '4.2.7']; r2[2].note = 'gabung';
 const s3 = sync(r2, 36, '2026-10-05');
-assert.deepStrictEqual(lihat(s3.rows).slice(2), [
+assert.deepStrictEqual(show(s3.rows).slice(2), [
   'M36 2026-10-12 pdp 4.2.6,4.2.7 diajar 35 X-Break (gabung)',
   'M36 2026-10-14 pdp 4.2.8 diajar 35',
 ]);
-// SP sahaja diubah tanpa Catatan pada baris akan datang: dibina semula (tidak dapat dikesan)
-const r2b = viaFail(s2.rows);
+// Only the SP of a future row changed, no Catatan: rebuilt (cannot be detected)
+const r2b = viaFile(s2.rows);
 r2b[3].sp = ['1.1.1'];
 assert.deepStrictEqual(sync(r2b, 36, '2026-10-05').rows[3].sp, ['4.2.7']);
 
-// Minggu yang terlangkau dirancang juga (diajar, kehadiran penuh) dengan amaran
-const s4 = sync(viaFail(s1.rows), 37, '2026-10-17');
-assert.deepStrictEqual(s4.rows.map(r => r.minggu), [35, 35, 36, 36, 37, 37]);
-assert.deepStrictEqual(s4.warnings, ['1S ASK: M36 tiada dalam rekod; dirancang juga']);
-assert.deepStrictEqual(sync(viaFail(s1.rows), 38, '2026-10-17').warnings, ['1S ASK: M36–M37 tiada dalam rekod; dirancang juga']);
-// Minggu cuti penuh (M6) tanpa PdP bukan minggu terlangkau
-const m5 = sync([], 5, '2026-02-07', { kelas: { ...kelas, mula: '1.1.1' }, versions: [{ ...versions[0], berkuatKuasa: '2026-01-01' }] });
-assert.deepStrictEqual(sync(viaFail(m5.rows), 7, '2026-02-21', { kelas: { ...kelas, mula: '1.1.1' }, versions: [{ ...versions[0], berkuatKuasa: '2026-01-01' }] }).warnings, []);
-// M38: UASA -> peperiksaan, tiada SP, Status dan Kehadiran kosong
-const s5 = sync(viaFail(s1.rows), 38, '2026-10-17');
-assert.deepStrictEqual(lihat(s5.rows.filter(r => r.minggu === 38)), [
+// Skipped weeks are planned too (taught, full attendance) with a warning
+const s4 = sync(viaFile(s1.rows), 37, '2026-10-17');
+assert.deepStrictEqual(s4.rows.map(r => r.week), [35, 35, 36, 36, 37, 37]);
+assert.deepStrictEqual(s4.warnings, ['1S ASK: M36 missing from the rekod; planned as well']);
+assert.deepStrictEqual(sync(viaFile(s1.rows), 38, '2026-10-17').warnings, ['1S ASK: M36–M37 missing from the rekod; planned as well']);
+// A full holiday week (M6) without PdP is not a skipped week
+const m5 = sync([], 5, '2026-02-07', { cls: { ...cls, start: '1.1.1' }, versions: [{ ...versions[0], effectiveFrom: '2026-01-01' }] });
+assert.deepStrictEqual(sync(viaFile(m5.rows), 7, '2026-02-21', { cls: { ...cls, start: '1.1.1' }, versions: [{ ...versions[0], effectiveFrom: '2026-01-01' }] }).warnings, []);
+// M38: UASA -> exam, no SP, blank Status and Kehadiran
+const s5 = sync(viaFile(s1.rows), 38, '2026-10-17');
+assert.deepStrictEqual(show(s5.rows.filter(r => r.week === 38)), [
   'M38 2026-10-26 peperiksaan   null PAT TING.4/UASA',
   'M38 2026-10-28 peperiksaan   null PAT TING.4/UASA',
 ]);
 
-// PdP lepas yang dibuang guru tidak ditambah semula; baris tidak tersusun disusun semula
-const rr = viaFail(s1.rows);
-const s6 = sync([rr[1]], 35, '2026-10-06'); // Isnin 5 Okt dibuang; Rabu masih akan datang
-assert.deepStrictEqual(s6.rows.map(r => r.tarikh), ['2026-10-07']);
+// A past PdP removed by the teacher is not added again; rows out of order are sorted
+const rr = viaFile(s1.rows);
+const s6 = sync([rr[1]], 35, '2026-10-06'); // Monday 5 Oct removed; Wednesday still ahead
+assert.deepStrictEqual(s6.rows.map(r => r.date), ['2026-10-07']);
 const s7 = sync([rr[1], rr[0]], 35, '2026-10-03');
-assert.deepStrictEqual(s7.rows.map(r => r.tarikh), ['2026-10-05', '2026-10-07']);
+assert.deepStrictEqual(s7.rows.map(r => r.date), ['2026-10-05', '2026-10-07']);
 
-// Baris akan datang yang diubah tetapi slotnya tiada lagi dalam jadual: dikekalkan + amaran
-const ganti = { ...rr[1], tarikh: '2026-10-06', hari: 'Selasa', waktu: '3–4', masa: '8:00–9:00', catatan: 'kelas ganti', line: 11 };
-const s8 = sync([rr[0], ganti], 35, '2026-10-03');
-assert.ok(s8.rows.some(r => r.catatan === 'kelas ganti'));
-assert.ok(s8.warnings.includes('rekod-1S-ASK.md:11: 2026-10-06 waktu 3–4 tiada dalam jadual; baris dikekalkan, sila semak'));
+// An edited future row whose slot is no longer in the timetable: kept + warning
+const swap = { ...rr[1], date: '2026-10-06', dayName: 'Selasa', periods: '3–4', time: '8:00–9:00', note: 'kelas ganti', line: 11 };
+const s8 = sync([rr[0], swap], 35, '2026-10-03');
+assert.ok(s8.rows.some(r => r.note === 'kelas ganti'));
+assert.ok(s8.warnings.includes('rekod-1S-ASK.md:11: 2026-10-06 period 3–4 is not in the timetable; row kept, please check'));
 
-// Tiada DSKP (PK): baris tanpa SP + amaran
-const pk = { ...semuaKelas.find(k => k.kelas === '2D' && k.subjek === 'PK'), bilMurid: 30 };
-const s9 = sync([], 35, '2026-10-03', { kelas: pk, sp: [] });
-assert.deepStrictEqual(lihat(s9.rows), ['M35 2026-10-06 pdp  diajar 30']);
-assert.deepStrictEqual(s9.warnings, ['2D PK: tiada DSKP; SP dibiarkan kosong']);
+// No DSKP (PK): rows without SP + warning
+const pk = { ...allClasses.find(c => c.classCode === '2D' && c.subject === 'PK'), pupils: 30 };
+const s9 = sync([], 35, '2026-10-03', { cls: pk, sp: [] });
+assert.deepStrictEqual(show(s9.rows), ['M35 2026-10-06 pdp  diajar 30']);
+assert.deepStrictEqual(s9.warnings, ['2D PK: no DSKP; SP left blank']);
 
-// Ralat: Bil. murid kosong; rekod kosong tanpa Mula
-assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, bilMurid: null } }), /1S ASK: Bil\. murid kosong dalam fail kelas/);
-assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, mula: '' } }), /1S ASK: rekod kosong dan Mula tiada dalam fail kelas/);
+// Errors: Bil. murid empty; empty rekod without Mula
+assert.throws(() => sync([], 35, '2026-10-03', { cls: { ...cls, pupils: null } }), /1S ASK: Bil\. murid is empty in the class file/);
+assert.throws(() => sync([], 35, '2026-10-03', { cls: { ...cls, start: '' } }), /1S ASK: rekod is empty and Mula is missing in the class file/);
 
-// Bil. murid berubah selepas dijana: baris akan datang yang belum disentuh tetap dibina semula
-// (Kehadiran tidak mengunci baris akan datang), jadi ditunda masih menganjak PdP seterusnya
-const lama = viaFail(sync([], 35, '2026-10-03').rows);
-lama[0].status = 'ditunda'; lama[0].catatan = 'Mesyuarat';
-const baharu = sync(lama, 35, '2026-10-05', { kelas: { ...kelas, bilMurid: 36 } });
-assert.deepStrictEqual(lihat(baharu.rows), [
+// Bil. murid changed after generating: untouched future rows are still rebuilt
+// (Kehadiran does not lock future rows), so a postponement still shifts the next PdP
+const old = viaFile(sync([], 35, '2026-10-03').rows);
+old[0].status = 'ditunda'; old[0].note = 'Mesyuarat';
+const fresh = sync(old, 35, '2026-10-05', { cls: { ...cls, pupils: 36 } });
+assert.deepStrictEqual(show(fresh.rows), [
   'M35 2026-10-05 pdp 4.2.5 ditunda 35 (Mesyuarat)',
   'M35 2026-10-07 pdp 4.2.5 diajar 36',
 ]);
-// Kehadiran kosong pada PdP akan datang juga tidak mengunci baris
-const kosong = viaFail(sync([], 35, '2026-10-03').rows);
-kosong[1].kehadiran = null;
-assert.strictEqual(sync(kosong, 35, '2026-10-03').rows[1].kehadiran, 35);
+// A blank Kehadiran on a future PdP does not lock the row either
+const blank = viaFile(sync([], 35, '2026-10-03').rows);
+blank[1].attendance = null;
+assert.strictEqual(sync(blank, 35, '2026-10-03').rows[1].attendance, 35);
 
-// Minggu dalam rekod mesti sepadan dengan Tarikh (takwim): salah taip M53 menghentikan dengan file:line
-const salah = viaFail(sync([], 35, '2026-10-03').rows);
-salah[1].minggu = 53;
-assert.throws(() => sync(salah, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Minggu M53 tidak sepadan dengan Tarikh 2026-10-07 \(M35\)/);
-// Tarikh di luar minggu persekolahan (cuti penggal) juga ditolak
-const cutiRow = viaFail(sync([], 35, '2026-10-03').rows);
-cutiRow[1].tarikh = '2026-09-02';
-assert.throws(() => sync(cutiRow, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Tarikh 2026-09-02 bukan hari dalam minggu persekolahan/);
+// The week in the rekod must match the Tarikh (takwim): a typo M53 stops with file:line
+const wrong = viaFile(sync([], 35, '2026-10-03').rows);
+wrong[1].week = 53;
+assert.throws(() => sync(wrong, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Minggu M53 does not match Tarikh 2026-10-07 \(M35\)/);
+// A Tarikh outside the school weeks (term break) is refused too
+const breakRow = viaFile(sync([], 35, '2026-10-03').rows);
+breakRow[1].date = '2026-09-02';
+assert.throws(() => sync(breakRow, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Tarikh 2026-09-02 is not a day in a school week/);
 
-// Kelas tanpa slot dalam jadual (contoh Subjek tersalah taip) berhenti dengan mesej jelas
-assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, subjek: 'MT3' } }), /1S MT3: tiada slot dalam jadual/);
+// A class without a slot in the timetable (e.g. a mistyped Subjek) stops with a clear message
+assert.throws(() => sync([], 35, '2026-10-03', { cls: { ...cls, subject: 'MT3' } }), /1S MT3: no slot in the timetable/);
 
-console.log('rekod-sync: semua ujian lulus');
+console.log('rekod-sync: all tests passed');

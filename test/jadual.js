@@ -1,4 +1,4 @@
-// node test/jadual.js — jadual waktu 5.10.2026 sebenar dari sample/
+// node test/jadual.js — the real 5.10.2026 timetable from sample/
 import fs from 'node:fs';
 import assert from 'node:assert';
 import * as R from '../src/core/index.js';
@@ -7,49 +7,49 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
-// Waktu: 30 minit, waktu 0 = 6:30, jam 12 jam seperti aSc
-assert.deepStrictEqual(R.waktuRange('2–3'), [2, 3]);
-assert.deepStrictEqual(R.waktuRange('12-14'), [12, 14]);
-assert.deepStrictEqual(R.waktuRange(' 9 '), [9, 9]);
-assert.throws(() => R.waktuRange('3–2'), /Waktu tidak sah: "3–2"/);
-assert.throws(() => R.waktuRange('pagi'), /Waktu tidak sah/);
-assert.strictEqual(R.fmtWaktu([2, 3]), '2–3');
-assert.strictEqual(R.fmtWaktu([9, 9]), '9');
-assert.strictEqual(R.masaWaktu([2, 3]), '7:30–8:30');
-assert.strictEqual(R.masaWaktu([12, 14]), '12:30–2:00');
-assert.strictEqual(R.masaWaktu([10, 12]), '11:30–1:00');
-assert.strictEqual(R.minitWaktu([7, 9]), 90);
-assert.strictEqual(R.jam24(R.minitMula(3)), '0800');
-assert.strictEqual(R.jam24(R.minitMula(15)), '1400');
-assert.strictEqual(R.fmtTarikh('2026-10-05'), '05/10/2026');
+// Periods: 30 minutes, period 0 = 6:30, 12-hour clock as in aSc
+assert.deepStrictEqual(R.periodRange('2–3'), [2, 3]);
+assert.deepStrictEqual(R.periodRange('12-14'), [12, 14]);
+assert.deepStrictEqual(R.periodRange(' 9 '), [9, 9]);
+assert.throws(() => R.periodRange('3–2'), /Invalid period: "3–2"/);
+assert.throws(() => R.periodRange('pagi'), /Invalid period/);
+assert.strictEqual(R.fmtPeriods([2, 3]), '2–3');
+assert.strictEqual(R.fmtPeriods([9, 9]), '9');
+assert.strictEqual(R.periodTime([2, 3]), '7:30–8:30');
+assert.strictEqual(R.periodTime([12, 14]), '12:30–2:00');
+assert.strictEqual(R.periodTime([10, 12]), '11:30–1:00');
+assert.strictEqual(R.periodMinutes([7, 9]), 90);
+assert.strictEqual(R.clock24(R.periodStart(3)), '0800');
+assert.strictEqual(R.clock24(R.periodStart(15)), '1400');
+assert.strictEqual(R.fmtDateDmy('2026-10-05'), '05/10/2026');
 
-// Jadual 5.10.2026: 12 slot kelas; slot B (Bukan kelas) diabaikan
-const j = R.parseJadual(read('jwg-20261002.md'), 'jwg-20261002.md');
-assert.strictEqual(j.berkuatKuasa, '2026-10-05');
+// Timetable 5.10.2026: 12 class slots; B slots (Bukan kelas) are ignored
+const j = R.parseTimetable(read('jwg-20261002.md'), 'jwg-20261002.md');
+assert.strictEqual(j.effectiveFrom, '2026-10-05');
 assert.strictEqual(j.slots.length, 12);
-assert.deepStrictEqual(j.slots[0], { hari: 'Isnin', waktu: [2, 3], masa: '7:30–8:30', subjek: 'M3', kelas: '4S', bilik: '' });
-assert.deepStrictEqual(j.slots.find(s => s.subjek === 'SK' && s.hari === 'Selasa').waktu, [12, 14]);
-assert.ok(!j.slots.some(s => s.hari === 'Jumaat' && s.waktu[0] === 9)); // tanda B
-assert.strictEqual(j.slots.filter(s => s.subjek === 'TUTORIAL').length, 1);
+assert.deepStrictEqual(j.slots[0], { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '4S', room: '' });
+assert.deepStrictEqual(j.slots.find(s => s.subject === 'SK' && s.dayName === 'Selasa').periods, [12, 14]);
+assert.ok(!j.slots.some(s => s.dayName === 'Jumaat' && s.periods[0] === 9)); // mark B
+assert.strictEqual(j.slots.filter(s => s.subject === 'TUTORIAL').length, 1);
 
-// Masa yang tidak sepadan dengan Waktu ditolak dengan nombor baris
-const salah = read('jwg-20261002.md').replace('| Isnin | 2–3 | 7:30–8:30 |', '| Isnin | 2–3 | 7:30–9:00 |');
-assert.throws(() => R.parseJadual(salah, 'jwg.md'), /jwg\.md:\d+: Masa "7:30–9:00" tidak sepadan dengan Waktu 2–3 \(7:30–8:30\)/);
-assert.throws(() => R.parseJadual('# x\n## Kelas\n', 'x.md'), /x\.md: tiada baris "- Berkuat kuasa/);
-// CRLF (fail disimpan di Windows) dibaca sama
-assert.deepStrictEqual(R.parseJadual(read('jwg-20261002.md').replace(/\n/g, '\r\n')), j);
+// A time that does not match the period is refused, with the line number
+const wrong = read('jwg-20261002.md').replace('| Isnin | 2–3 | 7:30–8:30 |', '| Isnin | 2–3 | 7:30–9:00 |');
+assert.throws(() => R.parseTimetable(wrong, 'jwg.md'), /jwg\.md:\d+: Masa "7:30–9:00" does not match Waktu 2–3 \(7:30–8:30\)/);
+assert.throws(() => R.parseTimetable('# x\n## Kelas\n', 'x.md'), /x\.md: missing line "- Berkuat kuasa/);
+// CRLF (file saved on Windows) reads the same
+assert.deepStrictEqual(R.parseTimetable(read('jwg-20261002.md').replace(/\n/g, '\r\n')), j);
 
-// Penyelesai: versi terkini yang berkuat kuasa pada tarikh itu
-const lama = { berkuatKuasa: '2026-08-10', slots: [{ hari: 'Isnin', waktu: [1, 2], masa: '7:00–8:00', subjek: 'M3', kelas: '4S', bilik: '' }] };
-const versions = [j, lama]; // tertib dalam senarai tidak penting
-assert.strictEqual(R.versionFor(versions, '2026-10-02'), lama);
+// Resolver: the latest version in force on the date
+const old = { effectiveFrom: '2026-08-10', slots: [{ dayName: 'Isnin', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '4S', room: '' }] };
+const versions = [j, old]; // order in the list does not matter
+assert.strictEqual(R.versionFor(versions, '2026-10-02'), old);
 assert.strictEqual(R.versionFor(versions, '2026-10-05'), j);
 assert.strictEqual(R.versionFor(versions, '2026-12-01'), j);
-assert.throws(() => R.versionFor(versions, '2026-08-07'), /Tiada jadual berkuat kuasa pada 2026-08-07/);
+assert.throws(() => R.versionFor(versions, '2026-08-07'), /No timetable in force on 2026-08-07/);
 
-// Minit seminggu: 4S M3 = 60 + 60 + 90; 4H SK = 90 + 90 (tutorial tidak dikira)
-assert.strictEqual(R.minitSeminggu(j, '4S', 'M3'), 210);
-assert.strictEqual(R.minitSeminggu(j, '4H', 'SK'), 180);
-assert.strictEqual(R.minitSeminggu(lama, '4S', 'M3'), 60);
+// Minutes per week: 4S M3 = 60 + 60 + 90; 4H SK = 90 + 90 (tutorial does not count)
+assert.strictEqual(R.weeklyMinutes(j, '4S', 'M3'), 210);
+assert.strictEqual(R.weeklyMinutes(j, '4H', 'SK'), 180);
+assert.strictEqual(R.weeklyMinutes(old, '4S', 'M3'), 60);
 
-console.log('jadual: semua ujian lulus');
+console.log('jadual: all tests passed');
