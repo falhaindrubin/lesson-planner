@@ -78,6 +78,8 @@ function renderMd(p, meta) {
     const tajuk = r.label != null ? (r.label ? `**${r.label}**` : '') : mdCell(r.tajuk);
     L.push(`| ${r.minggu} | ${r.tarikh} | ${tajuk} | ${mdCell(r.sk)} | ${mdCell(r.sp)} | ${mdCell(r.catatan)} |`);
   }
+  L.push('', '## Peruntukan SP', '', 'Minggu takwim bagi setiap SP. Dibaca oleh penjana RPH untuk menentukan masa setiap SP.', '', '| SP | Minggu |', '|---|---|');
+  for (const s of p.rated) L.push(`| ${s.code} | ${s.panjang.toFixed(3)} |`);
   if (p.warnings.length) L.push('', '## Amaran', '', ...p.warnings.map(w => `- ${w}`));
   return L.join('\n') + '\n';
 }

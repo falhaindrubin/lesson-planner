@@ -3,6 +3,7 @@ module.exports = {
   ...require('./parse/dskp'),
   ...require('./parse/kesukaran'),
   ...require('./parse/takwim'),
+  ...require('./parse/rpt'),
   ...require('./calendar'),
   ...require('./rpt-planner'),
   ...require('./render/rpt'),

@@ -91,4 +91,16 @@ const t1k = R.plan({ sp, kesukaran: k, kalendar, tingkatan: 1, tamat: 30 });
 const at = (p, c) => p.rated.find(s => s.code === c).minggu.length;
 assert.ok(at(t1k, '1.1.1') >= at(t1, '1.1.1'));
 
+// Lampiran Peruntukan SP: minggu setiap SP, dibaca semula oleh parseRpt (untuk penjana RPH)
+const mdMat = R.renderMd(m4, { subjek: 'Matematik', tahun: 2026, dskp: 'd', takwim: 't', kesukaran: 'k' });
+const rpt = R.parseRpt(mdMat, 'rpt-mat');
+assert.strictEqual(rpt.tamat, 34);
+assert.strictEqual(rpt.peruntukan.size, 70);
+assert.strictEqual(rpt.peruntukan.get('10.1.2'), 1.2);
+assert.strictEqual(rpt.peruntukan.get('6.2.1'), Number(m4.rated.find(s => s.code === '6.2.1').panjang.toFixed(3)));
+assert.deepStrictEqual(rpt.minggu.find(w => w.n === 20).sp, ['6.2.1', '6.2.2']);
+assert.deepStrictEqual(rpt.minggu.find(w => w.n === 24).sp, ['7.2.2', '7.2.3', '7.2.4']); // termasuk (samb.)
+assert.deepStrictEqual(rpt.minggu.find(w => w.n === 35).sp, []);
+assert.throws(() => R.parseRpt(mdMat.split('## Peruntukan SP')[0], 'lama.md'), /lama\.md: tiada jadual "## Peruntukan SP"/);
+
 console.log('rpt: semua ujian lulus');
