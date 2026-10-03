@@ -1,0 +1,206 @@
+{
+  "apps-script/fx.json": {
+    "mtime": 1790932937.9657657,
+    "seen": 1791005609.8921626,
+    "ast_hash": "79e955ce3caf1a1ad7860ed7382ebef7",
+    "semantic_hash": "79e955ce3caf1a1ad7860ed7382ebef7"
+  },
+  "apps-script/test.js": {
+    "mtime": 1790932937.9657657,
+    "seen": 1791005609.892167,
+    "ast_hash": "eff359e63a08e8c53552201296a015ab",
+    "semantic_hash": "eff359e63a08e8c53552201296a015ab"
+  },
+  "src/cli/rpt.js": {
+    "mtime": 1791004620.5904665,
+    "seen": 1791005609.8921692,
+    "ast_hash": "ecc67c1e8b95445549016ef0fd2ce737",
+    "semantic_hash": "ecc67c1e8b95445549016ef0fd2ce737"
+  },
+  "src/core/calendar.js": {
+    "mtime": 1791004451.51276,
+    "seen": 1791005609.8921707,
+    "ast_hash": "3dd2872c05c5f05ef0c127853907b507",
+    "semantic_hash": "3dd2872c05c5f05ef0c127853907b507"
+  },
+  "src/core/index.js": {
+    "mtime": 1791004620.566414,
+    "seen": 1791005609.892172,
+    "ast_hash": "5fcfec05b58cdce649dc5fef847507a4",
+    "semantic_hash": "5fcfec05b58cdce649dc5fef847507a4"
+  },
+  "src/core/parse/dskp.js": {
+    "mtime": 1791004451.4506464,
+    "seen": 1791005609.8921733,
+    "ast_hash": "4ace665f1201bfeb8b2036f5bb6330f1",
+    "semantic_hash": "4ace665f1201bfeb8b2036f5bb6330f1"
+  },
+  "src/core/parse/kesukaran.js": {
+    "mtime": 1791004451.470645,
+    "seen": 1791005609.8921745,
+    "ast_hash": "2e7e2bea581cb04c2513cd500b406ff7",
+    "semantic_hash": "2e7e2bea581cb04c2513cd500b406ff7"
+  },
+  "src/core/parse/takwim.js": {
+    "mtime": 1791004451.491704,
+    "seen": 1791005609.8921757,
+    "ast_hash": "000915b019030149350cd7f6fc785114",
+    "semantic_hash": "000915b019030149350cd7f6fc785114"
+  },
+  "src/core/render/rpt.js": {
+    "mtime": 1791004602.6000967,
+    "seen": 1791005609.8921766,
+    "ast_hash": "cd3f58f220775451ebc7a8e5fa1aab04",
+    "semantic_hash": "cd3f58f220775451ebc7a8e5fa1aab04"
+  },
+  "src/core/rpt-planner.js": {
+    "mtime": 1791004474.5753832,
+    "seen": 1791005609.8921776,
+    "ast_hash": "b9f890a2f0a368cd0f25ba52df6aae90",
+    "semantic_hash": "b9f890a2f0a368cd0f25ba52df6aae90"
+  },
+  "src/core/util.js": {
+    "mtime": 1791004451.4297676,
+    "seen": 1791005609.8921788,
+    "ast_hash": "4a2875116f5d87eb932aa8194c1fb1d8",
+    "semantic_hash": "4a2875116f5d87eb932aa8194c1fb1d8"
+  },
+  "test/rpt.js": {
+    "mtime": 1791004636.4029286,
+    "seen": 1791005609.8921802,
+    "ast_hash": "7e28a230bf60c7867c2ccdf74cffb58d",
+    "semantic_hash": "7e28a230bf60c7867c2ccdf74cffb58d"
+  },
+  "README.md": {
+    "mtime": 1791004729.6585433,
+    "seen": 1791005609.8921812,
+    "ast_hash": "6ef600295a45e493d97db6a1e89636f2",
+    "semantic_hash": "6ef600295a45e493d97db6a1e89636f2"
+  },
+  "TODO.md": {
+    "mtime": 1791004729.6585433,
+    "seen": 1791005609.8921824,
+    "ast_hash": "662fdc66b048fd8b321538aef322cfc3",
+    "semantic_hash": "662fdc66b048fd8b321538aef322cfc3"
+  },
+  "docs/architecture.md": {
+    "mtime": 1791004729.6585433,
+    "seen": 1791005609.8921833,
+    "ast_hash": "101d9d11794944ad132fd9885e9ef63f",
+    "semantic_hash": "101d9d11794944ad132fd9885e9ef63f"
+  },
+  "docs/discussion.md": {
+    "mtime": 1791004729.6585433,
+    "seen": 1791005609.8921843,
+    "ast_hash": "04eb7f081b808e0e5efa8447e840ed1d",
+    "semantic_hash": "04eb7f081b808e0e5efa8447e840ed1d"
+  },
+  "output/rpt-mat-t4-2026.html": {
+    "mtime": 1791004637.9639382,
+    "seen": 1791005609.892185,
+    "ast_hash": "68904099d79d0b7de3a5b86c31b5f1c1",
+    "semantic_hash": "68904099d79d0b7de3a5b86c31b5f1c1"
+  },
+  "output/rpt-mat-t4-2026.md": {
+    "mtime": 1791004637.9639382,
+    "seen": 1791005609.8921862,
+    "ast_hash": "99daedb38229c21df718a36f52e65f57",
+    "semantic_hash": "99daedb38229c21df718a36f52e65f57"
+  },
+  "sample/dskp-ask-t1.md": {
+    "mtime": 1790936238.8376207,
+    "seen": 1791005609.892187,
+    "ast_hash": "cc231c16b3aeb34807e63ea5543fde64",
+    "semantic_hash": "cc231c16b3aeb34807e63ea5543fde64"
+  },
+  "sample/dskp-mat-t4-t5.md": {
+    "mtime": 1790947385.1951387,
+    "seen": 1791005609.8921883,
+    "ast_hash": "3a46a8dc68112133daa4453d21f7f980",
+    "semantic_hash": "3a46a8dc68112133daa4453d21f7f980"
+  },
+  "sample/dskp-mat-t4.md": {
+    "mtime": 1790947023.335708,
+    "seen": 1791005609.8921893,
+    "ast_hash": "c92441652093e24fdd52e7eba7d0aa59",
+    "semantic_hash": "c92441652093e24fdd52e7eba7d0aa59"
+  },
+  "sample/jwg-20261002.md": {
+    "mtime": 1790936568.5805016,
+    "seen": 1791005609.8921902,
+    "ast_hash": "626f0df88364b255d5a398b072593080",
+    "semantic_hash": "626f0df88364b255d5a398b072593080"
+  },
+  "sample/kesukaran-mat-t4.md": {
+    "mtime": 1790950477.1637063,
+    "seen": 1791005609.8921914,
+    "ast_hash": "c00e5e9f42431014b604df75b7fc858c",
+    "semantic_hash": "c00e5e9f42431014b604df75b7fc858c"
+  },
+  "sample/links.txt": {
+    "mtime": 1790932937.9866204,
+    "seen": 1791005609.8921926,
+    "ast_hash": "182e366672af299381d764c1dd139fcf",
+    "semantic_hash": "182e366672af299381d764c1dd139fcf"
+  },
+  "sample/takwim-kpm-2027.md": {
+    "mtime": 1790949188.241443,
+    "seen": 1791005609.8921938,
+    "ast_hash": "5dd3978fed3bdcead22577f2019dc767",
+    "semantic_hash": "5dd3978fed3bdcead22577f2019dc767"
+  },
+  "sample/takwim-smly-2026.md": {
+    "mtime": 1790936265.3057032,
+    "seen": 1791005609.8921945,
+    "ast_hash": "da8d78b36b22ee81409b46bdaf2dbcc9",
+    "semantic_hash": "da8d78b36b22ee81409b46bdaf2dbcc9"
+  },
+  "sample/2026 - ASK T1 - Google Sheets M34A.pdf": {
+    "mtime": 1790932937.9717112,
+    "seen": 1791005609.8921957,
+    "ast_hash": "ad2bfee4d37ae6ebc13c8a8200407963",
+    "semantic_hash": "ad2bfee4d37ae6ebc13c8a8200407963"
+  },
+  "sample/Copy of DSKP SAINS KOMPUTER TINGKATAN 4.pdf": {
+    "mtime": 1790932937.9786494,
+    "seen": 1791005609.8921967,
+    "ast_hash": "e965ef7acbb6d6e7f7c6f60d39729ecc",
+    "semantic_hash": "e965ef7acbb6d6e7f7c6f60d39729ecc"
+  },
+  "sample/FALHAIND RUBIN - JWG - 20260810.pdf": {
+    "mtime": 1790932937.9796567,
+    "seen": 1791005609.8921976,
+    "ast_hash": "e8481891d0f446fcdc1b34e2836249b1",
+    "semantic_hash": "e8481891d0f446fcdc1b34e2836249b1"
+  },
+  "sample/Surat Siaran KPM Bil. 3 2025 - Kalendar Akademik 2026.pdf": {
+    "mtime": 1790932937.9866204,
+    "seen": 1791005609.8921986,
+    "ast_hash": "7c6719a183f54d52ced9b15800639dd6",
+    "semantic_hash": "7c6719a183f54d52ced9b15800639dd6"
+  },
+  "sample/dskp-ask-t1.pdf": {
+    "mtime": 1790932937.9796567,
+    "seen": 1791005609.8921998,
+    "ast_hash": "08daaa32c95c2373788f909aa64203c5",
+    "semantic_hash": "08daaa32c95c2373788f909aa64203c5"
+  },
+  "sample/dskp-mat-t4-t5.pdf": {
+    "mtime": 1790946854.710496,
+    "seen": 1791005609.8922007,
+    "ast_hash": "dae59d3644688e645789e80c8e3f0019",
+    "semantic_hash": "dae59d3644688e645789e80c8e3f0019"
+  },
+  "sample/jwg-20261002.pdf": {
+    "mtime": 1790932937.985601,
+    "seen": 1791005609.8922014,
+    "ast_hash": "53e58de3dde78ec95747f1127183e403",
+    "semantic_hash": "53e58de3dde78ec95747f1127183e403"
+  },
+  "sample/kalendar-akademik-2027-kpm.pdf": {
+    "mtime": 1790947737.565404,
+    "seen": 1791005609.8922024,
+    "ast_hash": "ec2fa1ff9da2806ac3da21d4c8520031",
+    "semantic_hash": "ec2fa1ff9da2806ac3da21d4c8520031"
+  }
+}
