@@ -22,7 +22,7 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] Open a few files in `output/simulasi-4S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
 - [x] Decide the **next sub-project** — the **web app** (see below)
 - [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
-- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu <n>`
+- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
 
 ## Web app (brainstorming started 2026-10-03, paused)
 Decided so far: first slice = **weekly RPH loop** (pick a week → view/print RPH → mark diajar/ditunda/batal + reason → ahead/behind) · inputs: **pick the sample/ and output/ folders once**, copied into the browser · hosting: **GitHub Pages** · rekod: **kept in the browser, with export/import of `rekod-*.md`** (no Drive sync yet) · main device: **laptop**.

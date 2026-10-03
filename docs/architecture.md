@@ -71,10 +71,10 @@ Each parser turns one markdown format into plain objects. Code: [src/core/parse/
 | DSKP | [sample/dskp-mat-t4.md](../sample/dskp-mat-t4.md): `## 1.0 Tajuk` → `### 1.1 SK` → SP table rows `\| 1.1.1 \| text \|`, TP table per SK (ASK) or per topic (Matematik) | Ordered SP list, each with its topic and SK |
 | Takwim | [sample/takwim-smly-2026.md](../sample/takwim-smly-2026.md): one row per day; `Mn` on Mondays; columns Cuti / Perayaan, Pentadbiran, Kurikulum, HEM, Kokurikulum | Weeks (M1…Mn) of five weekdays + weekdays in breaks |
 | Kesukaran | [sample/kesukaran-mat-t4.md](../sample/kesukaran-mat-t4.md): SP → 1–3 with reason; optional fixed weeks per topic | `{ sp: Map, tajuk: Map }` |
-| Jadual | [sample/jwg-20261002.md](../sample/jwg-20261002.md) (**frozen format**): `Berkuat kuasa: yyyy-mm-dd` + `## Kelas` table (Hari, Waktu, Masa, Subjek, Kelas, Bilik); `## Bukan kelas` ignored. One row = one lesson | `{ berkuatKuasa, slots }` — `parse/jadual.js` |
-| Kelas | `kelas-<tahun>.md`: Nama guru; one row per class × subject (Kelas, Nama penuh, Tingkatan, Subjek, DSKP, Aktiviti, RPT, Tutorial, Bil. murid, Mula = starting SP) | Class list — `parse/kelas.js` |
-| Acara | `acara-<tahun>.md`: table **Hari acara** (Tarikh, Acara, Tingkatan — blank = all) and table **Batal** (Tarikh, Tingkatan/Kelas, Sebab) | Event days + known cancellations — `parse/acara.js` |
-| Aktiviti | `aktiviti-<subjek>.md`: lists Permulaan / Perkembangan / Penutup | Activity template — `parse/aktiviti.js` |
+| Jadual | [sample/jwg-20261002.md](../sample/jwg-20261002.md) (**frozen format**): `Berkuat kuasa: yyyy-mm-dd` + `## Kelas` table (Hari, Waktu, Masa, Subjek, Kelas, Bilik); `## Bukan kelas` ignored. One row = one lesson | `{ effectiveFrom, slots }` — `parse/timetable.js` |
+| Kelas | `kelas-<tahun>.md`: Nama guru; one row per class × subject (Kelas, Nama penuh, Tingkatan, Subjek, DSKP, Aktiviti, RPT, Tutorial, Bil. murid, Mula = starting SP) | Class list — `parse/classes.js` |
+| Acara | `acara-<tahun>.md`: table **Hari acara** (Tarikh, Acara, Tingkatan — blank = all) and table **Batal** (Tarikh, Tingkatan/Kelas, Sebab) | Event days + known cancellations — `parse/events.js` |
+| Aktiviti | `aktiviti-<subjek>.md`: lists Permulaan / Perkembangan / Penutup | Activity template — `parse/activities.js` |
 | Rekod | `rekod-<kelas>-<subjek>.md`: one row per lesson (Minggu, Tarikh, Hari, Waktu, Jenis, SP, Status, Kehadiran, Refleksi/Sebab). Read **and written** by the CLI | Lesson history + outcomes — `parse/rekod.js`, written by `render/rekod.js`. Also: the RPT file itself is read by `parse/rpt.js` → `{ tamat, minggu, peruntukan }` |
 
 Rules for all parsers: fail loudly on structure errors (e.g. SP outside its SK); warn on data gaps (e.g. SP without a rating → default 2).
@@ -113,7 +113,7 @@ Input: SP list, ratings, calendar (from §4.2), form. Output: week-by-week plan.
 
 Fails on purpose when the takwim has no exam weeks (the split and revision rules need them), or when fixed weeks exceed a half's capacity.
 
-### 4.4 Timetable resolver — _Built_ ([src/core/timetable.js](../src/core/timetable.js), [parse/jadual.js](../src/core/parse/jadual.js))
+### 4.4 Timetable resolver — _Built_ ([src/core/timetable.js](../src/core/timetable.js), [parse/timetable.js](../src/core/parse/timetable.js))
 
 - Holds every **timetable version** with its effective-from date (`Berkuat kuasa:` line, from the aSc footer).
 - For a date, picks the latest version with effective-from ≤ date; fails if none applies. A timetable change is a new file, never an edit of dates.
@@ -129,13 +129,13 @@ Produces **lesson instances** for one school week: each school day × slot in th
 - Holidays (per form) and **Batal** entries produce no instances. Slots of classes not in the class file are skipped (the CLI prints one note), so one subject can be planned on its own.
 - `lessonsForWeek({ kalendar, versions, kelas, acara, minggu })`. The class file's `Tutorial` column names the jadual code (TUTORIAL) whose slots are tutorials of that class × subject.
 
-### 4.6 RPH generator — _Built_ ([rph-planner.js](../src/core/rph-planner.js), [masa-sp.js](../src/core/masa-sp.js), [rekod-sync.js](../src/core/rekod-sync.js), [kedudukan.js](../src/core/kedudukan.js), [render/rph.js](../src/core/render/rph.js), tests in [test/](../test/))
+### 4.6 RPH generator — _Built_ ([rph-planner.js](../src/core/rph-planner.js), [sp-time.js](../src/core/sp-time.js), [rekod-sync.js](../src/core/rekod-sync.js), [position.js](../src/core/position.js), [render/rph.js](../src/core/render/rph.js), tests in [test/](../test/))
 
 For each lesson instance, choose the SP(s) from the class's **progress queue**, built from the full rekod history:
 
 1. A **ditunda** or **batal** lesson consumes no time: the next lesson starts where the skipped one would have (its SPs are taught first).
 2. Otherwise continue in DSKP order. The first lesson of a class starts at its **Mula** SP from the class file.
-3. **Paced by the RPT**: each SP's time for a class = the class's **real minutes in the RPT weeks where the SP sits** — SPs laid in DSKP order over the RPT's capacity weeks using the appendix **Peruntukan SP**, each week contributing its overlap × the class's scheduled PdP minutes that week (`masa-sp.js`). Partial weeks give less time, so an undisturbed class tracks the RPT week by week. Lessons are filled in DSKP order, so light SPs share a lesson and heavy SPs span lessons (written plainly on each lesson; no "bersambung" / "samb." note). No continuation shorter than 15 min (finish it now); no new SP started with < 15 min left. Subjects without an RPT fall back to one SP per lesson with a warning.
+3. **Paced by the RPT**: each SP's time for a class = the class's **real minutes in the RPT weeks where the SP sits** — SPs laid in DSKP order over the RPT's capacity weeks using the appendix **Peruntukan SP**, each week contributing its overlap × the class's scheduled PdP minutes that week (`sp-time.js`). Partial weeks give less time, so an undisturbed class tracks the RPT week by week. Lessons are filled in DSKP order, so light SPs share a lesson and heavy SPs span lessons (written plainly on each lesson; no "bersambung" / "samb." note). No continuation shorter than 15 min (finish it now); no new SP started with < 15 min left. Subjects without an RPT fall back to one SP per lesson with a warning.
 4. **Reading the rekod** (minute replay, no marker): for each diajar row in date order, the lesson's minutes go to its listed SPs in order; all but the last are finished; the last takes the leftover and is finished when < 15 min of it remains. Hand edits (e.g. `4.2.7, 4.2.8`) follow the same rule.
 5. **Tutorial** lessons repeat all SPs of the latest **diajar** pdp lesson of that class × subject before it (this week if any, else earlier) and do not advance.
 6. **Peperiksaan** lessons are generated with no SP and do not advance.
@@ -144,11 +144,11 @@ For each lesson instance, choose the SP(s) from the class's **progress queue**, 
 9. **DSKP finished**: remaining lessons cycle through the topics, one per lesson ("Ulang kaji: 1.0 …"). A class still behind during the RPT's revision weeks keeps getting new SPs.
 10. A subject with no DSKP yet (PK / PJ) gets rows without SP and a warning.
 
-**Ahead / behind summary** (CLI only, not on the RPH): reads the frozen `rpt-<subjek>-<tahun>.md` named in the class file. Gap = (minutes of SP content taught − PdP minutes scheduled in teaching weeks so far) ÷ the class's normal weekly minutes; under half a week = ikut RPT, else n weeks ahead / behind. Measured in minutes so a short week (M20) doesn't inflate a small gap. `src/cli/simulasi.js` replays the year week by week to check an undisturbed class stays on the RPT. Warns when remaining SPs exceed remaining timetabled lessons before the syllabus end.
+**Ahead / behind summary** (CLI only, not on the RPH): reads the frozen `rpt-<subjek>-<tahun>.md` named in the class file. Gap = (minutes of SP content taught − PdP minutes scheduled in teaching weeks so far) ÷ the class's normal weekly minutes; under half a week = ikut RPT, else n weeks ahead / behind. Measured in minutes so a short week (M20) doesn't inflate a small gap. `src/cli/simulate.js` replays the year week by week to check an undisturbed class stays on the RPT. Warns when remaining SPs exceed remaining timetabled lessons before the syllabus end.
 
 Fills the RPH layout of [sample/2026 - ASK T1 - Google Sheets M34A.pdf](../sample/): guru, subjek, minggu/tarikh/hari, tingkatan, masa, kehadiran, tajuk, SK, SP, objektif, ringkasan aktiviti (Permulaan 5 min / Perkembangan = lesson length − 10 / Penutup 5 min — fixed template per subject from `aktiviti-<subjek>.md`, AI per SP later), refleksi.
 
-**CLI:** `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu 36 [--hari-ini yyyy-mm-dd]`; `node src/cli/simulasi.js --kelas sample/kelas-2026.md` replays the year week by week. For each class × subject: plan any missing weeks up to that week, rebuild future untouched rows, write the rekod, render the affected weeks and print the ahead/behind summary. Output: `output/rph/<tahun>-M<n>-<SUBJEK>.html`, one RPH per A4 page. Core: `planRows`, `syncRekod`, `masaSp`, `ringkasanKelas`, `parseRekod` + `renderRekod` (round-trip without changing edited rows), `parseAktiviti`, `renderRph`.
+**CLI:** `node src/cli/rph.js --classes sample/kelas-2026.md --week 36 [--today yyyy-mm-dd]`; `node src/cli/simulate.js --classes sample/kelas-2026.md` replays the year week by week. For each class × subject: plan any missing weeks up to that week, rebuild future untouched rows, write the rekod, render the affected weeks and print the ahead/behind summary. Output: `output/rph/<tahun>-M<n>-<SUBJEK>.html`, one RPH per A4 page. Core: `planRows`, `syncRekod`, `spTime`, `classSummary`, `parseRekod` + `renderRekod` (round-trip without changing edited rows), `parseActivities`, `renderRph`.
 
 ### 4.7 Progress & dashboard — _Planned_
 
@@ -234,7 +234,7 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 2. Lessons from that date are re-derived; past lessons and outcomes are untouched.
 
 **Weekly cycle**
-1. App generates the coming week's RPHs from the timetable in force, the calendar and each class's progress (until the app: `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu <n>` appends rows to each rekod and writes one HTML per subject).
+1. App generates the coming week's RPHs from the timetable in force, the calendar and each class's progress (until the app: `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>` appends rows to each rekod and writes one HTML per subject).
 2. Teacher prints or views them; after teaching, records outcomes, reflection and attendance (until the app: edits only the exception rows in the rekod).
 3. Dashboard updates % done and weeks ahead/behind.
 
@@ -244,14 +244,15 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 |---|---|---|
 | `docs/` | [discussion.md](discussion.md) (decisions), this file | — |
 | `sample/` | Source PDFs/DOCX and their checked markdown (DSKP, takwim, timetable, difficulty ratings) | Inputs |
-| `src/core/` | Pure core, no I/O: `parse/` (DSKP, takwim, kesukaran, RPT, jadual, kelas, acara, rekod, aktiviti), `calendar.js`, `timetable.js`, `scheduler.js`, `rpt-planner.js`, `rph-planner.js`, `masa-sp.js`, `rekod-sync.js`, `kedudukan.js`, `render/` (RPT, rekod, RPH), `util.js`; `index.js` exports all | Built |
-| `src/cli/` | Node CLIs over the core (`rpt.js`, `rph.js`, `simulasi.js`) | Built |
-| `src/ui/`, `src/store/` | PWA screens; IndexedDB + Drive sync | Planned |
+| `src/core/` | Pure core, no I/O (ES modules, English names): `parse/` (DSKP, takwim, difficulty, RPT, timetable, classes, events, rekod, activities), `week.js` (`runWeek`, shared by the CLI and the app), `calendar.js`, `timetable.js`, `scheduler.js`, `rpt-planner.js`, `rph-planner.js`, `sp-time.js`, `rekod-sync.js`, `position.js`, `render/` (RPT, rekod, RPH), `util.js`; `index.js` exports all | Built |
+| `src/cli/` | Node CLIs over the core (`rpt.js`, `rph.js`, `simulate.js`) | Built |
+| `app/` | Browser app (plain ES modules, imports `src/core/`): `logic/` (pure, tested in Node), `state.js` controller, `store.js` IndexedDB, Week / Classes / Files screens, service worker, manifest | Built (first slice) |
+| `tools/` | `serve.js` (dev server), `release.js` (copy `app/` + `src/core/` to the public rph-mate repo as RPH Mate) | Built |
 | `test/` | Tests against real sample data (`rpt.js`) | Built |
 | `output/` | Generated RPTs (`.md`, `.html`) | Generated |
 | `apps-script/` | Google Sheets stopgap + test | Stopgap |
 
-Conventions: Node 24, CommonJS, no dependencies so far; tests are plain `node <file>.js` with `assert` against real sample data; code comments and generated documents in Bahasa Melayu, docs in English.
+Conventions: Node 24, ES modules, no dependencies; tests are plain `node <file>.js` with `assert` against real sample data; code comments and generated documents in Bahasa Melayu, docs in English.
 
 ## 9. Technology
 
@@ -259,7 +260,7 @@ Decided 2026-10-03.
 
 | Concern | Stack | Status |
 |---|---|---|
-| Language | Plain JavaScript, CommonJS for now; pure functions in `src/core/`, no dependencies | In use |
+| Language | Plain JavaScript, ES modules; pure functions in `src/core/`, no dependencies | In use |
 | Runtime | Node 24 for CLIs and tests; the browser for the app (same core) | Node in use |
 | Tests | `node test/<file>.js` with `node:assert`, against real files in `sample/` | In use |
 | Inputs | Markdown files checked by the teacher | In use |
@@ -270,7 +271,7 @@ Decided 2026-10-03.
 | AI | Manual: Claude Code / claude.ai on the teacher's subscription writes `kesukaran-*.md`. No Claude API; the app never needs AI to run | In use |
 | Stopgap | Google Apps Script in the existing Sheets | In use until RPH is built |
 
-The core moves to ES modules when the browser app starts (a one-time change; browsers load ES modules natively).
+The core is ES modules so the browser app imports it directly (done 2026-10-03).
 
 ## 10. Status and next steps
 
@@ -285,7 +286,8 @@ The core moves to ES modules when the browser app starts (a one-time change; bro
 | Jadual parser + timetable resolver + lesson scheduler | Done |
 | RPH generator (port Apps Script logic, add tutorial/exam rules) + RPH renderer + rekod files | Done (4S Matematik simulated for the whole year) |
 | Outcomes, progress, dashboard, history import from Sheets | After RPH |
-| PWA shell, storage, sync | After the core is complete |
+| Web app first slice (weekly loop: Week, Classes, Files, Save rekod, offline, release script) | Built; browser behaviour still to be checked by hand |
+| Drive sync, history import | Later |
 
 ## 11. Open decisions
 

@@ -34,17 +34,24 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 | [apps-script/](apps-script/) | Stopgap: Google Apps Script that generates next week's RPH tab in the existing Sheets |
 | [sample/](sample/) | Real inputs used for analysis: DSKPs, aSc timetables, RPT, RPH PDF, school takwim, KPM academic calendar |
 
+## Web app (Lesson Planner; published as RPH Mate)
+```
+node tools/serve.js            # http://localhost:8080/app/
+node tools/release.js ../rph-mate   # copy the app into the public rph-mate checkout
+```
+Pick your `sample/` and `output/` folders once on the Files screen and type your name in Profile. The Week tab shows the week's lessons and RPH pages; mark Taught / Postponed / Cancelled (a reason is required for the last two), print the week, and use **Save rekod** to download the updated `rekod-*.md` back into your Rekod folder. Details: [the spec](docs/superpowers/specs/2026-10-03-web-app-weekly-loop-design.md).
+
 ## Weekly RPH
 ```
-node src/cli/rph.js --kelas sample/kelas-2026.md --minggu 35
-node src/cli/simulasi.js --kelas sample/kelas-2026.md      # replay the whole year, no edits
-node test/semua.js                                         # all tests
+node src/cli/rph.js --classes sample/kelas-2026.md --week 35
+node src/cli/simulate.js --classes sample/kelas-2026.md      # replay the whole year, no edits
+node test/all.js                                         # all tests
 ```
 Writes `rekod-<kelas>-<subjek>.md` (one row per lesson) and `<tahun>-M<n>-<SUBJEK>.html` (one RPH per A4 page; print to PDF from the browser). Weekly cycle: run it on the weekend, print, and after teaching edit only the exception rows in the rekod (`ditunda` + reason, `batal`, Kehadiran, Catatan). The next run re-teaches postponed SPs and prints each class's position against the RPT. Details: [the spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md).
 
 ## RPT generator
 ```
-node src/cli/rpt.js --dskp sample/dskp-mat-t4.md --takwim sample/takwim-smly-2026.md   --kesukaran sample/kesukaran-mat-t4.md --tingkatan 4 --out output/rpt-mat-t4-2026
+node src/cli/rpt.js --dskp sample/dskp-mat-t4.md --takwim sample/takwim-smly-2026.md   --difficulty sample/kesukaran-mat-t4.md --form 4 --out output/rpt-mat-t4-2026
 node test/rpt.js
 ```
 SPs are spread up to the form's final exam (PAT / UASA / Percubaan SPM), keeping the last

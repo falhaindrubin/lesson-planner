@@ -219,6 +219,9 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Fix (my choice) | **SP time follows the RPT's actual weeks**: each SP gets 4S's real minutes in the RPT weeks where it sits (M20 has only 60 min). Now `ikut RPT` every week M1–M34, DSKP done end of M34, revision M35–M36, PAT M37. RPT file unchanged. |
 | Ahead / behind | Measured in **minutes** (content taught − PdP minutes so far) and shown in weeks of 210 min, so a short week (M20) doesn't turn 10 minutes into "1 week ahead". Test: all three M10 lessons ditunda → `1 minggu ke belakang` from M11, "pertimbang gabung SP" warning, DSKP done in M35. |
 
+### Web app first slice built (2026-10-03)
+Implemented the plan on branch `web-app`: ES modules + English rename (byte-identical output proofs), `runWeek` in the core, A4 row rule, BOM, blank-Status warning, `app/` (Week, Classes, Files, Save rekod, service worker), `tools/serve.js`, `tools/release.js`. Browser checks still to do by hand.
+
 ### Web app — first slice (2026-10-03; spec: [web-app-weekly-loop-design.md](superpowers/specs/2026-10-03-web-app-weekly-loop-design.md))
 | Topic | Decision |
 |---|---|
