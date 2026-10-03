@@ -1,0 +1,10 @@
+# graphify: keep the graph itself, ignore the machine-specific cache and paths
+graphify-out/*
+!graphify-out/graph.json
+!graphify-out/graph.html
+!graphify-out/GRAPH_REPORT.md
+!graphify-out/manifest.json
+!graphify-out/.graphify_labels.json
+
+# visual companion mockups
+.superpowers/

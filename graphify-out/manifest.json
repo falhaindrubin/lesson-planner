@@ -1,0 +1,398 @@
+{
+  "apps-script/fx.json": {
+    "mtime": 1790932937.9657657,
+    "seen": 1791005609.8921626,
+    "ast_hash": "79e955ce3caf1a1ad7860ed7382ebef7",
+    "semantic_hash": "79e955ce3caf1a1ad7860ed7382ebef7"
+  },
+  "apps-script/test.js": {
+    "mtime": 1790932937.9657657,
+    "seen": 1791005609.892167,
+    "ast_hash": "eff359e63a08e8c53552201296a015ab",
+    "semantic_hash": "eff359e63a08e8c53552201296a015ab"
+  },
+  "src/cli/rpt.js": {
+    "mtime": 1791004620.5904665,
+    "seen": 1791005609.8921692,
+    "ast_hash": "ecc67c1e8b95445549016ef0fd2ce737",
+    "semantic_hash": "ecc67c1e8b95445549016ef0fd2ce737"
+  },
+  "src/core/calendar.js": {
+    "mtime": 1791004451.51276,
+    "seen": 1791005609.8921707,
+    "ast_hash": "3dd2872c05c5f05ef0c127853907b507",
+    "semantic_hash": "3dd2872c05c5f05ef0c127853907b507"
+  },
+  "src/core/index.js": {
+    "mtime": 1791011927.4159086,
+    "seen": 1791013717.364838,
+    "ast_hash": "013d9b7816429e8ab2d3983e9a6c4881",
+    "semantic_hash": "013d9b7816429e8ab2d3983e9a6c4881"
+  },
+  "src/core/parse/dskp.js": {
+    "mtime": 1791004451.4506464,
+    "seen": 1791005609.8921733,
+    "ast_hash": "4ace665f1201bfeb8b2036f5bb6330f1",
+    "semantic_hash": "4ace665f1201bfeb8b2036f5bb6330f1"
+  },
+  "src/core/parse/kesukaran.js": {
+    "mtime": 1791004451.470645,
+    "seen": 1791005609.8921745,
+    "ast_hash": "2e7e2bea581cb04c2513cd500b406ff7",
+    "semantic_hash": "2e7e2bea581cb04c2513cd500b406ff7"
+  },
+  "src/core/parse/takwim.js": {
+    "mtime": 1791004451.491704,
+    "seen": 1791005609.8921757,
+    "ast_hash": "000915b019030149350cd7f6fc785114",
+    "semantic_hash": "000915b019030149350cd7f6fc785114"
+  },
+  "src/core/render/rpt.js": {
+    "mtime": 1791011875.4360442,
+    "seen": 1791013717.3648531,
+    "ast_hash": "81d68c985c2f57683888871f2d0b307f",
+    "semantic_hash": "81d68c985c2f57683888871f2d0b307f"
+  },
+  "src/core/rpt-planner.js": {
+    "mtime": 1791004474.5753832,
+    "seen": 1791005609.8921776,
+    "ast_hash": "b9f890a2f0a368cd0f25ba52df6aae90",
+    "semantic_hash": "b9f890a2f0a368cd0f25ba52df6aae90"
+  },
+  "src/core/util.js": {
+    "mtime": 1791011898.9176004,
+    "seen": 1791013717.364858,
+    "ast_hash": "8a73e4806ba2bb2edeb3c75ad2e514f9",
+    "semantic_hash": "8a73e4806ba2bb2edeb3c75ad2e514f9"
+  },
+  "test/rpt.js": {
+    "mtime": 1791011869.0103734,
+    "seen": 1791013717.3648653,
+    "ast_hash": "74605e16d8404d7df5151924b2c0fd12",
+    "semantic_hash": "74605e16d8404d7df5151924b2c0fd12"
+  },
+  "README.md": {
+    "mtime": 1791012001.7952626,
+    "seen": 1791013717.3648682,
+    "ast_hash": "b64b46362679bbb7cc23552beb5d3b9d",
+    "semantic_hash": "b64b46362679bbb7cc23552beb5d3b9d"
+  },
+  "TODO.md": {
+    "mtime": 1791012001.7952626,
+    "seen": 1791013717.364869,
+    "ast_hash": "46497c5cadea76e22c00b4bcc2b77510",
+    "semantic_hash": "46497c5cadea76e22c00b4bcc2b77510"
+  },
+  "docs/architecture.md": {
+    "mtime": 1791012408.9403129,
+    "seen": 1791013717.36487,
+    "ast_hash": "44708d3d7187bd68cec5ddf15427eb4e",
+    "semantic_hash": "44708d3d7187bd68cec5ddf15427eb4e"
+  },
+  "docs/discussion.md": {
+    "mtime": 1791012001.7952626,
+    "seen": 1791013717.364871,
+    "ast_hash": "5ed38a7f0a2724fe6d12f1f00e9bfa7e",
+    "semantic_hash": "5ed38a7f0a2724fe6d12f1f00e9bfa7e"
+  },
+  "output/rpt-mat-t4-2026.html": {
+    "mtime": 1791004637.9639382,
+    "seen": 1791005609.892185,
+    "ast_hash": "68904099d79d0b7de3a5b86c31b5f1c1",
+    "semantic_hash": "68904099d79d0b7de3a5b86c31b5f1c1"
+  },
+  "output/rpt-mat-t4-2026.md": {
+    "mtime": 1791011881.1360457,
+    "seen": 1791013717.3648727,
+    "ast_hash": "6f160914bd2b6a8f0c8ba8518e1310fd",
+    "semantic_hash": "6f160914bd2b6a8f0c8ba8518e1310fd"
+  },
+  "sample/dskp-ask-t1.md": {
+    "mtime": 1790936238.8376207,
+    "seen": 1791005609.892187,
+    "ast_hash": "cc231c16b3aeb34807e63ea5543fde64",
+    "semantic_hash": "cc231c16b3aeb34807e63ea5543fde64"
+  },
+  "sample/dskp-mat-t4-t5.md": {
+    "mtime": 1790947385.1951387,
+    "seen": 1791005609.8921883,
+    "ast_hash": "3a46a8dc68112133daa4453d21f7f980",
+    "semantic_hash": "3a46a8dc68112133daa4453d21f7f980"
+  },
+  "sample/dskp-mat-t4.md": {
+    "mtime": 1790947023.335708,
+    "seen": 1791005609.8921893,
+    "ast_hash": "c92441652093e24fdd52e7eba7d0aa59",
+    "semantic_hash": "c92441652093e24fdd52e7eba7d0aa59"
+  },
+  "sample/jwg-20261002.md": {
+    "mtime": 1790936568.5805016,
+    "seen": 1791005609.8921902,
+    "ast_hash": "626f0df88364b255d5a398b072593080",
+    "semantic_hash": "626f0df88364b255d5a398b072593080"
+  },
+  "sample/kesukaran-mat-t4.md": {
+    "mtime": 1790950477.1637063,
+    "seen": 1791005609.8921914,
+    "ast_hash": "c00e5e9f42431014b604df75b7fc858c",
+    "semantic_hash": "c00e5e9f42431014b604df75b7fc858c"
+  },
+  "sample/links.txt": {
+    "mtime": 1790932937.9866204,
+    "seen": 1791005609.8921926,
+    "ast_hash": "182e366672af299381d764c1dd139fcf",
+    "semantic_hash": "182e366672af299381d764c1dd139fcf"
+  },
+  "sample/takwim-kpm-2027.md": {
+    "mtime": 1790949188.241443,
+    "seen": 1791005609.8921938,
+    "ast_hash": "5dd3978fed3bdcead22577f2019dc767",
+    "semantic_hash": "5dd3978fed3bdcead22577f2019dc767"
+  },
+  "sample/takwim-smly-2026.md": {
+    "mtime": 1790936265.3057032,
+    "seen": 1791005609.8921945,
+    "ast_hash": "da8d78b36b22ee81409b46bdaf2dbcc9",
+    "semantic_hash": "da8d78b36b22ee81409b46bdaf2dbcc9"
+  },
+  "sample/2026 - ASK T1 - Google Sheets M34A.pdf": {
+    "mtime": 1790932937.9717112,
+    "seen": 1791005609.8921957,
+    "ast_hash": "ad2bfee4d37ae6ebc13c8a8200407963",
+    "semantic_hash": "ad2bfee4d37ae6ebc13c8a8200407963"
+  },
+  "sample/Copy of DSKP SAINS KOMPUTER TINGKATAN 4.pdf": {
+    "mtime": 1790932937.9786494,
+    "seen": 1791005609.8921967,
+    "ast_hash": "e965ef7acbb6d6e7f7c6f60d39729ecc",
+    "semantic_hash": "e965ef7acbb6d6e7f7c6f60d39729ecc"
+  },
+  "sample/FALHAIND RUBIN - JWG - 20260810.pdf": {
+    "mtime": 1790932937.9796567,
+    "seen": 1791005609.8921976,
+    "ast_hash": "e8481891d0f446fcdc1b34e2836249b1",
+    "semantic_hash": "e8481891d0f446fcdc1b34e2836249b1"
+  },
+  "sample/Surat Siaran KPM Bil. 3 2025 - Kalendar Akademik 2026.pdf": {
+    "mtime": 1790932937.9866204,
+    "seen": 1791005609.8921986,
+    "ast_hash": "7c6719a183f54d52ced9b15800639dd6",
+    "semantic_hash": "7c6719a183f54d52ced9b15800639dd6"
+  },
+  "sample/dskp-ask-t1.pdf": {
+    "mtime": 1790932937.9796567,
+    "seen": 1791005609.8921998,
+    "ast_hash": "08daaa32c95c2373788f909aa64203c5",
+    "semantic_hash": "08daaa32c95c2373788f909aa64203c5"
+  },
+  "sample/dskp-mat-t4-t5.pdf": {
+    "mtime": 1790946854.710496,
+    "seen": 1791005609.8922007,
+    "ast_hash": "dae59d3644688e645789e80c8e3f0019",
+    "semantic_hash": "dae59d3644688e645789e80c8e3f0019"
+  },
+  "sample/jwg-20261002.pdf": {
+    "mtime": 1790932937.985601,
+    "seen": 1791005609.8922014,
+    "ast_hash": "53e58de3dde78ec95747f1127183e403",
+    "semantic_hash": "53e58de3dde78ec95747f1127183e403"
+  },
+  "sample/kalendar-akademik-2027-kpm.pdf": {
+    "mtime": 1790947737.565404,
+    "seen": 1791005609.8922024,
+    "ast_hash": "ec2fa1ff9da2806ac3da21d4c8520031",
+    "semantic_hash": "ec2fa1ff9da2806ac3da21d4c8520031"
+  },
+  "src/cli/rph.js": {
+    "mtime": 1791012451.1675725,
+    "seen": 1791013717.3648314,
+    "ast_hash": "e3bf913f0179287b55fbdb1207ae4873",
+    "semantic_hash": "e3bf913f0179287b55fbdb1207ae4873"
+  },
+  "src/cli/simulasi.js": {
+    "mtime": 1791011935.0095274,
+    "seen": 1791013717.3648353,
+    "ast_hash": "b1e9e477b1bde986694b1bfda4d9fc36",
+    "semantic_hash": "b1e9e477b1bde986694b1bfda4d9fc36"
+  },
+  "src/core/kedudukan.js": {
+    "mtime": 1791012424.774233,
+    "seen": 1791013717.3648388,
+    "ast_hash": "718a40f7ccd365a698fa153c705397d5",
+    "semantic_hash": "718a40f7ccd365a698fa153c705397d5"
+  },
+  "src/core/masa-sp.js": {
+    "mtime": 1791011924.9142995,
+    "seen": 1791013717.3648398,
+    "ast_hash": "5337d3bd5e513a74b210b5c10cec9648",
+    "semantic_hash": "5337d3bd5e513a74b210b5c10cec9648"
+  },
+  "src/core/parse/acara.js": {
+    "mtime": 1791011904.0224411,
+    "seen": 1791013717.3648407,
+    "ast_hash": "3a5ba9e648186ddae45195c14fcfda9e",
+    "semantic_hash": "3a5ba9e648186ddae45195c14fcfda9e"
+  },
+  "src/core/parse/aktiviti.js": {
+    "mtime": 1791011927.3297088,
+    "seen": 1791013717.364842,
+    "ast_hash": "655cd9546aec21f966070c20489f50c2",
+    "semantic_hash": "655cd9546aec21f966070c20489f50c2"
+  },
+  "src/core/parse/jadual.js": {
+    "mtime": 1791011898.9655707,
+    "seen": 1791013717.364844,
+    "ast_hash": "cf1a3d3805a76a4e545a9c513d17f7bb",
+    "semantic_hash": "cf1a3d3805a76a4e545a9c513d17f7bb"
+  },
+  "src/core/parse/kelas.js": {
+    "mtime": 1791011903.975462,
+    "seen": 1791013717.364845,
+    "ast_hash": "bc418a1773e0eadf789ded5926f8bab2",
+    "semantic_hash": "bc418a1773e0eadf789ded5926f8bab2"
+  },
+  "src/core/parse/rekod.js": {
+    "mtime": 1791011911.419114,
+    "seen": 1791013717.3648472,
+    "ast_hash": "9453c8ebf6135111d33231bf274d2e70",
+    "semantic_hash": "9453c8ebf6135111d33231bf274d2e70"
+  },
+  "src/core/parse/rpt.js": {
+    "mtime": 1791011875.4652655,
+    "seen": 1791013717.3648486,
+    "ast_hash": "d3c53177569b27e59dfb661a67606798",
+    "semantic_hash": "d3c53177569b27e59dfb661a67606798"
+  },
+  "src/core/rekod-sync.js": {
+    "mtime": 1791012424.774233,
+    "seen": 1791013717.3648508,
+    "ast_hash": "7901ae3fb6819b3585c732df4983d173",
+    "semantic_hash": "7901ae3fb6819b3585c732df4983d173"
+  },
+  "src/core/render/rekod.js": {
+    "mtime": 1791012405.3517642,
+    "seen": 1791013717.3648515,
+    "ast_hash": "7c32760007f4a270d3438709cc4bf1e7",
+    "semantic_hash": "7c32760007f4a270d3438709cc4bf1e7"
+  },
+  "src/core/render/rph.js": {
+    "mtime": 1791011927.3720448,
+    "seen": 1791013717.3648522,
+    "ast_hash": "1b7002a984000160d11f51abb09bd536",
+    "semantic_hash": "1b7002a984000160d11f51abb09bd536"
+  },
+  "src/core/rph-planner.js": {
+    "mtime": 1791011916.6154072,
+    "seen": 1791013717.364854,
+    "ast_hash": "05c4fe99811033dcfefdf3fc015a40dc",
+    "semantic_hash": "05c4fe99811033dcfefdf3fc015a40dc"
+  },
+  "src/core/scheduler.js": {
+    "mtime": 1791011909.6365423,
+    "seen": 1791013717.364856,
+    "ast_hash": "2404f0fd8daf7ffd03c066c88adcc384",
+    "semantic_hash": "2404f0fd8daf7ffd03c066c88adcc384"
+  },
+  "src/core/timetable.js": {
+    "mtime": 1791011899.0110195,
+    "seen": 1791013717.3648567,
+    "ast_hash": "5dad806c3463186fbe5f615080602c8b",
+    "semantic_hash": "5dad806c3463186fbe5f615080602c8b"
+  },
+  "test/jadual.js": {
+    "mtime": 1791011898.7309296,
+    "seen": 1791013717.3648586,
+    "ast_hash": "78912f9a418831408d62e5b488969881",
+    "semantic_hash": "78912f9a418831408d62e5b488969881"
+  },
+  "test/kedudukan.js": {
+    "mtime": 1791011924.773519,
+    "seen": 1791013717.3648593,
+    "ast_hash": "0c4e6b86891440c2b68232c0112caf74",
+    "semantic_hash": "0c4e6b86891440c2b68232c0112caf74"
+  },
+  "test/kelas-acara.js": {
+    "mtime": 1791011903.6450753,
+    "seen": 1791013717.3648605,
+    "ast_hash": "313e513f29e6525c92341a7382c491a7",
+    "semantic_hash": "313e513f29e6525c92341a7382c491a7"
+  },
+  "test/rekod-sync.js": {
+    "mtime": 1791012433.3549538,
+    "seen": 1791013717.3648612,
+    "ast_hash": "53ae5998a14996a291dae7d14af046ed",
+    "semantic_hash": "53ae5998a14996a291dae7d14af046ed"
+  },
+  "test/rekod.js": {
+    "mtime": 1791011911.2927146,
+    "seen": 1791013717.364862,
+    "ast_hash": "50aaf83d954de70371d75a378ba88c7e",
+    "semantic_hash": "50aaf83d954de70371d75a378ba88c7e"
+  },
+  "test/rph-cli.js": {
+    "mtime": 1791012443.2922895,
+    "seen": 1791013717.3648627,
+    "ast_hash": "840a7b817445ff43192218f0dc1ad2d1",
+    "semantic_hash": "840a7b817445ff43192218f0dc1ad2d1"
+  },
+  "test/rph-planner.js": {
+    "mtime": 1791011916.483032,
+    "seen": 1791013717.3648634,
+    "ast_hash": "0bb8c6bf8a95f358069cfe5afee20df7",
+    "semantic_hash": "0bb8c6bf8a95f358069cfe5afee20df7"
+  },
+  "test/rph-render.js": {
+    "mtime": 1791011927.152761,
+    "seen": 1791013717.3648646,
+    "ast_hash": "e8e2ae556f214412a034f1a24427dcf5",
+    "semantic_hash": "e8e2ae556f214412a034f1a24427dcf5"
+  },
+  "test/scheduler.js": {
+    "mtime": 1791011909.4927642,
+    "seen": 1791013717.3648663,
+    "ast_hash": "6d280f4d2395b7a1ccfcd209f4c0627e",
+    "semantic_hash": "6d280f4d2395b7a1ccfcd209f4c0627e"
+  },
+  "test/semua.js": {
+    "mtime": 1791011898.783774,
+    "seen": 1791013717.364867,
+    "ast_hash": "70f8de70ddf27b20900bf69fe46b80f4",
+    "semantic_hash": "70f8de70ddf27b20900bf69fe46b80f4"
+  },
+  "docs/superpowers/specs/2026-10-03-rph-pipeline-design.md": {
+    "mtime": 1791012408.9662678,
+    "seen": 1791013717.3648717,
+    "ast_hash": "171472bc31c4f0d8c2c12a6138c6c44d",
+    "semantic_hash": "171472bc31c4f0d8c2c12a6138c6c44d"
+  },
+  "sample/acara-2026.md": {
+    "mtime": 1791011903.796453,
+    "seen": 1791013717.3648736,
+    "ast_hash": "211176c4dbc620470959ae2f206187f3",
+    "semantic_hash": "211176c4dbc620470959ae2f206187f3"
+  },
+  "sample/aktiviti-umum.md": {
+    "mtime": 1791011927.1983998,
+    "seen": 1791013717.3648746,
+    "ast_hash": "4c4c553040783076c9515682fe506758",
+    "semantic_hash": "4c4c553040783076c9515682fe506758"
+  },
+  "sample/jwg-20260101-simulasi.md": {
+    "mtime": 1791011903.7372923,
+    "seen": 1791013717.3648753,
+    "ast_hash": "7541910bcbe4f72ac7232706846342c9",
+    "semantic_hash": "7541910bcbe4f72ac7232706846342c9"
+  },
+  "sample/kelas-2026.md": {
+    "mtime": 1791011903.705207,
+    "seen": 1791013717.364876,
+    "ast_hash": "7cce997dfa41fa7b13c5b1255b3cbf0f",
+    "semantic_hash": "7cce997dfa41fa7b13c5b1255b3cbf0f"
+  },
+  "test/data/kelas-semua.md": {
+    "mtime": 1791011903.8408704,
+    "seen": 1791013717.3648767,
+    "ast_hash": "ffb021f3835f18f3262b580fadab8635",
+    "semantic_hash": "ffb021f3835f18f3262b580fadab8635"
+  }
+}
