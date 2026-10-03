@@ -1,6 +1,6 @@
 # RPT Matematik Tingkatan 4 2026
 
-- Sumber: `sample/dskp-mat-t4.md`, `sample/takwim-smly-2026.md`, `rpt/kesukaran-mat-t4.md`
+- Sumber: `sample/dskp-mat-t4.md`, `sample/takwim-smly-2026.md`, `sample/kesukaran-mat-t4.md`
 - Sukatan tamat: M34 · 70 SP · 31 minggu PdP
 - Tajuk 1.0–5.0 selesai sebelum PPT T4 - 5 (M17)
 - Ulang kaji M35–M36 sebelum PAT TING. 4 (M37)

@@ -1,6 +1,6 @@
 # Lesson Planner — Architecture
 
-_Last updated: 2026-10-02 · Status: requirements done for RPT; RPH, dashboard and app shell not built yet._
+_Last updated: 2026-10-03 · Status: RPT built in `src/core/`; stack decided (§9); RPH pipeline designed (§4.4–4.6, spec in progress); dashboard and app shell not built yet._
 
 This document describes how the system is put together: its parts, the data they share, and the rules each part enforces. **Why** each rule exists is recorded in [discussion.md](discussion.md); this file only says **where** it lives. Anything marked **Proposal** is not decided yet.
 
@@ -64,88 +64,107 @@ Status: **Built** = working with tests · **Stopgap** = temporary tool · **Plan
 
 ### 4.1 Input parsers — _Built (DSKP, Takwim, Kesukaran) · Planned (Jadual)_
 
-Each parser turns one markdown format into plain objects. Code: [rpt/rpt.js](../rpt/rpt.js) (`parseDskp`, `parseTakwim`, `parseKesukaran`).
+Each parser turns one markdown format into plain objects. Code: [src/core/parse/](../src/core/parse/) (`parseDskp`, `parseTakwim`, `parseKesukaran`). The takwim parser keeps column text raw; classifying days is the calendar engine's job.
 
 | Input | Format (see sample) | Parsed into |
 |---|---|---|
 | DSKP | [sample/dskp-mat-t4.md](../sample/dskp-mat-t4.md): `## 1.0 Tajuk` → `### 1.1 SK` → SP table rows `\| 1.1.1 \| text \|`, TP table per SK (ASK) or per topic (Matematik) | Ordered SP list, each with its topic and SK |
 | Takwim | [sample/takwim-smly-2026.md](../sample/takwim-smly-2026.md): one row per day; `Mn` on Mondays; columns Cuti / Perayaan, Pentadbiran, Kurikulum, HEM, Kokurikulum | Weeks (M1…Mn) of five weekdays + weekdays in breaks |
-| Kesukaran | [rpt/kesukaran-mat-t4.md](../rpt/kesukaran-mat-t4.md): SP → 1–3 with reason; optional fixed weeks per topic | `{ sp: Map, tajuk: Map }` |
-| Jadual | [sample/jwg-20261002.md](../sample/jwg-20261002.md): effective-from date + rows (Hari, Waktu, Masa, Subjek, Kelas, Bilik) | Timetable version with slots — _parser planned_ |
+| Kesukaran | [sample/kesukaran-mat-t4.md](../sample/kesukaran-mat-t4.md): SP → 1–3 with reason; optional fixed weeks per topic | `{ sp: Map, tajuk: Map }` |
+| Jadual | [sample/jwg-20261002.md](../sample/jwg-20261002.md) (**frozen format**): `Berkuat kuasa: yyyy-mm-dd` + `## Kelas` table (Hari, Waktu, Masa, Subjek, Kelas, Bilik); `## Bukan kelas` ignored. One row = one lesson | `{ berkuatKuasa, slots }` — _planned_ |
+| Kelas | `kelas-<tahun>.md`: Nama guru; one row per class × subject (Kelas, Nama penuh, Tingkatan, Subjek, DSKP, Aktiviti, RPT, Tutorial, Bil. murid, Mula = starting SP) | Class list — _planned_ |
+| Acara | `acara-<tahun>.md`: table **Hari acara** (Tarikh, Acara, Tingkatan — blank = all) and table **Batal** (Tarikh, Tingkatan/Kelas, Sebab) | Event days + known cancellations — _planned_ |
+| Aktiviti | `aktiviti-<subjek>.md`: lists Permulaan / Perkembangan / Penutup | Activity template — _planned_ |
+| Rekod | `rekod-<kelas>-<subjek>.md`: one row per lesson (Minggu, Tarikh, Hari, Waktu, Jenis, SP, Status, Kehadiran, Refleksi/Sebab). Read **and written** by the CLI | Lesson history + outcomes — _planned_ |
 
 Rules for all parsers: fail loudly on structure errors (e.g. SP outside its SK); warn on data gaps (e.g. SP without a rating → default 2).
 
-### 4.2 Calendar engine — _Built (inside the RPT planner) · to be split out_
+### 4.2 Calendar engine — _Built_ ([src/core/calendar.js](../src/core/calendar.js))
 
 Classifies every weekday for a given **form**. Two layers, applied in order:
 
 1. **KPM layer** — terms, breaks, national holidays, Cuti Tambahan KPM (e.g. [sample/takwim-kpm-2027.md](../sample/takwim-kpm-2027.md)).
 2. **School layer** — Sabah state holidays, Cuti Peristiwa, exams, events (e.g. the SM Lok Yuk takwim).
-3. **Manual overrides** — surprise cancellations (e.g. Ujian SEGAK) entered in the app. _Planned._
+3. **Manual overrides** — event days and cancellations known ahead (e.g. Ujian SEGAK) from `acara-<tahun>.md`; in the app later. _Planned._
 
 | Day class | How it is detected | Effect |
 |---|---|---|
 | Break / holiday | Any weekday text in **Cuti / Perayaan**, except entries listed as not-a-holiday in Sabah (Hari Sarawak) | No lessons, no RPH, zero RPT capacity |
 | Exam (per form) | **Kurikulum** item mapped to forms: `PPT Ta - b`, `PAT TING.4`, `UASA` (T1–3), `PEP. PERCUBAAN SPM` (T5); `UBBM/UBBI` ignored | RPH generated and marked "Peperiksaan"; SP doesn't advance; zero RPT capacity |
-| Event | Weekday activity in the school layer (Sukaneka, X-Break, …) | RPH flagged "event day"; teacher decides |
+| Event | Listed in `acara-<tahun>.md` (hand-picked; takwim columns are too noisy to detect from) | RPH flagged "event day"; teacher decides |
+| Batal | Listed in the **Batal** table of `acara-<tahun>.md` | No lesson, no RPH |
 | Normal | Everything else (meetings are ignored) | Lesson as timetabled |
 
-Derived per form: **exam blocks** (consecutive exam weeks). The first block is the mid-year exam (PPT); the last block is the final exam (PAT / UASA / Percubaan SPM).
+Derived per form: **exam blocks** (consecutive exam weeks). The first block is the mid-year exam (PPT); the last block is the final exam (PAT / UASA / Percubaan SPM). Also derived: **breaks** between school weeks (Cuti Penggal etc.).
 
-### 4.3 RPT planner — _Built_ ([rpt/rpt.js](../rpt/rpt.js) `plan`, tests in [rpt/test.js](../rpt/test.js))
+Functions: `buildCalendar` (raw takwim → classified days), `dayClass(day, form)` → cuti · exam · pdp, `weekFor(week, form)`, `examBlocks`, `breaks`. Event days and manual overrides are not classified yet.
 
-Input: SP list, ratings, calendar, form. Output: week-by-week plan.
+### 4.3 RPT planner — _Built_ ([src/core/rpt-planner.js](../src/core/rpt-planner.js) `plan`, tests in [test/rpt.js](../test/rpt.js))
+
+Input: SP list, ratings, calendar (from §4.2), form. Output: week-by-week plan. CLI: [src/cli/rpt.js](../src/cli/rpt.js).
 
 1. **Capacity** counts whole **takwim weeks**: a week with at least one teaching day = 1 week; a week that is all holiday or all exam (for that form) = 0. Partial weeks are noted in Catatan (e.g. "3/5 hari PdP") but still count as one week.
 2. **Syllabus end** = final exam's first week − 1 − revision weeks (default **2**, all forms). Weeks after it until the final exam are *Ulang kaji & pengukuhan*; weeks after the exam are *Pasca peperiksaan*.
 3. **Split at PPT**: the first ⌈topics ÷ 2⌉ topics must fit before the mid-year exam; the rest go after it.
 4. **Inside each half**: topics with **fixed weeks** take exactly that capacity; other SPs share the rest in proportion to their 1–3 rating. DSKP order is kept.
 5. **Map to weeks**: each SP occupies a span of cumulative capacity; it is listed in every week it overlaps by ≥ 0.2 of a week (continuations marked "(samb.)").
-6. **Freeze**: once the teacher accepts it, the RPT is stored as a snapshot (week → SPs). Later rating changes do not move it unless the teacher regenerates on purpose. _Freeze step planned; today the output files are the snapshot._
+6. **Peruntukan SP** (planned): the RPT file ends with an appendix table SP → weeks allocated; the RPH generator paces lessons from it.
+7. **Freeze**: once the teacher accepts it, the RPT is stored as a snapshot (week → SPs). Later rating changes do not move it unless the teacher regenerates on purpose. _Freeze step planned; today the output files are the snapshot._
 
 Fails on purpose when the takwim has no exam weeks (the split and revision rules need them), or when fixed weeks exceed a half's capacity.
 
 ### 4.4 Timetable resolver — _Planned_
 
-- Holds every **timetable version** with its effective-from date (from the aSc footer).
-- For a date, picks the latest version with effective-from ≤ date. A timetable change is a new file, never an edit of dates.
-- Slots: 30-minute periods, period 0 = 6:30. Consecutive periods of the same subject and class merge into **one lesson** (the RPH sample shows 0800–0830 + 0830–0900 as one RPH).
-- aSc "B" marks (after-school duty) are not lessons.
+- Holds every **timetable version** with its effective-from date (`Berkuat kuasa:` line, from the aSc footer).
+- For a date, picks the latest version with effective-from ≤ date; fails if none applies. A timetable change is a new file, never an edit of dates.
+- Slots: 30-minute periods, period 0 = 6:30. Each `## Kelas` row is already **one lesson** (consecutive periods merged at conversion; the RPH sample shows 0800–0830 + 0830–0900 as one RPH). The parser fails if Masa doesn't match Waktu.
+- aSc "B" marks (after-school duty) sit in `## Bukan kelas` and are not lessons.
+- **Proposal:** `parse/jadual.js` `parseJadual(md) → { berkuatKuasa, slots: [{ hari, waktu: [from, to], mula, akhir, subjek, kelas, bilik }] }`; `timetable.js` `versionFor(versions, date)`.
 
 ### 4.5 Lesson scheduler — _Planned_
 
-Produces **lesson instances**: for each school day × slot in the resolved timetable → `{ date, week, class, subject, periods, kind }`.
+Produces **lesson instances** for one school week: each school day × slot in the resolved timetable → `{ tarikh, hari, minggu, kelas, subjek, waktu, masa, minit, jenis, acara }`.
 
-- `kind`: normal · exam · event-flagged · **tutorial** (TUTORIAL slot for 4H).
-- Holidays produce no instances. Manual cancellations remove or mark instances.
+- `jenis`: **pdp** · **tutorial** (TUTORIAL slot for 4H) · **peperiksaan** (exam day for the class's form). Event days keep their `jenis` and carry the `acara` name as a flag.
+- Holidays (per form) and **Batal** entries produce no instances. Slots of classes not in the class file are skipped (the CLI prints one note), so one subject can be planned on its own.
+- **Proposal:** `scheduler.js` `lessonsForWeek({ kalendar, versions, kelas, acara, minggu })`. The class file's `Tutorial` column names the jadual code (TUTORIAL) whose slots are tutorials of that class × subject.
 
 ### 4.6 RPH generator — _Planned (logic proven in the Apps Script stopgap)_
 
-For each lesson instance, choose the SP(s) from the class's **progress queue**:
+For each lesson instance, choose the SP(s) from the class's **progress queue**, built from the full rekod history:
 
-1. SPs from a postponed lesson (*PdP ditunda*) are taught first.
-2. Otherwise continue after the last completed SP.
-3. **Tutorial** lessons repeat that week's SP and do not advance.
-4. **Exam** lessons are generated but carry no new SP.
-5. A lesson may carry more than one SP (e.g. 4.2.7 + 4.2.8).
+1. A **ditunda** or **batal** lesson consumes no time: the next lesson starts where the skipped one would have (its SPs are taught first).
+2. Otherwise continue in DSKP order. The first lesson of a class starts at its **Mula** SP from the class file.
+3. **Paced by the RPT**: each SP's time for a class = the class's **real minutes in the RPT weeks where the SP sits** — SPs laid in DSKP order over the RPT's capacity weeks using the appendix **Peruntukan SP**, each week contributing its overlap × the class's scheduled PdP minutes that week (`masa-sp.js`). Partial weeks give less time, so an undisturbed class tracks the RPT week by week. Lessons are filled in DSKP order, so light SPs share a lesson and heavy SPs span lessons (written plainly on each lesson; no "bersambung" / "samb." note). No continuation shorter than 15 min (finish it now); no new SP started with < 15 min left. Subjects without an RPT fall back to one SP per lesson with a warning.
+4. **Reading the rekod** (minute replay, no marker): for each diajar row in date order, the lesson's minutes go to its listed SPs in order; all but the last are finished; the last takes the leftover and is finished when < 15 min of it remains. Hand edits (e.g. `4.2.7, 4.2.8`) follow the same rule.
+5. **Tutorial** lessons repeat all SPs of the latest **diajar** pdp lesson of that class × subject before it (this week if any, else earlier) and do not advance.
+6. **Peperiksaan** lessons are generated with no SP and do not advance.
+7. New rows are written with Status **diajar** and Kehadiran = class size; the teacher edits only exceptions. An interrupted lesson is **ditunda** (its content is taught again from the start; no partial status).
+8. **Past rows** (date ≤ today) are never re-derived. **Future untouched rows** (still exactly as generated) are rebuilt on every run from the current jadual, takwim, acara and queue; edited future rows are kept, flagged "slot tiada" if their slot disappeared.
+9. **DSKP finished**: remaining lessons cycle through the topics, one per lesson ("Ulang kaji: 1.0 …"). A class still behind during the RPT's revision weeks keeps getting new SPs.
+10. A subject with no DSKP yet (PK / PJ) gets rows without SP and a warning.
 
-Fills the RPH layout of [sample/2026 - ASK T1 - Google Sheets M34A.pdf](../sample/): guru, subjek, minggu/tarikh/hari, tingkatan, masa, kehadiran, tajuk, SK, SP, objektif, ringkasan aktiviti (Permulaan / Perkembangan / Penutup — fixed template per subject now, AI per SP later), refleksi.
+**Ahead / behind summary** (CLI only, not on the RPH): reads the frozen `rpt-<subjek>-<tahun>.md` named in the class file. Gap = (minutes of SP content taught − PdP minutes scheduled in teaching weeks so far) ÷ the class's normal weekly minutes; under half a week = ikut RPT, else n weeks ahead / behind. Measured in minutes so a short week (M20) doesn't inflate a small gap. `src/cli/simulasi.js` replays the year week by week to check an undisturbed class stays on the RPT. Warns when remaining SPs exceed remaining timetabled lessons before the syllabus end.
+
+Fills the RPH layout of [sample/2026 - ASK T1 - Google Sheets M34A.pdf](../sample/): guru, subjek, minggu/tarikh/hari, tingkatan, masa, kehadiran, tajuk, SK, SP, objektif, ringkasan aktiviti (Permulaan 5 min / Perkembangan = lesson length − 10 / Penutup 5 min — fixed template per subject from `aktiviti-<subjek>.md`, AI per SP later), refleksi.
+
+**CLI (Proposal):** `node src/cli/rph.js --tahun 2026 --minggu 36 [--hari-ini yyyy-mm-dd]`. For each class × subject: plan any missing weeks up to that week, rebuild future untouched rows, write the rekod, render the affected weeks and print the ahead/behind summary. Output: `output/rph/<tahun>-M<n>-<SUBJEK>.html`, one RPH per A4 page. Core: `rph-planner.js` `planWeek(lessons, history, spList, mula, bilMurid)`, `parse/rekod.js` + `render/rekod.js` (round-trip without changing edited rows), `parse/aktiviti.js`, `render/rph.js`.
 
 ### 4.7 Progress & dashboard — _Planned_
 
-- Teacher records each lesson's outcome once a week (laptop): **held**, **ditunda** (postponed) or **batal** (cancelled), plus reflection and attendance.
+- Teacher records each lesson's outcome once a week (laptop): **diajar** (held, the default), **ditunda** (postponed) or **batal** (cancelled), plus reflection and attendance. Until the app exists this is done by editing `rekod-<kelas>-<subjek>.md`.
 - An SP is **completed** when a lesson covering it was held and not postponed.
 - Per class: % of SPs completed, and **weeks ahead/behind the RPT** (compare the last completed SP with the RPT week that plans it; both directions — 4H SK is about 5 weeks ahead).
 - **History import**: weeks M12–M35 of 2026 from the existing Google Sheets seed the dashboard. _Needs the Sheets for SK, MAT, PJPK._
 
-### 4.8 Renderers — _Built for RPT_
+### 4.8 Renderers — _Built for RPT_ ([src/core/render/rpt.js](../src/core/render/rpt.js))
 
 - Markdown (for review and git diffs) and self-contained printable HTML (A4 landscape for RPT; one RPH per page). PDF = browser print. No server-side PDF library.
 - RPT columns: Minggu, Tarikh, Tajuk, Standard Kandungan, Standard Pembelajaran, Catatan (holidays, exams, partial weeks).
 
 ### 4.9 AI assistant — _Manual today_
 
-- **Difficulty draft**: once per subject per year, AI reads the DSKP (SP text + Catatan) and writes `kesukaran-<subject>.md` with a 1–3 rating and a reason per SP. The teacher edits it; the planner only reads the file. Today this is done by Claude in a session; in the app it becomes one online call.
+- **Difficulty draft**: once per subject per year, AI reads the DSKP (SP text + Catatan) and writes `kesukaran-<subject>.md` with a 1–3 rating and a reason per SP. The teacher edits it; the planner only reads the file. Done by the teacher in Claude Code or claude.ai (subscription); the app has no AI call and needs no API key.
 - **Activity text per SP**: later.
 - The only component that needs internet. Its output is always a reviewable file, never a hidden input.
 
@@ -177,8 +196,9 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 | Subject | code (`M3`, `ASK`, `SK`, `PK`/`PJ`) | DSKPs are reused across years |
 | SP | code `t.s.n` | Unique within a DSKP; the link between RPT, RPH and progress |
 | RPT | subject + year | One per **subject** (all classes of that subject share it) |
-| Lesson | class + date + first period | Generated; never typed by hand |
-| Outcome | lesson | The only data entered every week |
+| Lesson | class + date + first period | Generated; never typed by hand. Stored as a rekod row; never re-derived once written |
+| Outcome | lesson | The only data entered every week; same rekod row (Status, Kehadiran, Refleksi/Sebab) |
+| Acara | date | Hand-picked event days and known cancellations, per year |
 
 ## 6. Rules and where they live
 
@@ -193,7 +213,13 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 | Fixed weeks per topic (Matematik T4 topic 10.0 = 2) | RPT planner | Built |
 | RPT frozen once accepted | RPT store | Planned |
 | Timetable version by effective-from date | Timetable resolver | Planned |
-| Postponed SP taught first; tutorial repeats; exam doesn't advance | RPH generator | Planned (stopgap has postponed + next SP) |
+| Postponed / cancelled SP taught first; tutorial repeats last SK SP; exam doesn't advance | RPH generator | Planned (stopgap has postponed + next SP) |
+| SP time paced from the RPT's Peruntukan SP; split SPs unmarked (minute replay); hand edits respected | RPH generator | Planned |
+| RPT file carries a Peruntukan SP appendix (SP → weeks) | RPT renderer | Planned |
+| Unmarked lesson = diajar | RPH generator | Planned |
+| Past rekod rows never re-derived | RPH CLI | Planned |
+| Event days and known cancellations from a hand-picked list | Scheduler | Planned |
+| Perkembangan = lesson length − 10 min | RPH renderer | Planned |
 | SP completed = held and not postponed | Progress | Planned |
 
 ## 7. Main flows
@@ -208,8 +234,8 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 2. Lessons from that date are re-derived; past lessons and outcomes are untouched.
 
 **Weekly cycle**
-1. App generates the coming week's RPHs from the timetable in force, the calendar and each class's progress.
-2. Teacher prints or views them; after teaching, records outcomes, reflection and attendance.
+1. App generates the coming week's RPHs from the timetable in force, the calendar and each class's progress (until the app: `node src/cli/rph.js --minggu <n>` appends rows to each rekod and writes one HTML per subject).
+2. Teacher prints or views them; after teaching, records outcomes, reflection and attendance (until the app: edits only the exception rows in the rekod).
 3. Dashboard updates % done and weeks ahead/behind.
 
 ## 8. Repository layout
@@ -217,25 +243,34 @@ Class (e.g. 4S, form 4) ── teaches ── Subject
 | Path | Contents | Status |
 |---|---|---|
 | `docs/` | [discussion.md](discussion.md) (decisions), this file | — |
-| `sample/` | Source PDFs/DOCX and their checked markdown (DSKP, takwim, timetable) | Inputs |
-| `rpt/` | RPT core + CLI (`rpt.js`), tests (`test.js`), difficulty files | Built |
+| `sample/` | Source PDFs/DOCX and their checked markdown (DSKP, takwim, timetable, difficulty ratings) | Inputs |
+| `src/core/` | Pure core, no I/O: `parse/` (DSKP, takwim, kesukaran), `calendar.js`, `rpt-planner.js`, `render/`, `util.js`; `index.js` exports all. Later: Jadual parser, scheduler, RPH | Built (RPT) |
+| `src/cli/` | Node CLIs over the core (`rpt.js`) | Built |
+| `src/ui/`, `src/store/` | PWA screens; IndexedDB + Drive sync | Planned |
+| `test/` | Tests against real sample data (`rpt.js`) | Built |
 | `output/` | Generated RPTs (`.md`, `.html`) | Generated |
 | `apps-script/` | Google Sheets stopgap + test | Stopgap |
-| `src/` | **Proposal**: the app — `core/` (parsers, calendar, planner, scheduler, RPH; moved out of `rpt/`), `ui/`, `store/` | Planned |
 
 Conventions: Node 24, CommonJS, no dependencies so far; tests are plain `node <file>.js` with `assert` against real sample data; code comments and generated documents in Bahasa Melayu, docs in English.
 
 ## 9. Technology
 
-| Concern | Decided | Proposal (open) |
+Decided 2026-10-03.
+
+| Concern | Stack | Status |
 |---|---|---|
-| Core logic | Plain JavaScript, pure functions, no dependencies | Keep; share between CLI and browser |
-| Inputs | Markdown files checked by the teacher | — |
-| Output | Markdown + printable HTML; PDF via browser print | — |
-| App shell | Installable PWA, offline | Static site + service worker; no framework until screens need one |
-| Local storage | — | IndexedDB in the browser (inputs, frozen RPTs, lessons, outcomes) |
-| Sync | Must work across laptop / desktop / tablet | One JSON store file in the teacher's Google Drive (already used for the Sheets): last-writer-wins per record with timestamps. Avoids running a server. |
-| AI | Once per subject per year | Claude API call from the app, result saved as `kesukaran-*.md` |
+| Language | Plain JavaScript, CommonJS for now; pure functions in `src/core/`, no dependencies | In use |
+| Runtime | Node 24 for CLIs and tests; the browser for the app (same core) | Node in use |
+| Tests | `node test/<file>.js` with `node:assert`, against real files in `sample/` | In use |
+| Inputs | Markdown files checked by the teacher | In use |
+| Output | Markdown + self-contained printable HTML; PDF via browser print | In use |
+| App shell | Installable PWA: static site + service worker, offline; no framework until screens need one | Planned |
+| Local storage | IndexedDB in the browser (inputs, frozen RPTs, lessons, outcomes) | Planned |
+| Sync | One JSON store file in the teacher's Google Drive, last-writer-wins per record with timestamps; no server | Planned |
+| AI | Manual: Claude Code / claude.ai on the teacher's subscription writes `kesukaran-*.md`. No Claude API; the app never needs AI to run | In use |
+| Stopgap | Google Apps Script in the existing Sheets | In use until RPH is built |
+
+The core moves to ES modules when the browser app starts (a one-time change; browsers load ES modules natively).
 
 ## 10. Status and next steps
 
@@ -243,15 +278,18 @@ Conventions: Node 24, CommonJS, no dependencies so far; tests are plain `node <f
 |---|---|
 | Inputs converted: DSKP ASK T1, DSKP Matematik T4, takwim 2026, KPM 2027 (draft), timetable 5.10.2026 | Done |
 | RPT planner with calendar rules, tests, Matematik T4 2026 output | Done |
+| Core split into `src/core/` (parsers, calendar engine, planner, renderer); stack decided | Done |
 | Review difficulty ratings for Matematik T4 | Teacher |
+| Design spec split into 3 sub-projects: RPH pipeline → Progress → PWA app | Decided |
+| RPH pipeline spec (formats, components §4.4–4.6) | In progress |
 | Jadual parser + timetable resolver + lesson scheduler | Next |
-| RPH generator (port Apps Script logic, add tutorial/exam rules) + RPH renderer | Next |
+| RPH generator (port Apps Script logic, add tutorial/exam rules) + RPH renderer + rekod files | Next |
 | Outcomes, progress, dashboard, history import from Sheets | After RPH |
 | PWA shell, storage, sync | After the core is complete |
 
 ## 11. Open decisions
 
-- Sync approach and app stack (§9 proposals) — confirm before building the shell.
-- Exact markdown formats for DSKP / Jadual / Takwim — current samples are the de facto formats; freeze them in the spec.
+- Exact markdown formats for DSKP / Takwim — current samples are the de facto formats; freeze them in the spec. (Jadual frozen 2026-10-03.)
+- RPH pipeline interfaces marked **Proposal** in §4.4–4.6 (the class file's `Tutorial` and `RPT` columns, function signatures) — awaiting confirmation.
 - 2027: Lampiran C (confirm estimated Cuti Tambahan KPM days) and the school takwim (exam weeks).
 - DSKP and a sample RPH week for PJPK; Sheets for SK, MAT, PJPK (history import).

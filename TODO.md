@@ -5,7 +5,7 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## Now
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
-- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `rpt/kesukaran-mat-t4.md`, then re-run `node rpt/rpt.js ...`
+- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t4.md`, then re-run `node rpt/rpt.js ...`
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
