@@ -12,6 +12,7 @@ module.exports = {
   ...require('./calendar'),
   ...require('./timetable'),
   ...require('./scheduler'),
+  ...require('./rph-planner'),
   ...require('./rpt-planner'),
   ...require('./render/rpt'),
   ...require('./render/rekod'),
