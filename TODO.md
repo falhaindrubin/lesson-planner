@@ -18,16 +18,17 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 
 ## RPH pipeline (built 2026-10-03, branch `rph-pipeline`)
 - [x] Say **"go"** for the design spec — RPH pipeline spec, plan and code done ([spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md))
-- [ ] Open the **pull request** and merge `rph-pipeline` into `main`: https://github.com/falhaindrubin/lesson-planner/pull/new/rph-pipeline
+- [x] `rph-pipeline` merged to `main` (PR #1)
 - [ ] Open a few files in `output/simulasi-4S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
 - [x] Decide the **next sub-project** — the **web app** (see below)
 - [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
 - [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
 
-## Web app (brainstorming started 2026-10-03, paused)
-Decided so far: first slice = **weekly RPH loop** (pick a week → view/print RPH → mark diajar/ditunda/batal + reason → ahead/behind) · inputs: **pick the sample/ and output/ folders once**, copied into the browser · hosting: **GitHub Pages** · rekod: **kept in the browser, with export/import of `rekod-*.md`** (no Drive sync yet) · main device: **laptop**.
-- [ ] Check the repo is **public** (GitHub Pages is free only for public repos; private needs a paid plan)
-- [ ] Next session: answer whether to use the visual companion (screen mockups in a browser tab), then design the screens → written spec → plan
+## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
+- [ ] **Try the app in the browser**: `node tools/serve.js` → http://localhost:8080/app/ → Files: type your name, pick `sample/` then `output/` → Week tab: mark a lesson, print the week, Save rekod. Tell me what breaks.
+- [ ] Check the repo is **public** (GitHub Pages is free only for public repos) and create the public **rph-mate** repo
+- [ ] Release: `node tools/release.js ../rph-mate`, commit and push there, enable GitHub Pages, open https://falhaindrubin.github.io/rph-mate/ and install it; check it works offline
+- [ ] Decide the next sub-project: Progress (dashboard, history import) or Drive sync
 
 ## After the spec
 - [x] Convert **one of each** input to markdown and drop it in `sample/` (done early, 2026-10-02; recheck once the spec fixes the formats):

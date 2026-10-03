@@ -2,9 +2,24 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
-## Update 2026-10-03 (web app first slice built on branch `web-app`)
-Plan `docs/superpowers/plans/2026-10-03-web-app-weekly-loop.md` is implemented (Tasks 1–11). Core is ES modules with English names; `runWeek` is shared by the CLI and the app; the app is in `app/`. `node test/all.js` passes. **Not yet checked in a real browser** (the browser tool was not connected): run `node tools/serve.js`, open http://localhost:8080/app/ and follow the manual steps in the plan (Tasks 6–10). Old notes below describe the RPH pipeline session and use the old Malay command names where quoted from history.
+## Update 2026-10-03 — web app first slice built and merged to `main`
+**What happened this session.** Executed the 11-task plan (`docs/superpowers/plans/2026-10-03-web-app-weekly-loop.md`) inline (Sonnet), then one Opus whole-branch review. Core and CLI are now ES modules with English names (generated output proven byte-identical); `runWeek` in `src/core/week.js` is shared by the CLI and the app; the app is in `app/` (Week, Classes, Files screens, IndexedDB, Save rekod, service worker); `tools/serve.js` and `tools/release.js` (copies `app/` + `src/core/` to the public rph-mate repo as "RPH Mate"). Review found 1 Critical + 3 Important; all fixed (same-name drop/folder key, false rekod diffs on re-pick, lost click after typing, one-file Save rekod). `node test/all.js` → 13 files pass.
 
+**Not verified in a browser** (the Chrome extension was not connected): every manual step in plan Tasks 6–10, including the lost-click fix and the offline check. Start here: `node tools/serve.js`, open http://localhost:8080/app/, pick `sample/` and `output/`, walk the plan's Task 7 steps, then the release/offline check (Task 10 step 5).
+
+**Windows quirks hit again:** bash heredocs with `
+` or regexes mangle escapes — use the Write/Edit tools; `git diff` shows regenerated outputs as modified because of CRLF — check sameness with `git diff --exit-code --quiet <paths>`; `output/rpt-mat-t4-2026.md` shows as modified for that reason only (not committed).
+
+**Deferred minors (from the review):** `today` computed once at load (stale overnight) · IndexedDB failure after a mark is not rolled back · rejected store write during import unhandled · attendance edits on future lessons revert at once (matches CLI) · exam card prints the event twice · `esc` misses quotes in attributes, RPH iframe has no `sandbox` · service worker `skipWaiting` can mix old/new modules after a release · `serve.js` prefix path check · `release.js` does not rewrite the static `<title>` · error paths are class-file-relative · literal BOM char in a `util.js` regex (use ﻿) · spec §4.3 field names `needMinutes/haveMinutes` vs code `need/have`.
+
+## Suggested next steps
+1. Browser check of the app (above); fix what breaks.
+2. Create the public `rph-mate` repo, run `node tools/release.js ../rph-mate`, enable GitHub Pages, install as PWA; offline check.
+3. Real use for a week (switch Rekod/Output to real folders, Mula to 4S's current SP).
+4. Next sub-project: Progress (dashboard, history import) or Drive sync; brainstorm → spec → plan.
+5. Pick from the deferred minors.
+
+## History: RPH pipeline session (old Malay command names appear where quoted)
 ## Where we are
 - **Branch `rph-pipeline`** (pushed, 16 commits ahead of `main`, **pull request not opened yet**): https://github.com/falhaindrubin/lesson-planner/pull/new/rph-pipeline
 - **Built and tested** (`node test/all.js` → 10 files, all print "all tests passed"):
