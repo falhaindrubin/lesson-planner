@@ -3,6 +3,7 @@
 import { cells } from '../util.js';
 
 const HEADERS = ['Tahun', 'Guru', 'Takwim', 'Jadual', 'Acara', 'Rekod', 'Output'];
+const REQUIRED = HEADERS.filter(h => h !== 'Guru'); // the teacher's name may come from the app's Profile instead
 const COLUMNS = ['Kelas', 'Nama penuh', 'Tingkatan', 'Subjek', 'Nama subjek', 'DSKP', 'Aktiviti', 'RPT', 'Tutorial', 'Bil. murid', 'Mula'];
 
 function parseClasses(md, file = 'classes') {
@@ -25,11 +26,11 @@ function parseClasses(md, file = 'classes') {
       pupils: pupils ? Number(pupils) : null, start, line: i + 1,
     });
   });
-  for (const h of HEADERS) if (!meta[h]) throw new Error(`${file}: missing line "- ${h}: …"`);
+  for (const h of REQUIRED) if (!meta[h]) throw new Error(`${file}: missing line "- ${h}: …"`);
   if (!/^\d{4}$/.test(meta.Tahun)) throw new Error(`${file}: Tahun "${meta.Tahun}" is not a year`);
   if (!classes.length) throw new Error(`${file}: no class rows`);
   return {
-    year: Number(meta.Tahun), teacher: meta.Guru, takwim: meta.Takwim,
+    year: Number(meta.Tahun), teacher: meta.Guru || '', takwim: meta.Takwim,
     timetables: meta.Jadual.split(',').map(s => s.trim()).filter(Boolean),
     events: meta.Acara, rekod: meta.Rekod, output: meta.Output, classes,
   };

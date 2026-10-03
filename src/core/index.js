@@ -20,3 +20,4 @@ export * from './rpt-planner.js';
 export * from './render/rpt.js';
 export * from './render/rekod.js';
 export * from './render/rph.js';
+export * from './week.js';

@@ -1,4 +1,4 @@
-// A class's position against the frozen RPT (shown by the CLI only, never on an RPH).
+// A class's position against the frozen RPT (the CLI and the app word it themselves; never printed on an RPH).
 // Gap = (content minutes of the SPs already taught − PdP minutes scheduled in the PdP weeks
 // before the requested week) ÷ the class's weekly minutes. A gap under 0.5 week = on track;
 // otherwise rounded to weeks ahead / behind. Measured in minutes so that a partial week
@@ -22,14 +22,6 @@ function position({ rpt, calendar, form, sp, end, spTime, weeklyPdp, weekly, wee
   return { status, sp: code, rptWeeks: [Math.min(...span), Math.max(...span)], weeks: status === 'onTrack' ? 0 : Math.round(Math.abs(gap)) };
 }
 
-function positionText(label, p) {
-  if (p.status === 'finished') return `${label}: DSKP finished · revision`;
-  if (p.status === 'notInRpt') return `${label}: SP ${p.sp} not in RPT`;
-  const rpt = `RPT M${p.rptWeeks[0]}${p.rptWeeks[1] > p.rptWeeks[0] ? `–M${p.rptWeeks[1]}` : ''}`;
-  const now = p.status === 'onTrack' ? 'on track' : `${p.weeks} week${p.weeks === 1 ? '' : 's'} ${p.status}`;
-  return `${label}: SP ${p.sp} · ${rpt} · ${now}`;
-}
-
 // Minutes needed for the remaining SPs vs the PdP minutes scheduled (lessons) until the RPT's last week
 function fit({ sp, spTime, end, lessons }) {
   let need = 0;
@@ -38,26 +30,30 @@ function fit({ sp, spTime, end, lessons }) {
   return { need, have: lessons.reduce((a, l) => a + l.minutes, 0) };
 }
 
-// One summary line + "does not fit" warning for a class × subject at the start of the requested week
+// Position of one class × subject at the start of the requested week, as numbers.
+// The CLI and the app word it themselves (never printed on an RPH).
 function classSummary({ cls, rows, sp, rpt, spTime, weeklyPdp, calendar, versions, events, classes, week }) {
   const w = calendar.weeks.find(x => x.n === week);
+  const base = {
+    classCode: cls.classCode, subject: cls.subject, subjectName: cls.subjectName,
+    hasDskp: sp.length > 0, hasRpt: !!rpt, spTotal: sp.length, spDone: 0, currentSp: null,
+    finished: false, rptEnd: rpt ? rpt.end : null, position: null, fit: null,
+  };
+  if (!sp.length) return base;
+  const { end } = planRows({ rows: rows.filter(r => r.week < week), sp, spTime: rpt ? spTime : null, start: cls.start });
+  Object.assign(base, { spDone: end.finished ? sp.length : end.idx, currentSp: end.finished ? null : sp[end.idx].code, finished: end.finished });
+  if (!rpt) return base;
   const weekly = weeklyMinutes(versionFor(versions, w.days[0].date), cls.classCode, cls.subject);
-  const label = `${cls.classCode} ${cls.subject}`;
-  if (!sp.length) return { text: `${label}: no DSKP`, warnings: [] };
-  const before = rows.filter(r => r.week < week);
-  const { end } = planRows({ rows: before, sp, spTime: rpt ? spTime : null, start: cls.start });
-  if (!rpt) return { text: `${label}: ${end.finished ? 'DSKP finished' : `SP ${sp[end.idx].code}`} · no RPT`, warnings: [] };
-  const text = positionText(label, position({ rpt, calendar, form: cls.form, sp, end, spTime, weeklyPdp, weekly, week }));
-  if (end.finished) return { text, warnings: [] };
+  base.position = position({ rpt, calendar, form: cls.form, sp, end, spTime, weeklyPdp, weekly, week });
+  if (end.finished) return base;
   const lessons = [];
   for (let n = week; n <= rpt.end; n++)
     lessons.push(...lessonsForWeek({ calendar, versions, classes, events, week: n })
       .filter(l => l.classCode === cls.classCode && l.subject === cls.subject && l.kind === 'pdp'));
   const f = fit({ sp, spTime, end, lessons });
-  const warnings = f.need > f.have + 30 // one period: the 15-minute rule can add a little time
-    ? [`${label}: needs ${Math.round(f.need)} min for the remaining SPs, has ${f.have} min until M${rpt.end}; consider combining SPs`]
-    : [];
-  return { text, warnings };
+  // One period of slack: the 15-minute rule can add a little time
+  if (f.need > f.have + 30) base.fit = { need: f.need, have: f.have, endWeek: rpt.end };
+  return base;
 }
 
-export { position, positionText, fit, classSummary };
+export { position, fit, classSummary };

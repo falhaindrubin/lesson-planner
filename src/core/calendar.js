@@ -2,7 +2,7 @@
 //   holiday — has Cuti / Perayaan text (except NOT_HOLIDAY): no PdP
 //   exam    — an exam for that form in the Kurikulum column: no new PdP
 //   pdp     — anything else (a meeting does not cancel PdP)
-import { range } from './util.js';
+import { range, daysBetween } from './util.js';
 
 // Cuti / Perayaan entries on working days that are NOT a holiday in Sabah
 const NOT_HOLIDAY = [/HARI SARAWAK/i];
@@ -77,4 +77,10 @@ function breaks(calendar) {
   return out;
 }
 
-export { NOT_HOLIDAY, examForms, buildCalendar, dayClass, weekFor, examBlocks, breaks };
+// The takwim week containing a date (its Monday up to the following Sunday), or null in a school break
+function weekOfDate(calendar, date) {
+  const w = calendar.weeks.find(x => x.start <= date && daysBetween(x.start, date) < 7);
+  return w ? w.n : null;
+}
+
+export { NOT_HOLIDAY, examForms, buildCalendar, dayClass, weekFor, examBlocks, breaks, weekOfDate };
