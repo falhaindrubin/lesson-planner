@@ -44,6 +44,7 @@ Status mapping (app ↔ rekod): Taught ↔ `diajar`, Postponed ↔ `ditunda`, Ca
 | W10 | The app prints RPH pages; it does not write `output/*.html`. |
 | W11 | No personal data is ever published. The public repo holds only app and core code. The teacher's name is typed into the app's Profile; all school files are picked from the laptop and stay in the browser. |
 | W12 | The name **RPH Mate** is used only in production (the `rph-mate` repo and the deployed app). Everywhere else the project is **Lesson Planner**; the local app shows "Lesson Planner (dev)". |
+| W13 | **Responsiveness over aesthetics.** After a mark, the lesson cards, badges and dashboard update in under 100 ms (one class, one week). The RPH preview redraws afterwards, without blocking clicks. No visual effect, animation or library may slow down a click. Measured: one week's planning takes about 30 ms in Node (2026-10-03). |
 
 ## 4. Architecture
 
@@ -231,6 +232,7 @@ One row per class × subject in the class file, as of the start of the week show
 - BOM and blank-Status tests (§9).
 - Page-break CSS test (§8).
 - `teacher` overrides `Guru:`; a class file without `Guru:` parses.
+- Timing: `runWeek` for one week of the sample class finishes in under 100 ms in Node (W13).
 - `tools/release.js`: copies only the allowed file types from `app/` and `src/core/`, writes the production name, and refuses a target that is not a git checkout.
 
 ### 10.3 App logic (Node, no browser)
@@ -244,7 +246,7 @@ One row per class × subject in the class file, as of the start of the week show
 ### 10.4 Manual checklist (Chrome or Edge, once per release)
 1. Type a name in Profile; pick `sample/` and `output/`; all files found, none missing; the RPH shows the Profile name.
 2. Week opens on today's week; ◀ ▶ and Today work.
-3. Mark Tuesday Postponed: Reason required; Wednesday's SPs move; the preview shows "PdP ditunda kerana: …"; the badge and dashboard update.
+3. Mark Tuesday Postponed: Reason required; the cards update with no visible delay (W13); Wednesday's SPs move; the preview shows "PdP ditunda kerana: …"; the badge and dashboard update.
 4. Cancel a lesson: its page disappears from the preview.
 5. Save rekod; the downloaded file equals what `node src/cli/rph.js` writes for the same marks.
 6. Edit that file by hand and re-pick it: the differences are listed; confirm replaces.

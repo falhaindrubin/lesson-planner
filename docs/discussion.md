@@ -244,6 +244,8 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Personal data | Teacher name typed into the app's **Profile** (NAMA GURU); `Guru:` in the class file becomes optional. School files are picked locally and stay in the browser (same session) |
 | Publishing | **Separate public repo `rph-mate`** holding only `app/` + `src/core/`, filled by `tools/release.js`; this repo stays private (its files and history hold personal data). Chosen over rewriting history or Cloudflare/Netlify (same session) |
 | App name | **RPH Mate**, used **only in production** (the `rph-mate` repo and deployed app). Development stays "Lesson Planner"; the local app shows "Lesson Planner (dev)" (same session) |
+| CLI | **Kept for now**: `rph.js` as a fallback while the app is new (drop after a few real weeks), `rpt.js` until the app makes RPTs, `simulate.js` for checks. Never published to `rph-mate` (same session) |
+| Responsiveness | **Rule W13**: cards, badges and dashboard update in under 100 ms after a mark; the RPH preview redraws afterwards; nothing visual may slow a click. Measured ~30 ms planning per week in Node (same session) |
 
 ## Takwim 2027 (draft, layer 1 only)
 `sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
