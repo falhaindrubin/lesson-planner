@@ -11,13 +11,18 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
 - [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
 - [ ] Review the 4S Matematik simulation in `output/simulasi-4S-M3/` (`rekod-4S-M3.md`, the RPH HTML, `ringkasan.txt`)
-- [ ] For real use: in `sample/kelas-2026.md` set Rekod to `../rekod/2026`, Output to `../output/rph` and Mula to 4S's current SP; add other classes from `test/data/kelas-semua.md` with Bil. murid and Mula
+- [ ] Add the other classes from `test/data/kelas-semua.md` to `sample/kelas-2026.md` with Bil. murid and Mula (ASK 1S, SK 4H, PK/PJ 2D 2J) — PK/PJ run without SP until their DSKP is added
 - [ ] Check `sample/acara-2026.md` (events) and add Batal days you already know
 - [ ] Optional: copy `sample/aktiviti-umum.md` per subject and point the Aktiviti column at it
 - [ ] Optional: try the stopgap script ([apps-script/Code.gs](apps-script/Code.gs)) on the ASK Sheet for M36
 
-## When I'm ready
-- [ ] Say **"go"** to start the design spec (data model, RPT algorithm, screens, sync, markdown formats)
+## RPH pipeline (built 2026-10-03, branch `rph-pipeline`)
+- [x] Say **"go"** for the design spec — RPH pipeline spec, plan and code done ([spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md))
+- [ ] Open the **pull request** and merge `rph-pipeline` into `main`: https://github.com/falhaindrubin/lesson-planner/pull/new/rph-pipeline
+- [ ] Open a few files in `output/simulasi-4S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
+- [ ] Decide the **next sub-project** (see [docs/next-session.md](docs/next-session.md)): Progress (dashboard + history import) or the PWA app
+- [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
+- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu <n>`
 
 ## After the spec
 - [x] Convert **one of each** input to markdown and drop it in `sample/` (done early, 2026-10-02; recheck once the spec fixes the formats):
