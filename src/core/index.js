@@ -10,6 +10,7 @@ module.exports = {
   ...require('./parse/acara'),
   ...require('./calendar'),
   ...require('./timetable'),
+  ...require('./scheduler'),
   ...require('./rpt-planner'),
   ...require('./render/rpt'),
 };
