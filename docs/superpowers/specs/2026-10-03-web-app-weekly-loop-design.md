@@ -151,7 +151,7 @@ On first start the app calls `navigator.storage.persist()`.
 
 ### 5.6 Re-picking files
 
-- **An input file** (takwim, jadual, acara, DSKP, aktiviti, RPT, class file): if it parses, it replaces the stored copy and the current week is recalculated. If it doesn't parse, it is rejected and the old copy stays.
+- **An input file** (takwim, jadual, acara, DSKP, aktiviti, RPT, class file): if it parses, it replaces the stored copy and the current week is recalculated. If it doesn't parse, it is rejected and the old copy stays. A new class file is resolved again (§5.2 step 3), so it may report newly missing files.
 - **A rekod file**: `logic/rekod-diff.js` compares its rows with the stored rows, keyed by date and first period. If any differ, the app shows "3 lessons differ: M5 Mon, M5 Tue, M7 Wed" with each side's Status, SP and Catatan, and asks "Replace with the file?" On confirm, the file wins (W8) and the unsaved flag for that rekod is cleared. On cancel, nothing changes.
 
 ## 6. Week screen (layout A)
