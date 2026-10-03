@@ -206,6 +206,8 @@ Pacing round (2026-10-03). My rules: the generated RPT is fixed; low-level SPs c
 | No RPT yet (ASK, SK today) | Fallback one SP per lesson + warning "tiada RPT". |
 | DSKP + difficulty | DSKP markdown from me (AI-converted); ratings stay in a **separate** `kesukaran-<subjek>.md` drafted by AI, reviewed by me — DSKP stays a clean copy of KPM text. |
 
+Built (2026-10-03): `node src/cli/rph.js --kelas sample/kelas-2026.md --minggu <n>` writes the rekod and one RPH HTML per subject and week; `node src/cli/simulasi.js --kelas sample/kelas-2026.md` replays the year. Simulation of 4S Matematik is in `output/simulasi-4S-M3/` (ikut RPT M1–M34). For real use: rekod in `rekod/2026/`, HTML in `output/rph/`. Clarifications found while planning: with no RPT every SP listed in a diajar row counts as finished; files are written only when every class succeeded; SP time follows the RPT's actual weeks; classes not in the class file are skipped; to keep a future SP edit, write a note in Catatan.
+
 Simulation round (2026-10-03). My rules: simulate the whole year as if it were early in the year; give me `kelas-2026.md`; focus on **Matematik T4, 4 Stanford** only.
 
 | Topic | Decision |
@@ -251,5 +253,5 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 - [ ] Sheets for SK, MAT, PJPK (for history import)
 - [ ] Exact markdown formats for DSKP / Jadual / Takwim (goes in spec) — Jadual frozen 2026-10-03; new files (kelas, acara, aktiviti, rekod) defined for the RPH pipeline
 - [x] Sync approach and stack — decided 2026-10-03 (see "Stack and code layout")
-- [ ] Write the design spec — **started 2026-10-03**, RPH pipeline first (see "Design spec: split, RPH pipeline first")
-- [ ] Confirm RPH pipeline components (architecture §4.4–4.6, marked Proposal): `Tutorial` and `RPT` columns in the class file (`--semula` dropped in the grilling round)
+- [x] Write the design spec — RPH pipeline spec done: [docs/superpowers/specs/2026-10-03-rph-pipeline-design.md](superpowers/specs/2026-10-03-rph-pipeline-design.md). Progress and PWA specs still to come.
+- [x] Confirm RPH pipeline components — built and tested (`Tutorial` and `RPT` columns in the class file; `--semula` dropped)

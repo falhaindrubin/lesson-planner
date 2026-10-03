@@ -5,11 +5,15 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## Now
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
-- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t4.md`, then re-run `node rpt/rpt.js ...`
+- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t4.md`, then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
 - [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
+- [ ] Review the 4S Matematik simulation in `output/simulasi-4S-M3/` (`rekod-4S-M3.md`, the RPH HTML, `ringkasan.txt`)
+- [ ] For real use: in `sample/kelas-2026.md` set Rekod to `../rekod/2026`, Output to `../output/rph` and Mula to 4S's current SP; add other classes from `test/data/kelas-semua.md` with Bil. murid and Mula
+- [ ] Check `sample/acara-2026.md` (events) and add Batal days you already know
+- [ ] Optional: copy `sample/aktiviti-umum.md` per subject and point the Aktiviti column at it
 - [ ] Optional: try the stopgap script ([apps-script/Code.gs](apps-script/Code.gs)) on the ASK Sheet for M36
 
 ## When I'm ready

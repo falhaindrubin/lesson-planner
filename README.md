@@ -4,7 +4,7 @@ A lesson-plan generator for a KSSM teacher (Malaysia). It turns the curriculum
 (DSKP), the school calendar and the timetable into a yearly teaching plan (RPT)
 and per-lesson plans (RPH), with a dashboard showing topic completion.
 
-**Status:** RPT generator built; RPH, dashboard and app shell next. Stack: plain JavaScript (Node 24), no dependencies; planned as an offline PWA (see [docs/architecture.md](docs/architecture.md) §9).
+**Status:** RPT generator and weekly RPH pipeline built; dashboard and app shell next. Stack: plain JavaScript (Node 24), no dependencies; planned as an offline PWA (see [docs/architecture.md](docs/architecture.md) §9).
 Decisions so far live in [docs/discussion.md](docs/discussion.md).
 
 ## The idea
@@ -28,11 +28,19 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 | [docs/architecture.md](docs/architecture.md) | Components, data model, rules and where they live, tech choices |
 | [docs/discussion.md](docs/discussion.md) | Living log of every decision, findings from samples, open questions |
 | [src/core/](src/core/) | App core (pure functions): parsers, calendar engine, RPT planner, renderers |
-| [src/cli/](src/cli/) | Command-line tools over the core (RPT generator) |
+| [src/cli/](src/cli/) | Command-line tools over the core (RPT generator, weekly RPH, year simulation) |
 | [test/](test/) | Tests against the real files in `sample/` |
-| [output/](output/) | Generated RPTs (markdown + printable HTML) |
+| [output/](output/) | Generated RPTs (markdown + printable HTML), RPH pages, the 4S Matematik simulation |
 | [apps-script/](apps-script/) | Stopgap: Google Apps Script that generates next week's RPH tab in the existing Sheets |
 | [sample/](sample/) | Real inputs used for analysis: DSKPs, aSc timetables, RPT, RPH PDF, school takwim, KPM academic calendar |
+
+## Weekly RPH
+```
+node src/cli/rph.js --kelas sample/kelas-2026.md --minggu 35
+node src/cli/simulasi.js --kelas sample/kelas-2026.md      # replay the whole year, no edits
+node test/semua.js                                         # all tests
+```
+Writes `rekod-<kelas>-<subjek>.md` (one row per lesson) and `<tahun>-M<n>-<SUBJEK>.html` (one RPH per A4 page; print to PDF from the browser). Weekly cycle: run it on the weekend, print, and after teaching edit only the exception rows in the rekod (`ditunda` + reason, `batal`, Kehadiran, Catatan). The next run re-teaches postponed SPs and prints each class's position against the RPT. Details: [the spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md).
 
 ## RPT generator
 ```
