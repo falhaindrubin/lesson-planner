@@ -9,7 +9,8 @@ A browser app, installable and usable offline, for the weekly routine: open a we
 **In scope:**
 - Core converted to ES modules and renamed to English.
 - One shared week function, `runWeek`, used by the CLI and the app.
-- Static PWA on GitHub Pages: the Files screen, the Week screen (layout A) and the Classes dashboard.
+- Static PWA: the Files screen (with Profile), the Week screen (layout A) and the Classes dashboard.
+- Published as **RPH Mate** from a separate public repo, `rph-mate`, by a release script (§12). Development keeps the name Lesson Planner.
 - Rekod stored in IndexedDB, with "Save rekod" export and a re-pick check.
 - A4 page rule, two deferred fixes (UTF-8 BOM, blank Status), English CLI messages.
 
@@ -41,6 +42,8 @@ Status mapping (app ↔ rekod): Taught ↔ `diajar`, Postponed ↔ `ditunda`, Ca
 | W8 | Markdown is the source of truth. A re-picked rekod file **wins**, after the app lists the lessons that differ and the teacher confirms. |
 | W9 | Each RPH lesson starts on a new A4 page. A lesson too long for one page continues on the next page(s). A table row is not split across pages unless it is taller than a page. |
 | W10 | The app prints RPH pages; it does not write `output/*.html`. |
+| W11 | No personal data is ever published. The public repo holds only app and core code. The teacher's name is typed into the app's Profile; all school files are picked from the laptop and stay in the browser. |
+| W12 | The name **RPH Mate** is used only in production (the `rph-mate` repo and the deployed app). Everywhere else the project is **Lesson Planner**; the local app shows "Lesson Planner (dev)". |
 
 ## 4. Architecture
 
@@ -53,6 +56,7 @@ src/cli/                 Node shells: fs-backed read → runWeek → write files
   rph.js  rpt.js  simulate.js
 app/                     static PWA, English UI, loads ../src/core/ directly (no build step)
   index.html  app.css
+  config.js              { appName: 'Lesson Planner (dev)' } — the release script writes 'RPH Mate'
   main.js                start-up, tab switching, top bar
   store.js               IndexedDB: files, settings, unsaved flag
   inputs.js              Files screen: pick folders / drop files, resolve references, re-pick check
@@ -63,16 +67,19 @@ app/                     static PWA, English UI, loads ../src/core/ directly (no
   logic/                 pure modules tested in Node (§10.3)
     paths.js  rekod-diff.js  status.js  words.js  marking.js
   sw.js  manifest.webmanifest  icon.svg
+tools/
+  serve.js       NEW     tiny static server for local development (node:http, no dependencies)
+  release.js     NEW     copies the app to the rph-mate checkout (§12)
 test/                    node test/all.js runs every test file
 package.json     NEW     { "type": "module" }, no dependencies
 ```
 
-The app is plain JavaScript with no framework. GitHub Pages serves the whole repository, so `app/index.html` imports `../src/core/index.js` as it is.
+The app is plain JavaScript with no framework. `app/index.html` imports `../src/core/index.js` as it is; the public repo keeps the same two folders, so the import works unchanged there. Locally, `node tools/serve.js` serves the repo at `http://localhost:8080/app/`, because ES modules and service workers need http rather than `file://`.
 
 ### 4.1 `runWeek`
 
 ```js
-runWeek({ read, classFile, week, today }) → {
+runWeek({ read, classFile, week, today, teacher }) → {
   writes:    [{ path, text, kind: 'rekod' | 'rph' }],  // what the CLI writes today, in the same order
   rph:       [{ subject, week, html }],                 // = the 'rph' writes, for the app preview
   classes:   [ClassSummary],                            // §7, one per class × subject, as of the start of `week`
@@ -84,6 +91,7 @@ runWeek({ read, classFile, week, today }) → {
 
 - `read(path) → string | null` reads a file by path. The CLI passes an `fs` reader. The app passes a reader over its stored files. Paths are relative to the class file's folder, as today.
 - The body is the current loop in `src/cli/rph.js`, moved unchanged: parse inputs, compute SP time per class, `syncRekod`, summary, group RPH pages by subject and week, `renderRph`. Rekod paths come from the class file's Rekod folder, as today.
+- `teacher` (optional) is the name printed as NAMA GURU. The app passes the Profile name; the CLI passes nothing, and the class file's `Guru:` line is used. The `Guru:` line becomes **optional** in the class file. If neither gives a name, NAMA GURU is left blank and the app's Files screen asks for one.
 - It throws on the first error (W4). The message names the file and line, as the parsers do today.
 
 ### 4.2 Rename
@@ -118,7 +126,7 @@ Renaming never changes the markdown: parsers still read the Malay headers and va
 | Store | Content |
 |---|---|
 | `files` | path → text, for every `.md` input and every rekod file (paths as picked, e.g. `sample/kelas-2026.md`, `output/simulasi-4S-M3/rekod-4S-M3.md`) |
-| `settings` | class file path, last week shown, unsaved rekod paths |
+| `settings` | Profile (teacher name), class file path, last week shown, unsaved rekod paths and when each was last saved |
 
 Rekod is stored as **markdown text**, the same text the CLI writes. A mark parses the rekod, changes the row, renders it again with `renderRekod`, stores the text and runs `runWeek`. "Save rekod" downloads the stored text unchanged (W2).
 
@@ -126,6 +134,7 @@ On first start the app calls `navigator.storage.persist()`.
 
 ### 5.2 Setup (Files screen)
 
+0. **Profile:** the teacher types their name once (Files screen, top). It prints as NAMA GURU and can be changed later.
 1. The teacher picks the `sample/` folder and the `output/` folder (`<input type="file" webkitdirectory>`), or drops `.md` files. Only `.md` files are read; PDFs, HTML and DOCX are ignored.
 2. If more than one `kelas-*.md` is found, the teacher chooses one. It is remembered.
 3. The app resolves every file the class file names (Takwim, Jadual, Acara, DSKP, Aktiviti, RPT, and the Rekod folder) relative to the class file's folder (`logic/paths.js`; `../output/x` from `sample/` → `output/x`). A dropped file without a folder matches by file name when that name is unique.
@@ -221,6 +230,8 @@ One row per class × subject in the class file, as of the start of the week show
 - New tests on the sample files: a postponed lesson, a cancelled lesson, a re-marked past lesson, an exam week, a week with no lessons for the class, a `read` that returns `null` for a missing input (clear error).
 - BOM and blank-Status tests (§9).
 - Page-break CSS test (§8).
+- `teacher` overrides `Guru:`; a class file without `Guru:` parses.
+- `tools/release.js`: copies only the allowed file types from `app/` and `src/core/`, writes the production name, and refuses a target that is not a git checkout.
 
 ### 10.3 App logic (Node, no browser)
 `app/logic/` holds pure modules, tested with `node:assert` like the core:
@@ -231,7 +242,7 @@ One row per class × subject in the class file, as of the start of the week show
 - `marking.js`: applying a mark to rekod text; reason required; the text round-trips through `renderRekod`
 
 ### 10.4 Manual checklist (Chrome or Edge, once per release)
-1. Pick `sample/` and `output/`; all files found, none missing.
+1. Type a name in Profile; pick `sample/` and `output/`; all files found, none missing; the RPH shows the Profile name.
 2. Week opens on today's week; ◀ ▶ and Today work.
 3. Mark Tuesday Postponed: Reason required; Wednesday's SPs move; the preview shows "PdP ditunda kerana: …"; the badge and dashboard update.
 4. Cancel a lesson: its page disappears from the preview.
@@ -240,6 +251,7 @@ One row per class × subject in the class file, as of the start of the week show
 7. Print week and Open in new tab: one lesson per page; a long lesson continues on the next page.
 8. Reload offline: the app opens with its data.
 9. Re-pick a broken jadual: rejected, the old one kept.
+10. After a release: the deployed app's title reads "RPH Mate", and the `rph-mate` repo holds nothing outside `app/`, `src/core/`, `index.html` and `README.md`.
 
 ## 11. Build order
 
@@ -251,9 +263,22 @@ One row per class × subject in the class file, as of the start of the week show
 6. Week screen and preview.
 7. Classes dashboard.
 8. Save rekod, re-pick check, service worker, manifest; §10.4.
-9. Docs: README, architecture §9–10, next-session.
+9. `tools/release.js`; first release to `rph-mate`.
+10. Docs: README, architecture §9–10, next-session.
 
-## 12. Open items for the teacher
+## 12. Publishing (RPH Mate)
 
-- **GitHub Pages needs the repository to be public** (or a paid plan). A public repository also publishes everything committed in `sample/` and `output/`: the timetable, the takwim, your name and the source PDFs. Decide before step 8: make it public as is, move personal files out first, or host elsewhere. The app itself never uploads your files; they stay in your browser.
+- **Why a separate repo:** this repo's files and git history contain the teacher's name, school, timetable and source PDFs. Making it public would publish all of them, including deleted files, through history. The public repo starts clean and only ever receives code.
+- **`rph-mate`:** a new public GitHub repo, `falhaindrubin/rph-mate`, served by GitHub Pages at `https://falhaindrubin.github.io/rph-mate/`. It holds `app/`, `src/core/`, a root `index.html` that redirects to `app/`, and a short `README.md`. No `sample/`, `output/`, `docs/`, `test/`, `src/cli/`, or markdown data.
+- **`node tools/release.js <path to rph-mate checkout>`**:
+  1. checks that the target is a git checkout, and that `node test/all.js` passes here
+  2. empties the target's `app/` and `src/core/`
+  3. copies `app/` and `src/core/`, only `.js .html .css .webmanifest .svg .png` files
+  4. writes the production name into the copied `config.js` and `manifest.webmanifest` (W12), and a version (the date and this repo's short commit) into the service worker's cache name
+  5. prints the copied files. The teacher reviews them, then commits and pushes in `rph-mate` by hand.
+- Nothing is pushed automatically.
+
+## 13. Open items for the teacher
+
+- Create the empty public repo `rph-mate` on GitHub and turn on Pages before step 9.
 - The weekly screen design is approved for now, to be revisited after first use.

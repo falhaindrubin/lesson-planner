@@ -225,7 +225,7 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | Next sub-project | The web app (PWA), before Progress |
 | First slice | Weekly RPH loop: pick week → view/print RPH → mark diajar/ditunda/batal + reason → ahead/behind |
 | Inputs | Pick `sample/` and `output/` folders once; copied into the browser; markdown stays the source of truth |
-| Hosting | GitHub Pages (needs a public repo, or a paid plan) |
+| Hosting | GitHub Pages (needs a public repo, or a paid plan) — see "Publishing" below |
 | Rekod | In the browser, with export/import of `rekod-*.md`; Drive sync later |
 | Main device | Laptop; tablet for viewing |
 | Screen layout | Weekly screen = layout A: lesson cards with diajar/ditunda/batal on the left, live RPH preview on the right, Print below (2026-10-03, later session) |
@@ -241,6 +241,9 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | RPH output in the app | **Print only** (or Save as PDF from the print dialog); the app writes no `output/*.html` files (same session) |
 | Weekly screen detail | Mockup approved for now (revisit later). **"Open in new tab"** button shows the week's RPH pages in their own browser tab (print from there too); the side preview stays (same session) |
 | Dashboard in first slice | **Yes, a simple Classes dashboard**: per class current SP, % DSKP done, weeks ahead/behind, RPT week of that SP, "won't fit before RPT ends" warning. Charts and Sheets history import stay in sub-project 2 (same session) |
+| Personal data | Teacher name typed into the app's **Profile** (NAMA GURU); `Guru:` in the class file becomes optional. School files are picked locally and stay in the browser (same session) |
+| Publishing | **Separate public repo `rph-mate`** holding only `app/` + `src/core/`, filled by `tools/release.js`; this repo stays private (its files and history hold personal data). Chosen over rewriting history or Cloudflare/Netlify (same session) |
+| App name | **RPH Mate**, used **only in production** (the `rph-mate` repo and deployed app). Development stays "Lesson Planner"; the local app shows "Lesson Planner (dev)" (same session) |
 
 ## Takwim 2027 (draft, layer 1 only)
 `sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
