@@ -1,7 +1,7 @@
 // acara-<tahun>.md -> { acara: [{ tarikh, nama, tingkatan: [n] }], batal: [{ tarikh, sasaran, sebab }] }
 // Hari acara: PdP ditandakan (guru buat keputusan). Tingkatan kosong = semua tingkatan.
 // Batal: tiada PdP langsung. Sasaran kosong = semua; '4' = Tingkatan 4; '4S' = kelas 4S.
-const { cells } = require('../util');
+import { cells } from '../util.js';
 
 function parseAcara(md, fail = 'acara') {
   const out = { acara: [], batal: [] };
@@ -24,4 +24,4 @@ function parseAcara(md, fail = 'acara') {
   return out;
 }
 
-module.exports = { parseAcara };
+export { parseAcara };

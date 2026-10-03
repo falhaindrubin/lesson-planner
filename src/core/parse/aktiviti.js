@@ -15,4 +15,4 @@ function parseAktiviti(md, fail = 'aktiviti') {
   return out;
 }
 
-module.exports = { parseAktiviti };
+export { parseAktiviti };

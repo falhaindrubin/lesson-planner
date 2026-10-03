@@ -8,9 +8,9 @@
 // Output: <Output>/<tahun>-M<n>-<SUBJEK>.html bagi setiap subjek dan minggu yang dirancang,
 // kemudian amaran (stderr) dan satu baris kedudukan bagi setiap kelas.
 
-const fs = require('fs');
-const path = require('path');
-const C = require('../core');
+import fs from 'node:fs';
+import path from 'node:path';
+import * as C from '../core/index.js';
 
 function hariIniTempatan() {
   const d = new Date();

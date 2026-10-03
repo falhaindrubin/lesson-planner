@@ -20,4 +20,4 @@ function parseRpt(md, fail = 'rpt') {
   return { tamat: Number(t[1]), minggu, peruntukan };
 }
 
-module.exports = { parseRpt };
+export { parseRpt };

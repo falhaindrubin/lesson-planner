@@ -3,7 +3,7 @@
 //   SP:        kod dalam sel ikut tertib (n.n.n), atau kod tajuk n.0 = ulang kaji
 //   Status:    diajar / ditunda / batal (huruf besar atau kecil); kosong bagi peperiksaan
 //   Kehadiran: nombor pertama dibaca ('33/35' -> 33)
-const { cells, waktuRange, minitWaktu } = require('../util');
+import { cells, waktuRange, minitWaktu } from '../util.js';
 
 const JENIS = ['pdp', 'tutorial', 'peperiksaan'];
 const STATUS = ['diajar', 'ditunda', 'batal'];
@@ -37,4 +37,4 @@ function parseRekod(md, fail = 'rekod') {
   return rows;
 }
 
-module.exports = { parseRekod, kodSel, JENIS, STATUS };
+export { parseRekod, kodSel, JENIS, STATUS };

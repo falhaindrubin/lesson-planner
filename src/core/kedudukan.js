@@ -3,10 +3,10 @@
 // sebelum minggu diminta) ÷ minit seminggu kelas itu. Beza < 0.5 minggu = ikut RPT; selainnya
 // dibundarkan kepada minggu ke depan / ke belakang. Diukur dalam minit supaya minggu separa
 // (contoh M20: dua hari cuti) tidak membesarkan beza yang kecil.
-const { weekFor } = require('./calendar');
-const { lessonsForWeek } = require('./scheduler');
-const { planRows } = require('./rph-planner');
-const { versionFor, minitSeminggu } = require('./timetable');
+import { weekFor } from './calendar.js';
+import { lessonsForWeek } from './scheduler.js';
+import { planRows } from './rph-planner.js';
+import { versionFor, minitSeminggu } from './timetable.js';
 
 function kedudukan({ rpt, kalendar, tingkatan, sp, akhir, masaSp, minitMinggu, seminggu, minggu }) {
   if (akhir.selesai) return { status: 'selesai' };
@@ -60,4 +60,4 @@ function ringkasanKelas({ kelas, rows, sp, rpt, masaSp, minitMinggu, kalendar, v
   return { teks, amaran };
 }
 
-module.exports = { kedudukan, teksKedudukan, muat, ringkasanKelas };
+export { kedudukan, teksKedudukan, muat, ringkasanKelas };

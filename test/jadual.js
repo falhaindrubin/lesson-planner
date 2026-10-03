@@ -1,6 +1,10 @@
 // node test/jadual.js — jadual waktu 5.10.2026 sebenar dari sample/
-const fs = require('fs'), assert = require('assert');
-const R = require('../src/core');
+import fs from 'node:fs';
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
 // Waktu: 30 minit, waktu 0 = 6:30, jam 12 jam seperti aSc

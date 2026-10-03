@@ -1,6 +1,6 @@
 // kelas-<tahun>.md -> { tahun, guru, takwim, jadual: [fail], acara, rekod, output, kelas: [baris] }
 // Satu baris = satu kelas × subjek. Laluan fail adalah relatif kepada folder fail kelas.
-const { cells } = require('../util');
+import { cells } from '../util.js';
 
 const KEPALA = ['Tahun', 'Guru', 'Takwim', 'Jadual', 'Acara', 'Rekod', 'Output'];
 const LAJUR = ['Kelas', 'Nama penuh', 'Tingkatan', 'Subjek', 'Nama subjek', 'DSKP', 'Aktiviti', 'RPT', 'Tutorial', 'Bil. murid', 'Mula'];
@@ -35,4 +35,4 @@ function parseKelas(md, fail = 'kelas') {
   };
 }
 
-module.exports = { parseKelas };
+export { parseKelas };

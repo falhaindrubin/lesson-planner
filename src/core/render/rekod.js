@@ -18,4 +18,4 @@ function renderRekod(k, tahun, rows) {
   return L.join('\n') + '\n';
 }
 
-module.exports = { renderRekod };
+export { renderRekod };

@@ -1,24 +1,22 @@
 // Teras aplikasi: fungsi tulen sahaja (tiada I/O). Dikongsi oleh CLI dan aplikasi pelayar.
-module.exports = {
-  ...require('./util'),
-  ...require('./parse/dskp'),
-  ...require('./parse/kesukaran'),
-  ...require('./parse/takwim'),
-  ...require('./parse/rpt'),
-  ...require('./parse/jadual'),
-  ...require('./parse/kelas'),
-  ...require('./parse/acara'),
-  ...require('./parse/rekod'),
-  ...require('./parse/aktiviti'),
-  ...require('./calendar'),
-  ...require('./timetable'),
-  ...require('./scheduler'),
-  ...require('./rph-planner'),
-  ...require('./masa-sp'),
-  ...require('./rekod-sync'),
-  ...require('./kedudukan'),
-  ...require('./rpt-planner'),
-  ...require('./render/rpt'),
-  ...require('./render/rekod'),
-  ...require('./render/rph'),
-};
+export * from './util.js';
+export * from './parse/dskp.js';
+export * from './parse/kesukaran.js';
+export * from './parse/takwim.js';
+export * from './parse/rpt.js';
+export * from './parse/jadual.js';
+export * from './parse/kelas.js';
+export * from './parse/acara.js';
+export * from './parse/rekod.js';
+export * from './parse/aktiviti.js';
+export * from './calendar.js';
+export * from './timetable.js';
+export * from './scheduler.js';
+export * from './rph-planner.js';
+export * from './masa-sp.js';
+export * from './rekod-sync.js';
+export * from './kedudukan.js';
+export * from './rpt-planner.js';
+export * from './render/rpt.js';
+export * from './render/rekod.js';
+export * from './render/rph.js';

@@ -1,6 +1,10 @@
 // node test/rekod-sync.js — selaras rekod 1S ASK dan 4S M3 dengan takwim, jadual dan acara 2026 sebenar
-const fs = require('fs'), assert = require('assert');
-const R = require('../src/core');
+import fs from 'node:fs';
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
 const kalendar = R.buildCalendar(R.parseTakwim(read('takwim-smly-2026.md')));

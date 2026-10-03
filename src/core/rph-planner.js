@@ -85,4 +85,4 @@ function planRows({ rows, sp, masaSp = null, mula = '', fail = 'rekod' }) {
   return { rows: out, warnings: [...new Set(warnings)], akhir: { idx, sisa, ulang, selesai: idx >= sp.length } };
 }
 
-module.exports = { MIN_SISA, planRows };
+export { MIN_SISA, planRows };

@@ -1,6 +1,10 @@
 // node test/rpt.js — guna takwim 2026 dan DSKP ASK T1 sebenar dari sample/
-const fs = require('fs'), assert = require('assert');
-const R = require('../src/core');
+import fs from 'node:fs';
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 const takwim = R.parseTakwim(read('takwim-smly-2026.md'));
 const kalendar = R.buildCalendar(takwim);

@@ -1,5 +1,5 @@
 // DSKP.md -> [{ bidang, sk, code, text }] ikut tertib DSKP
-const { cells } = require('../util');
+import { cells } from '../util.js';
 
 function parseDskp(md) {
   const sp = [];
@@ -17,4 +17,4 @@ function parseDskp(md) {
   return sp;
 }
 
-module.exports = { parseDskp };
+export { parseDskp };

@@ -39,7 +39,7 @@ const masaWaktu = ([a, b]) => `${jam12(minitMula(a))}–${jam12(minitMula(b + 1)
 // '2026-10-05' -> '05/10/2026'
 const fmtTarikh = iso => iso.split('-').reverse().join('/');
 
-module.exports = {
+export {
   BULAN, HARI_BEKERJA, cells, daysBetween, fmtDate, fmtRange, range,
   waktuRange, fmtWaktu, minitMula, minitWaktu, jam12, jam24, masaWaktu, fmtTarikh,
 };

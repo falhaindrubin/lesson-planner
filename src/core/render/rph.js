@@ -1,7 +1,7 @@
 // Renderer RPH: satu halaman A4 bagi setiap PdP, susun atur seperti RPH Google Sheets
 // (sample/2026 - ASK T1 - Google Sheets M34A.pdf). PdP batal tidak dicetak.
 // Tiada tanda "bersambung": SP yang merentas PdP ditulis biasa pada setiap PdP.
-const { waktuRange, range, minitMula, jam24, fmtTarikh } = require('../util');
+import { waktuRange, range, minitMula, jam24, fmtTarikh } from '../util.js';
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const uniq = xs => [...new Map(xs.map(x => [x.code, x])).values()];
@@ -86,4 +86,4 @@ ${body}
 `;
 }
 
-module.exports = { renderRph, kandungan };
+export { renderRph, kandungan };

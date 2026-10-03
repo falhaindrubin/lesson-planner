@@ -1,6 +1,6 @@
 // node test/rph-planner.js — pemadanan SP kepada PdP ikut masa daripada RPT
-const assert = require('assert');
-const R = require('../src/core');
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
 
 // DSKP kecil: masa SP (minit) = 30, 60, 120, 10, 100
 const mk = code => ({ code, text: `Teks ${code}`, sk: { code: code.split('.').slice(0, 2).join('.'), title: 'SK' }, bidang: { code: code.split('.')[0] + '.0', title: 'Tajuk' } });

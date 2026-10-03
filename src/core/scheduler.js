@@ -4,9 +4,9 @@
 //   hari acara                     -> PdP biasa, acara = nama acara (guru buat keputusan)
 // Slot dengan kod Tutorial kelas itu -> jenis 'tutorial' bagi subjek kelas itu.
 // Slot kelas × subjek yang tiada dalam fail kelas tidak dirancang (contoh: rancang satu subjek sahaja).
-const { dayClass } = require('./calendar');
-const { versionFor } = require('./timetable');
-const { fmtWaktu, minitWaktu, waktuRange } = require('./util');
+import { dayClass } from './calendar.js';
+import { versionFor } from './timetable.js';
+import { fmtWaktu, minitWaktu, waktuRange } from './util.js';
 
 const ikutMasa = (a, b) => (a.tarikh < b.tarikh ? -1 : a.tarikh > b.tarikh ? 1 : waktuRange(a.waktu)[0] - waktuRange(b.waktu)[0]);
 
@@ -45,4 +45,4 @@ function slotTanpaKelas(versions, kelas) {
   return [...out];
 }
 
-module.exports = { lessonsForWeek, ikutMasa, slotTanpaKelas };
+export { lessonsForWeek, ikutMasa, slotTanpaKelas };

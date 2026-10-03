@@ -7,7 +7,7 @@
 //   berkongsi baki ikut kesukaran SP.
 // SP disenaraikan dalam minggu yang bertindih sekurang-kurangnya MIN_OVERLAP minggu,
 // atau minggu tindihan terbesarnya.
-const { weekFor, examBlocks, breaks } = require('./calendar');
+import { weekFor, examBlocks, breaks } from './calendar.js';
 
 const MIN_OVERLAP = 0.2;
 const ULANG_KAJI = 2; // minggu ulang kaji sebelum peperiksaan akhir (bagi tamat 'akhir')
@@ -86,4 +86,4 @@ function plan({ sp, kesukaran, kalendar, tingkatan, tamat = 'akhir', ulangKaji =
   };
 }
 
-module.exports = { MIN_OVERLAP, ULANG_KAJI, plan };
+export { MIN_OVERLAP, ULANG_KAJI, plan };

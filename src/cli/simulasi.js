@@ -4,10 +4,12 @@
 //
 //   node src/cli/simulasi.js --kelas sample/kelas-2026.md [--dari 1] [--hingga 43]
 
-const fs = require('fs');
-const path = require('path');
-const { spawnSync } = require('child_process');
-const C = require('../core');
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import * as C from '../core/index.js';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function main(argv) {
   const a = {};

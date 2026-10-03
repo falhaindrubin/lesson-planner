@@ -1,5 +1,5 @@
 // Renderer RPT: Markdown (untuk semakan / git diff) dan HTML boleh cetak (A4 landskap).
-const { fmtDate, fmtRange } = require('../util');
+import { fmtDate, fmtRange } from '../util.js';
 
 function catatan(r, p) {
   const c = [];
@@ -113,4 +113,4 @@ ${body}
 `;
 }
 
-module.exports = { rowsOut, ringkasan, aturan, renderMd, renderHtml };
+export { rowsOut, ringkasan, aturan, renderMd, renderHtml };

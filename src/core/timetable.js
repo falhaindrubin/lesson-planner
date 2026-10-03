@@ -1,6 +1,6 @@
 // Penyelesai jadual: versi jadual yang berkuat kuasa pada satu tarikh.
 // Pertukaran jadual = fail baharu dengan tarikh berkuat kuasa sendiri; tarikh lama tidak diubah.
-const { minitWaktu } = require('./util');
+import { minitWaktu } from './util.js';
 
 // Versi terkini dengan berkuatKuasa <= tarikh
 function versionFor(versions, tarikh) {
@@ -17,4 +17,4 @@ function minitSeminggu(version, kelas, subjek) {
     .reduce((a, s) => a + minitWaktu(s.waktu), 0);
 }
 
-module.exports = { versionFor, minitSeminggu };
+export { versionFor, minitSeminggu };

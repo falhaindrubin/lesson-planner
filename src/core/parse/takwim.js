@@ -2,7 +2,7 @@
 // Hari bekerja sahaja, teks lajur disimpan mentah: { date, hari, cuti, kurikulum }.
 // gaps = hari bekerja di luar minggu persekolahan (cuti penggal).
 // Pengelasan hari (cuti / peperiksaan) dibuat oleh calendar.js, bukan di sini.
-const { cells, daysBetween, HARI_BEKERJA } = require('../util');
+import { cells, daysBetween, HARI_BEKERJA } from '../util.js';
 
 function parseTakwim(md) {
   const weeks = [];
@@ -19,4 +19,4 @@ function parseTakwim(md) {
   return { weeks, gaps };
 }
 
-module.exports = { parseTakwim };
+export { parseTakwim };

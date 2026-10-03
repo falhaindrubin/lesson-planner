@@ -1,6 +1,6 @@
 // node test/rekod.js — baca dan tulis rekod PdP satu kelas × subjek
-const assert = require('assert');
-const R = require('../src/core');
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
 
 const k = { kelas: '4S', subjek: 'M3', namaPenuh: '4 STANFORD', tingkatan: 4, namaSubjek: 'MATEMATIK' };
 const rows = [

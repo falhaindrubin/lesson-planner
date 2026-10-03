@@ -10,9 +10,9 @@
 // --ulang-kaji <n>    minggu ulang kaji sebelum peperiksaan akhir (lalai 2, semua tingkatan)
 // --tamat <minggu>    tetapkan minggu terakhir sukatan secara manual
 
-const fs = require('fs');
-const path = require('path');
-const C = require('../core');
+import fs from 'node:fs';
+import path from 'node:path';
+import * as C from '../core/index.js';
 
 function main(argv) {
   const a = {};

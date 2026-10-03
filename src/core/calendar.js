@@ -2,7 +2,7 @@
 //   cuti — ada teks Cuti / Perayaan (kecuali BUKAN_CUTI): tiada PdP
 //   exam — peperiksaan tingkatan itu dalam lajur Kurikulum: tiada PdP baharu
 //   pdp  — selainnya (mesyuarat tidak membatalkan PdP)
-const { range } = require('./util');
+import { range } from './util.js';
 
 // Entri Cuti / Perayaan pada hari bekerja yang BUKAN cuti di Sabah
 const BUKAN_CUTI = [/HARI SARAWAK/i];
@@ -77,4 +77,4 @@ function breaks(kalendar) {
   return out;
 }
 
-module.exports = { BUKAN_CUTI, examForms, buildCalendar, dayClass, weekFor, examBlocks, breaks };
+export { BUKAN_CUTI, examForms, buildCalendar, dayClass, weekFor, examBlocks, breaks };

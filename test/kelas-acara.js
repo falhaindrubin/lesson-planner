@@ -1,6 +1,10 @@
 // node test/kelas-acara.js — fail kelas dan acara 2026 sebenar dari sample/, data ujian semua kelas dari test/data/
-const fs = require('fs'), assert = require('assert');
-const R = require('../src/core');
+import fs from 'node:fs';
+import assert from 'node:assert';
+import * as R from '../src/core/index.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
 // Fail kelas 2026 sebenar: Matematik T4, 4 Stanford sahaja, bermula awal tahun

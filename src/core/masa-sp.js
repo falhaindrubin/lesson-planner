@@ -3,8 +3,8 @@
 // ikut tertib DSKP. Masa SP = jumlah tindihan dengan setiap minggu × minit PdP sebenar kelas itu
 // dalam minggu tersebut. Minggu separa (cuti, Batal) memberi masa kurang, jadi kelas yang tidak
 // terganggu sentiasa mengikut RPT; hanya PdP ditunda / batal dalam rekod membuat kelas ketinggalan.
-const { lessonsForWeek } = require('./scheduler');
-const { versionFor } = require('./timetable');
+import { lessonsForWeek } from './scheduler.js';
+import { versionFor } from './timetable.js';
 
 function masaSp({ rpt, sp, minitMinggu }) {
   const minggu = rpt.minggu.filter(w => w.sp.length).map(w => w.n);
@@ -46,4 +46,4 @@ function minitPdpMinggu({ kalendar, versions, kelas, semuaKelas, acara }) {
   return f;
 }
 
-module.exports = { masaSp, minitPdpMinggu };
+export { masaSp, minitPdpMinggu };

@@ -1,7 +1,7 @@
 // Jadual.md (aSc) -> { berkuatKuasa, slots: [{ hari, waktu: [a, b], masa, subjek, kelas, bilik }] }
 // Hanya jadual di bawah '## Kelas' dibaca; satu baris = satu PdP.
 // '## Bukan kelas' (tanda B dan lain-lain) bukan PdP dan diabaikan.
-const { cells, HARI_BEKERJA, waktuRange, masaWaktu } = require('../util');
+import { cells, HARI_BEKERJA, waktuRange, masaWaktu } from '../util.js';
 
 function parseJadual(md, fail = 'jadual') {
   const bk = md.match(/^- Berkuat kuasa: (\d{4}-\d\d-\d\d)/m);
@@ -27,4 +27,4 @@ function parseJadual(md, fail = 'jadual') {
   return { berkuatKuasa: bk[1], slots };
 }
 
-module.exports = { parseJadual };
+export { parseJadual };

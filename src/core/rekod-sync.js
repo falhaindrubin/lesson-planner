@@ -2,9 +2,9 @@
 //   - baris lepas (tarikh <= hariIni) dan baris yang diubah guru: kekal
 //   - baris akan datang yang belum diubah: dibina semula daripada jadual, takwim, acara dan baris sebelumnya
 //   - minggu yang belum ada dalam rekod hingga minggu diminta: dirancang (diajar, kehadiran penuh)
-const { lessonsForWeek, ikutMasa } = require('./scheduler');
-const { planRows } = require('./rph-planner');
-const { waktuRange, range } = require('./util');
+import { lessonsForWeek, ikutMasa } from './scheduler.js';
+import { planRows } from './rph-planner.js';
+import { waktuRange, range } from './util.js';
 
 const kunci = r => `${r.tarikh} ${waktuRange(r.waktu)[0]}`;
 
@@ -68,4 +68,4 @@ function syncRekod({ rows, kelas, semuaKelas, sp, masaSp = null, kalendar, versi
   };
 }
 
-module.exports = { syncRekod, diubah };
+export { syncRekod, diubah };

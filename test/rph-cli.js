@@ -1,8 +1,13 @@
 // node test/rph-cli.js — jalankan src/cli/rph.js hujung ke hujung dalam folder sementara,
 // dengan takwim, jadual, acara, DSKP dan RPT Matematik T4 2026 sebenar.
-const fs = require('fs'), os = require('os'), path = require('path'), assert = require('assert');
-const { spawnSync } = require('child_process');
-const R = require('../src/core');
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import assert from 'node:assert';
+import { spawnSync } from 'node:child_process';
+import * as R from '../src/core/index.js';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const sample = path.join(__dirname, '..', 'sample');
 const cli = path.join(__dirname, '..', 'src', 'cli', 'rph.js');

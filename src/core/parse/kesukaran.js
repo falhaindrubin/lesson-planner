@@ -1,5 +1,5 @@
 // Fail kesukaran -> { sp: Map(code -> { nilai, sebab }), tajuk: Map('10.0' -> minggu tetap) }
-const { cells } = require('../util');
+import { cells } from '../util.js';
 
 function parseKesukaran(md) {
   const sp = new Map(), tajuk = new Map();
@@ -12,4 +12,4 @@ function parseKesukaran(md) {
   return { sp, tajuk };
 }
 
-module.exports = { parseKesukaran };
+export { parseKesukaran };
