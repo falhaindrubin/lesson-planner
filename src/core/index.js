@@ -6,6 +6,8 @@ module.exports = {
   ...require('./parse/takwim'),
   ...require('./parse/rpt'),
   ...require('./parse/jadual'),
+  ...require('./parse/kelas'),
+  ...require('./parse/acara'),
   ...require('./calendar'),
   ...require('./timetable'),
   ...require('./rpt-planner'),
