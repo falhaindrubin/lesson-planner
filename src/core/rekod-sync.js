@@ -8,19 +8,27 @@ const { waktuRange, range } = require('./util');
 
 const kunci = r => `${r.tarikh} ${waktuRange(r.waktu)[0]}`;
 
-// Diubah guru = Status, Kehadiran atau Catatan berbeza daripada nilai lalai
-function diubah(r, bilMurid) {
-  const exam = r.jenis === 'peperiksaan';
-  return r.status !== (exam ? '' : 'diajar') || r.catatan !== '' || r.kehadiran !== (exam ? null : bilMurid);
+// Diubah guru = Status atau Catatan berbeza daripada nilai lalai. Kehadiran tidak dikira: PdP akan
+// datang belum berlaku, dan Bil. murid yang berubah tidak boleh mengunci baris yang dijana.
+function diubah(r) {
+  return r.status !== (r.jenis === 'peperiksaan' ? '' : 'diajar') || r.catatan !== '';
 }
 
 function syncRekod({ rows, kelas, semuaKelas, sp, masaSp = null, kalendar, versions, acara, minggu, hariIni, fail = 'rekod' }) {
   const label = `${kelas.kelas} ${kelas.subjek}`;
   if (!kalendar.weeks.some(w => w.n === minggu)) throw new Error(`Tiada minggu M${minggu} dalam takwim`);
   if (kelas.bilMurid == null) throw new Error(`${label}: Bil. murid kosong dalam fail kelas`);
+  if (!versions.some(v => v.slots.some(s => s.kelas === kelas.kelas && s.subjek === kelas.subjek)))
+    throw new Error(`${label}: tiada slot dalam jadual (semak Kelas dan Subjek dalam fail kelas)`);
+  // Minggu dalam rekod mesti sepadan dengan Tarikh mengikut takwim; salah taip akan menghentikan perancangan
+  for (const r of rows) {
+    const w = kalendar.weeks.find(x => x.days.some(d => d.date === r.tarikh));
+    if (!w) throw new Error(`${fail}:${r.line}: Tarikh ${r.tarikh} bukan hari dalam minggu persekolahan`);
+    if (w.n !== r.minggu) throw new Error(`${fail}:${r.line}: Minggu M${r.minggu} tidak sepadan dengan Tarikh ${r.tarikh} (M${w.n})`);
+  }
   if (!rows.length && sp.length && !kelas.mula) throw new Error(`${label}: rekod kosong dan Mula tiada dalam fail kelas`);
   const warnings = [];
-  const kekal = rows.filter(r => r.tarikh <= hariIni || diubah(r, kelas.bilMurid));
+  const kekal = rows.filter(r => r.tarikh <= hariIni || diubah(r));
   const akhirRekod = rows.length ? Math.max(...rows.map(r => r.minggu)) : null;
   const depan = rows.filter(r => r.tarikh > hariIni).map(r => r.minggu);
   const dari = akhirRekod == null ? minggu : Math.min(akhirRekod + 1, ...depan);

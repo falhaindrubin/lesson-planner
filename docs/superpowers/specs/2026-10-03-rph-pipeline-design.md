@@ -25,7 +25,7 @@ One command generates the coming week's RPHs for every class the teacher teaches
 | R9 | DSKP finished → each further pdp lesson revises one topic, cycling in order (`1.0`, `2.0`, …). |
 | R10 | No RPT → one SP per lesson. No DSKP → rows with no SP. Both warn. |
 | R11 | New rows are **diajar**, Kehadiran = class size. The teacher edits only exceptions. |
-| R12 | Rows dated ≤ today are never changed. Rows dated after today are rebuilt on every run unless the teacher edited them (§5.4). |
+| R12 | Rows dated ≤ today are never changed. Rows dated after today are rebuilt on every run unless the teacher edited them (Status or Catatan, §5.4). |
 | R13 | Ahead/behind is printed by the CLI only, never on the RPH. It is measured in minutes (content taught − PdP minutes scheduled so far) and shown in weeks of the class's normal timetable. |
 | R14 | Only classes listed in the class file are planned; other timetable slots are skipped with one note. |
 
@@ -146,7 +146,7 @@ Then every **diajar pdp** row (new or old) is **replayed**: all listed SPs but t
 A row whose SP cell holds topic codes renders the topic's SKs and SPs under Tajuk `ULANG KAJI: n.0 …`.
 
 ### 5.4 Sync (`syncRekod`) — one class × subject
-- **Edited** row: Status ≠ default (`diajar`; blank for peperiksaan), or Catatan not empty, or Kehadiran ≠ default (class size; blank for peperiksaan). **To lock a future row's SP, write a note in Catatan** (an SP change alone is not detectable).
+- **Edited** row: Status ≠ default (`diajar`; blank for peperiksaan), or Catatan not empty. Kehadiran is not part of the test (an upcoming lesson has no attendance, and a changed Bil. murid must not lock generated rows). **To lock a future row's SP, write a note in Catatan** (an SP change alone is not detectable).
 - **Kept** rows: tarikh ≤ hariIni, or edited. Future unedited rows are dropped and rebuilt.
 - **Weeks planned**: rekod empty → only `minggu`. Otherwise from `min(last rekod week + 1, earliest future row's week)` to `max(minggu, last rekod week)`. Skipped weeks are planned too and warned about — only weeks that actually have lessons (a full holiday week such as M6 is not "skipped").
 - For every scheduled lesson of this class × subject in those weeks: skip if a kept row has the same date and first period; skip past lessons in weeks that already had rows (the teacher deleted them); otherwise add a new row (diajar, class size; peperiksaan: blank status and kehadiran).
@@ -189,7 +189,7 @@ Runs `rph.js` for each week as if on the Saturday before it, no rekod edits, and
 `node test/<file>.js` with `node:assert`, against the real files in `sample/` (plus small inline fixtures for edge cases); `node test/semua.js` runs every test file. Coverage: Jadual parse on `jwg-20261002.md` (12 slots, `12:30–2:00`, wrong Masa fails); resolver across two versions; class / acara / aktiviti / RPT appendix parsing; scheduler on M35 (12 lessons), M36 (X-Break), M37 (Form 4 exams only), M38 (all exams), M39 (2 Nov holiday); rekod round-trip, CRLF, loose Status / SP / Kehadiran; pacing worked examples (shared lesson, spanning SP, 15-min rules, ditunda, hand merge, tutorial, revision, no RPT); sync (kept vs rebuilt rows, skipped weeks, deleted past lesson, slot gone, rows out of order, idempotent); summary (ikut / ke depan / ke belakang, fit warning); RPH HTML labels and durations; one end-to-end CLI run in a temp folder, re-run byte-identical.
 
 ## 10. Clarifications made while writing this spec
-- **Untouched rows**: an SP-only edit on a future row can't be told apart from a generated SP, so the rule is "Status, Kehadiran or Catatan changed". To keep a future SP edit, write a note in Catatan.
+- **Untouched rows**: an SP-only edit on a future row can't be told apart from a generated SP, so the rule is "Status or Catatan changed". To keep a future SP edit, write a note in Catatan.
 - **"Slot tiada"** is a warning in the CLI output; the row itself is left unchanged.
 - **CLI takes `--kelas <file>`** instead of `--tahun`: the class file names the year, takwim, jadual, acara and folders.
 - **Real class data**: `sample/kelas-2026.md` is created with Bil. murid and Mula blank; the teacher fills them before the first real run.

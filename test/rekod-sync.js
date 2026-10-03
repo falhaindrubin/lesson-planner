@@ -95,4 +95,30 @@ assert.deepStrictEqual(s9.warnings, ['2D PK: tiada DSKP; SP dibiarkan kosong']);
 assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, bilMurid: null } }), /1S ASK: Bil\. murid kosong dalam fail kelas/);
 assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, mula: '' } }), /1S ASK: rekod kosong dan Mula tiada dalam fail kelas/);
 
+// Bil. murid berubah selepas dijana: baris akan datang yang belum disentuh tetap dibina semula
+// (Kehadiran tidak mengunci baris akan datang), jadi ditunda masih menganjak PdP seterusnya
+const lama = viaFail(sync([], 35, '2026-10-03').rows);
+lama[0].status = 'ditunda'; lama[0].catatan = 'Mesyuarat';
+const baharu = sync(lama, 35, '2026-10-05', { kelas: { ...kelas, bilMurid: 36 } });
+assert.deepStrictEqual(lihat(baharu.rows), [
+  'M35 2026-10-05 pdp 4.2.5 ditunda 35 (Mesyuarat)',
+  'M35 2026-10-07 pdp 4.2.5 diajar 36',
+]);
+// Kehadiran kosong pada PdP akan datang juga tidak mengunci baris
+const kosong = viaFail(sync([], 35, '2026-10-03').rows);
+kosong[1].kehadiran = null;
+assert.strictEqual(sync(kosong, 35, '2026-10-03').rows[1].kehadiran, 35);
+
+// Minggu dalam rekod mesti sepadan dengan Tarikh (takwim): salah taip M53 menghentikan dengan file:line
+const salah = viaFail(sync([], 35, '2026-10-03').rows);
+salah[1].minggu = 53;
+assert.throws(() => sync(salah, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Minggu M53 tidak sepadan dengan Tarikh 2026-10-07 \(M35\)/);
+// Tarikh di luar minggu persekolahan (cuti penggal) juga ditolak
+const cutiRow = viaFail(sync([], 35, '2026-10-03').rows);
+cutiRow[1].tarikh = '2026-09-02';
+assert.throws(() => sync(cutiRow, 36, '2026-10-09'), /rekod-1S-ASK\.md:11: Tarikh 2026-09-02 bukan hari dalam minggu persekolahan/);
+
+// Kelas tanpa slot dalam jadual (contoh Subjek tersalah taip) berhenti dengan mesej jelas
+assert.throws(() => sync([], 35, '2026-10-03', { kelas: { ...kelas, subjek: 'MT3' } }), /1S MT3: tiada slot dalam jadual/);
+
 console.log('rekod-sync: semua ujian lulus');

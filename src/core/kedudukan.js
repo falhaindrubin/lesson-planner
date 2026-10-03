@@ -17,7 +17,7 @@ function kedudukan({ rpt, kalendar, tingkatan, sp, akhir, masaSp, minitMinggu, s
   for (let i = 0; i < akhir.idx; i++) diajar += masaSp.get(sp[i].code) || 0;
   if (akhir.sisa != null) diajar += (masaSp.get(kod) || 0) - akhir.sisa;
   const jangka = kalendar.weeks.filter(w => w.n < minggu && weekFor(w, tingkatan).pdp > 0).reduce((a, w) => a + minitMinggu(w.n), 0);
-  const beza = (diajar - jangka) / seminggu;
+  const beza = seminggu ? (diajar - jangka) / seminggu : 0;
   const status = Math.abs(beza) < 0.5 ? 'ikut' : beza > 0 ? 'depan' : 'belakang';
   return { status, kod, julat: [Math.min(...julat), Math.max(...julat)], beza: status === 'ikut' ? 0 : Math.round(Math.abs(beza)) };
 }

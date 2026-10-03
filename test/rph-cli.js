@@ -86,6 +86,13 @@ assert.ok(t('out/2026-M35-M3.html').includes('☑ PdP ditunda kerana: Mesyuarat'
 assert.ok(t('out/2026-M36-M3.html').includes('Hari acara: X-Break'));
 assert.ok(!/bersambung|samb\./.test(t('out/2026-M36-M3.html')));
 
+// Dua kelas satu subjek (2D PJ Khamis, 2J PJ Jumaat): pada Khamis 8 Okt hanya 2J masih ada baris M35 akan
+// datang, tetapi fail PJ M35 mesti tetap memuatkan halaman kedua-dua kelas
+assert.strictEqual(run('--minggu', '36', '--hari-ini', '2026-10-08').code, 0);
+const pj35 = t('out/2026-M35-PJ.html');
+assert.ok(pj35.includes('2 DIAMOND') && pj35.includes('2 JADE'), 'PJ M35 hilang halaman satu kelas');
+assert.strictEqual((pj35.match(/RANCANGAN PENGAJARAN HARIAN/g) || []).length, 2);
+
 // Ralat: mesej jelas, kod keluar 1, tiada jejak tindanan
 const r3 = run('--minggu', '50', '--hari-ini', '2026-10-06');
 assert.strictEqual(r3.code, 1);

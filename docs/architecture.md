@@ -140,7 +140,7 @@ For each lesson instance, choose the SP(s) from the class's **progress queue**, 
 5. **Tutorial** lessons repeat all SPs of the latest **diajar** pdp lesson of that class × subject before it (this week if any, else earlier) and do not advance.
 6. **Peperiksaan** lessons are generated with no SP and do not advance.
 7. New rows are written with Status **diajar** and Kehadiran = class size; the teacher edits only exceptions. An interrupted lesson is **ditunda** (its content is taught again from the start; no partial status).
-8. **Past rows** (date ≤ today) are never re-derived. **Future untouched rows** (Status, Kehadiran and Catatan unchanged — to keep a future SP edit, write a note in Catatan) are rebuilt on every run from the current jadual, takwim, acara and queue; edited future rows are kept, flagged "slot tiada" if their slot disappeared.
+8. **Past rows** (date ≤ today) are never re-derived. **Future untouched rows** (Status and Catatan unchanged — to keep a future SP edit, write a note in Catatan) are rebuilt on every run from the current jadual, takwim, acara and queue; edited future rows are kept, flagged "slot tiada" if their slot disappeared.
 9. **DSKP finished**: remaining lessons cycle through the topics, one per lesson ("Ulang kaji: 1.0 …"). A class still behind during the RPT's revision weeks keeps getting new SPs.
 10. A subject with no DSKP yet (PK / PJ) gets rows without SP and a warning.
 

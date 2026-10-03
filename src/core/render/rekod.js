@@ -8,7 +8,7 @@ function renderRekod(k, tahun, rows) {
     `- Kelas: ${k.namaPenuh} (Tingkatan ${k.tingkatan}) · ${k.namaSubjek}`,
     '- Status: **diajar** (lalai) · **ditunda** · **batal**. Tulis sebab atau refleksi dalam Catatan.',
     '- SP: satu atau lebih kod dipisahkan koma (contoh `4.2.7, 4.2.8`); kod tajuk (contoh `1.0`) = ulang kaji.',
-    '- Baris selepas hari ini dibina semula setiap kali penjana dijalankan, kecuali jika Status, Kehadiran atau Catatan diubah. Untuk mengekalkan SP yang diubah pada baris akan datang, tulis nota dalam Catatan.',
+    '- Baris selepas hari ini dibina semula setiap kali penjana dijalankan, kecuali jika Status atau Catatan diubah. Untuk mengekalkan SP yang diubah pada baris akan datang, tulis nota dalam Catatan.',
     '',
     '| Minggu | Tarikh | Hari | Waktu | Masa | Jenis | Acara | SP | Status | Kehadiran | Catatan |',
     '|---|---|---|---|---|---|---|---|---|---|---|',

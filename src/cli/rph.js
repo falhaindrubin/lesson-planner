@@ -43,7 +43,10 @@ function main(argv) {
 
   // Semua fail ditulis selepas setiap kelas berjaya: ralat pada satu kelas tidak meninggalkan fail separuh siap
   const tulis = [];
-  const halaman = new Map(); // 'SUBJEK|n' -> [{ kelas, row, sp, aktiviti }]
+  // Fail HTML dikongsi oleh semua kelas satu subjek: kumpul hasil semua kelas dahulu, kemudian tulis
+  // setiap (subjek, minggu) yang dirancang oleh mana-mana kelas dengan baris semua kelas subjek itu
+  const hasil = [];
+  const kunci = new Set(); // 'SUBJEK|n'
   const amaran = [], ringkasan = [];
   for (const k of K.kelas) {
     const sp = k.dskp ? sekali(k.dskp, C.parseDskp) : [];
@@ -61,18 +64,17 @@ function main(argv) {
     });
     tulis.push([failRekod, C.renderRekod(k, K.tahun, s.rows)]);
     amaran.push(...s.warnings);
-    for (const n of new Set([...s.minggu, minggu])) {
-      const key = `${k.subjek}|${n}`;
-      if (!halaman.has(key)) halaman.set(key, []);
-      halaman.get(key).push(...s.rows.filter(r => r.minggu === n).map(row => ({ kelas: k, row, sp, aktiviti })));
-    }
+    hasil.push({ kelas: k, sp, aktiviti, rows: s.rows });
+    for (const n of new Set([...s.minggu, minggu])) kunci.add(`${k.subjek}|${n}`);
     const r = C.ringkasanKelas({ kelas: k, rows: s.rows, sp, rpt, masaSp, minitMinggu, kalendar, versions, acara, semuaKelas: K.kelas, minggu });
     ringkasan.push(r.teks);
     amaran.push(...r.amaran);
   }
 
-  for (const [key, pages] of [...halaman].sort(([x], [y]) => x.localeCompare(y))) {
+  for (const key of [...kunci].sort((x, y) => x.localeCompare(y))) {
     const [subjek, n] = key.split('|');
+    const pages = hasil.filter(h => h.kelas.subjek === subjek)
+      .flatMap(h => h.rows.filter(r => r.minggu === Number(n)).map(row => ({ kelas: h.kelas, row, sp: h.sp, aktiviti: h.aktiviti })));
     if (!pages.some(p => p.row.status !== 'batal')) continue;
     pages.sort((x, y) => C.ikutMasa(x.row, y.row));
     const f = path.join(outDir, `${K.tahun}-M${n}-${subjek}.html`);
