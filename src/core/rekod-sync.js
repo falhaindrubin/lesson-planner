@@ -26,8 +26,11 @@ function syncRekod({ rows, cls, classes, sp, spTime = null, calendar, versions, 
     if (!w) throw new Error(`${file}:${r.line}: Tarikh ${r.date} is not a day in a school week`);
     if (w.n !== r.week) throw new Error(`${file}:${r.line}: Minggu M${r.week} does not match Tarikh ${r.date} (M${w.n})`);
   }
-  if (!rows.length && sp.length && !cls.start) throw new Error(`${label}: rekod is empty and Mula is missing in the class file`);
   const warnings = [];
+  // A hand-blanked Status on a lesson counts as not taught; say so instead of staying silent
+  for (const r of rows)
+    if (r.line && r.kind !== 'peperiksaan' && r.status === '') warnings.push(`${file}:${r.line}: Status blank, counted as not taught`);
+  if (!rows.length && sp.length && !cls.start) throw new Error(`${label}: rekod is empty and Mula is missing in the class file`);
   const kept = rows.filter(r => r.date <= today || isEdited(r));
   const lastWeek = rows.length ? Math.max(...rows.map(r => r.week)) : null;
   const ahead = rows.filter(r => r.date > today).map(r => r.week);

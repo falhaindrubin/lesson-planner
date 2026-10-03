@@ -99,4 +99,23 @@ assert.strictEqual(R.weekOfDate(calendar, '2026-01-12'), 1);
 assert.strictEqual(R.weekOfDate(calendar, '2026-01-17'), 1);
 assert.strictEqual(R.weekOfDate(calendar, calendar.gaps[0].date), null);
 
+// A pdp row whose Status was blanked by hand (Monday 5 Oct is 4S M3, periods 2–3): warned, counted as not taught
+files = base();
+files.set('rekod/rekod-4S-M3.md', '| M35 | 2026-10-05 | Isnin | 2–3 | 7:30–8:30 | pdp |  | 7.1.1 |  | 35 |  |\n');
+assert.ok(run(35, '2026-10-06', 'X').warnings.includes('rekod/rekod-4S-M3.md:1: Status blank, counted as not taught'));
+
+// UTF-8 BOM (Windows Notepad) is accepted in every input and in the class file
+files = base();
+for (const [k, v] of files) files.set(k, '﻿' + v);
+const bom = R.runWeek({ read, classText: '﻿' + classText(), classFile: 'kelas.md', week: 35, today: '2026-10-03', teacher: 'X' });
+assert.strictEqual(bom.lessons.length, 3);
+
+// Responsiveness (W13): one week for one class plans in under 100 ms once warm
+files = base();
+run(35, '2026-10-03', 'X');
+const t0 = performance.now();
+run(35, '2026-10-03', 'X');
+const ms = performance.now() - t0;
+assert.ok(ms < 100, `runWeek took ${ms.toFixed(0)} ms`);
+
 console.log('week: all tests passed');

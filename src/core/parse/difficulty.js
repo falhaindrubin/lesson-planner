@@ -1,7 +1,8 @@
 // Difficulty file -> { sp: Map(code -> { value, reason }), topics: Map('10.0' -> fixed weeks) }
-import { cells } from '../util.js';
+import { stripBom, cells } from '../util.js';
 
 function parseDifficulty(md) {
+  md = stripBom(md);
   const sp = new Map(), topics = new Map();
   for (const line of md.split(/\r?\n/)) {
     let m;

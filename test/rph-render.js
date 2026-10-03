@@ -70,4 +70,9 @@ assert.ok(h4.includes('1.1.1 Menerangkan teknik Leraian') && h4.includes('1.1.5 
 const h5 = html([row({ sp: [], note: '<b>x</b>' })]);
 assert.ok(h5.includes('&lt;b&gt;x&lt;/b&gt;'));
 
+// A4 rule (W9): every lesson starts a page; a table row is not split across pages
+const css = html([row()]);
+assert.ok(css.includes('.rph { break-after: page; page-break-after: always; }'));
+assert.ok(css.includes('tr { break-inside: avoid; page-break-inside: avoid; }'));
+
 console.log('rph-render: all tests passed');

@@ -4,6 +4,9 @@
 const MONTHS = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
 const WEEKDAYS = ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
 
+// Windows Notepad may save UTF-8 with a byte-order mark; it would break the first line's match
+const stripBom = s => String(s).replace(/^﻿/, '');
+
 // '| a | b |' -> ['a', 'b']
 function cells(line) {
   return line.trim().replace(/^\||\|$/g, '').split('|').map(s => s.trim());
@@ -41,6 +44,6 @@ const periodTime = ([a, b]) => `${clock12(periodStart(a))}–${clock12(periodSta
 const fmtDateDmy = iso => iso.split('-').reverse().join('/');
 
 export {
-  MONTHS, WEEKDAYS, cells, daysBetween, fmtDate, fmtRange, range,
+  MONTHS, WEEKDAYS, stripBom, cells, daysBetween, fmtDate, fmtRange, range,
   periodRange, fmtPeriods, periodStart, periodMinutes, clock12, clock24, periodTime, fmtDateDmy,
 };

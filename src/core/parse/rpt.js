@@ -1,8 +1,10 @@
 // RPT.md (output of src/cli/rpt.js) -> { end, weeks: [{ n, sp: [code] }], allocation: Map(code -> weeks) }
 // The RPT is a frozen copy: the RPH generator reads this file, it does not plan the RPT again.
+import { stripBom } from '../util.js';
 const SP_IN_CELL = /(?:\| |<br>)(\d+\.\d+\.\d+) /g;
 
 function parseRpt(md, file = 'rpt') {
+  md = stripBom(md);
   const t = md.match(/^- Sukatan tamat: M(\d+)/m);
   if (!t) throw new Error(`${file}: missing line "- Sukatan tamat: M…"`);
   const weeks = [], allocation = new Map();

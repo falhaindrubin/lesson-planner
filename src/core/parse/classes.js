@@ -1,12 +1,13 @@
 // kelas-<year>.md -> { year, teacher, takwim, timetables: [file], events, rekod, output, classes: [row] }
 // One row = one class × subject. File paths are relative to the class file's folder.
-import { cells } from '../util.js';
+import { stripBom, cells } from '../util.js';
 
 const HEADERS = ['Tahun', 'Guru', 'Takwim', 'Jadual', 'Acara', 'Rekod', 'Output'];
 const REQUIRED = HEADERS.filter(h => h !== 'Guru'); // the teacher's name may come from the app's Profile instead
 const COLUMNS = ['Kelas', 'Nama penuh', 'Tingkatan', 'Subjek', 'Nama subjek', 'DSKP', 'Aktiviti', 'RPT', 'Tutorial', 'Bil. murid', 'Mula'];
 
 function parseClasses(md, file = 'classes') {
+  md = stripBom(md);
   const meta = {};
   const classes = [];
   md.split(/\r?\n/).forEach((line, i) => {

@@ -1,9 +1,10 @@
 // Timetable.md (aSc) -> { effectiveFrom, slots: [{ dayName, periods: [a, b], time, subject, classCode, room }] }
 // Only the table under '## Kelas' is read; one row = one PdP.
 // '## Bukan kelas' (mark B and others) is not PdP and is ignored.
-import { cells, WEEKDAYS, periodRange, periodTime } from '../util.js';
+import { stripBom, cells, WEEKDAYS, periodRange, periodTime } from '../util.js';
 
 function parseTimetable(md, file = 'timetable') {
+  md = stripBom(md);
   const bk = md.match(/^- Berkuat kuasa: (\d{4}-\d\d-\d\d)/m);
   if (!bk) throw new Error(`${file}: missing line "- Berkuat kuasa: yyyy-mm-dd"`);
   const slots = [];

@@ -2,9 +2,10 @@
 // Working days only, column text kept raw: { date, dayName, holiday, curriculum }.
 // gaps = working days outside the school weeks (term breaks).
 // Classifying days (holiday / exam) is done by calendar.js, not here.
-import { cells, daysBetween, WEEKDAYS } from '../util.js';
+import { stripBom, cells, daysBetween, WEEKDAYS } from '../util.js';
 
 function parseTakwim(md) {
+  md = stripBom(md);
   const weeks = [];
   const gaps = [];
   let cur = null;

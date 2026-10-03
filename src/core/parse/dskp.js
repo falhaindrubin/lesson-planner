@@ -1,7 +1,8 @@
 // DSKP.md -> [{ topic, sk, code, text }] in DSKP order
-import { cells } from '../util.js';
+import { stripBom, cells } from '../util.js';
 
 function parseDskp(md) {
+  md = stripBom(md);
   const sp = [];
   let topic = null, sk = null;
   for (const line of md.split(/\r?\n/)) {

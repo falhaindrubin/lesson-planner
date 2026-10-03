@@ -76,6 +76,7 @@ function renderRph({ year, week, teacher, pages }) {
 body { font: 10pt/1.35 Arial, sans-serif; color: #000; background: #fff; margin: 16px; }
 .rph { break-after: page; page-break-after: always; }
 .rph:last-child { break-after: auto; page-break-after: auto; }
+tr { break-inside: avoid; page-break-inside: avoid; }
 .kepala { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 8px; }
 h1 { font-size: 13pt; text-align: center; margin: 0 0 10px; }
 table { width: 100%; border-collapse: collapse; }

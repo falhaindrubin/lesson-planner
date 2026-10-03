@@ -1,9 +1,10 @@
 // acara-<year>.md -> { eventDays: [{ date, name, forms: [n] }], cancellations: [{ date, target, reason }] }
 // Hari acara: PdP is flagged (the teacher decides). Empty forms = all forms.
 // Batal: no PdP at all. Empty target = everyone; '4' = Form 4; '4S' = class 4S.
-import { cells } from '../util.js';
+import { stripBom, cells } from '../util.js';
 
 function parseEvents(md, file = 'events') {
+  md = stripBom(md);
   const out = { eventDays: [], cancellations: [] };
   let section = '';
   md.split(/\r?\n/).forEach((line, i) => {

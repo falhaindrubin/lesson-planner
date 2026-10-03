@@ -3,7 +3,7 @@
 //   SP:        codes in the cell in order (n.n.n), or a topic code n.0 = revision
 //   Status:    diajar / ditunda / batal (any case); blank for exams
 //   Kehadiran: the first number is read ('33/35' -> 33)
-import { cells, periodRange, periodMinutes } from '../util.js';
+import { stripBom, cells, periodRange, periodMinutes } from '../util.js';
 
 const KINDS = ['pdp', 'tutorial', 'peperiksaan'];
 const STATUSES = ['diajar', 'ditunda', 'batal'];
@@ -12,6 +12,7 @@ const COLUMNS = 11;
 const spCodes = s => String(s).match(/\b\d+\.\d+\.\d+\b|\b\d+\.0\b/g) || [];
 
 function parseRekod(md, file = 'rekod') {
+  md = stripBom(md);
   const rows = [];
   md.split(/\r?\n/).forEach((line, i) => {
     if (!/^\| *M\d+ *\|/.test(line)) return;
