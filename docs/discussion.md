@@ -246,6 +246,8 @@ Simulation round (2026-10-03). My rules: simulate the whole year as if it were e
 | App name | **RPH Mate**, used **only in production** (the `rph-mate` repo and deployed app). Development stays "Lesson Planner"; the local app shows "Lesson Planner (dev)" (same session) |
 | CLI | **Kept for now**: `rph.js` as a fallback while the app is new (drop after a few real weeks), `rpt.js` until the app makes RPTs, `simulate.js` for checks. Never published to `rph-mate` (same session) |
 | Responsiveness | **Rule W13**: cards, badges and dashboard update in under 100 ms after a mark; the RPH preview redraws afterwards; nothing visual may slow a click. Measured ~30 ms planning per week in Node (same session) |
+| Spec approved | Web app first-slice spec approved; next: implementation plan (same session) |
+| Implementation plan | Written: [2026-10-03-web-app-weekly-loop.md](superpowers/plans/2026-10-03-web-app-weekly-loop.md), 11 tasks; ES modules and English rename split into two commits, each proven byte-for-byte (same session) |
 
 ## Takwim 2027 (draft, layer 1 only)
 `sample/kalendar-akademik-2027-kpm.pdf` is a one-page scan (Lampiran B only, no text layer). Converted to `sample/takwim-kpm-2027.md` (same format as the 2026 takwim; school columns empty).
