@@ -2,6 +2,13 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
+## Update 2026-10-25 — product doc set
+**What happened this session.** Briefing only, then a product doc set for the whole of RPH Mate (built Phase 0–1 + planned phases) in [docs/product/](product/): [PRD](product/prd.md), [TRD](product/trd.md), [app flow](product/app-flow.md) (Mermaid), [UI/UX brief](product/ui-ux-brief.md), [data schema](product/backend-schema.md) (IndexedDB, runtime objects, markdown formats, proposed Drive store), [implementation plan](product/implementation-plan.md) (phased roadmap). No code changed; the app is still unchecked in a browser.
+
+**Choices made in the docs for the teacher to confirm:** phase order 1b (browser check, release, real week) → 2 Progress → 4 RPT in the app (for the 2027 RPTs in December) → 3 Drive sync; the Drive store format and merge rules are a **proposal** to settle in the Phase 3 brainstorm; the success target (weekly session < 10 min) and the month-by-month timeline are suggestions.
+
+**Next:** unchanged — start Phase 1b in [implementation-plan.md](product/implementation-plan.md) (browser check first). Keep the product docs' status labels in step as phases finish.
+
 ## Update 2026-10-03 — web app first slice built and merged to `main`
 **What happened this session.** Executed the 11-task plan (`docs/superpowers/plans/2026-10-03-web-app-weekly-loop.md`) inline (Sonnet), then one Opus whole-branch review. Core and CLI are now ES modules with English names (generated output proven byte-identical); `runWeek` in `src/core/week.js` is shared by the CLI and the app; the app is in `app/` (Week, Classes, Files screens, IndexedDB, Save rekod, service worker); `tools/serve.js` and `tools/release.js` (copies `app/` + `src/core/` to the public rph-mate repo as "RPH Mate"). Review found 1 Critical + 3 Important; all fixed (same-name drop/folder key, false rekod diffs on re-pick, lost click after typing, one-file Save rekod). `node test/all.js` → 13 files pass.
 
