@@ -4,7 +4,7 @@ A lesson-plan generator for a KSSM teacher (Malaysia). It turns the curriculum
 (DSKP), the school calendar and the timetable into a yearly teaching plan (RPT)
 and per-lesson plans (RPH), with a dashboard showing topic completion.
 
-**Status:** RPT generator and weekly RPH pipeline built; dashboard and app shell next. Stack: plain JavaScript (Node 24), no dependencies; planned as an offline PWA (see [docs/architecture.md](docs/architecture.md) §9).
+**Status:** RPT generator, weekly RPH pipeline and the web app's first slice (Week, Classes, Files; offline PWA) built; next is a browser check, the first release as RPH Mate and a real week ([roadmap](docs/product/implementation-plan.md)). Stack: plain JavaScript (Node 24), no dependencies (see [docs/architecture.md](docs/architecture.md) §9).
 Decisions so far live in [docs/discussion.md](docs/discussion.md).
 
 ## The idea
