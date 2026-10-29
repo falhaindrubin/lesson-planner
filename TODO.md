@@ -25,7 +25,8 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
 
 ## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
-- [ ] **Try the app in the browser**: `node tools/serve.js` → http://localhost:8080/app/ → Files: type your name, pick `sample/` then `output/` → Week tab: mark a lesson, print the week, Save rekod. Tell me what breaks.
+- [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit, which Claude will fix next (details in [docs/next-session.md](docs/next-session.md)).
+- [ ] Optional: click through it yourself (`node tools/serve.js` → http://localhost:8080/app/) and try **Print week** to a real PDF
 - [ ] Check the repo is **public** (GitHub Pages is free only for public repos) and create the public **rph-mate** repo
 - [ ] Release: `node tools/release.js ../rph-mate`, commit and push there, enable GitHub Pages, open https://falhaindrubin.github.io/rph-mate/ and install it; check it works offline
 - [ ] Decide the next sub-project: Progress (dashboard, history import) or Drive sync

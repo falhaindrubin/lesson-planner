@@ -2,6 +2,28 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
+## Update 2026-10-29 — repo cleanup, textbook markdown, headless browser check
+**What happened this session.**
+- **Repo:** the workspace held a stale outer git repo with this one nested inside, so VS Code showed `lesson-planner` under `lesson-planner`. The outer `.git` and its stale copies were deleted and this repo now sits at `projects/lesson-planner`. Three loose sample files moved into `sample/`.
+- **`sample/bt-mat-t5.md`:** the Matematik T5 textbook (Pelangi 2020), turned from raw PDF text into structured markdown:
+  - `*ms. N*` page markers
+  - `## Bab`, `### 1.1` and `#### Contoh / Latih Kendiri / MobiLisasi Minda` headings
+  - Jawapan, Glosari, Rujukan and Indeks sections
+  - Limit: equations, matrices and diagrams stay scrambled (noted in the file header). Re-extract from the PDF if those are needed.
+- **Quick fixes:**
+  - `.gitattributes` (`* text=auto eol=lf`): stops regenerated output showing as modified on Windows
+  - README status line updated
+- **Phase 1b task 1 (browser check), run headless:** the Chrome extension wasn't connected, so headless Chrome was driven over the DevTools protocol (scripts were in the session scratchpad, not kept). Results against the web app spec §10.4:
+  - Steps 1–7 and 9 **pass**. Save rekod output equals the CLI rekod byte for byte. A broken jadual is rejected with a line error. Printing gives one RPH per A4 page. No console errors.
+  - Step 8 (offline) **fails on a first visit.** `app/sw.js` only caches what's fetched after it takes control, so after one online visit the cache is empty and an offline reload gives "site can't be reached". It works after a second online visit (41 files cached). Proved by killing the server, because CDP offline emulation doesn't cover service-worker fetches.
+  - Planned fix: once `navigator.serviceWorker.ready`, the page posts the URLs it loaded (`location.href` plus `performance.getEntriesByType('resource')`), and the SW caches them with `cache.addAll`. Check: one online visit, then server killed, then reload works.
+  - **Not exercised:**
+    - SPs moving after Postpone: every simulation row is already marked, and marked rows are kept
+    - A lesson longer than one page
+    - The real print dialog and PWA install
+
+**Next:** fix the first-visit offline bug, then Phase 1b tasks 3–6 (deferred minors, create `rph-mate`, release, install and check offline on the deployed URL).
+
 ## Update 2026-10-25 — product doc set
 **What happened this session.** Briefing only, then a product doc set for the whole of RPH Mate (built Phase 0–1 + planned phases) in [docs/product/](product/): [PRD](product/prd.md), [TRD](product/trd.md), [app flow](product/app-flow.md) (Mermaid), [UI/UX brief](product/ui-ux-brief.md), [data schema](product/backend-schema.md) (IndexedDB, runtime objects, markdown formats, proposed Drive store), [implementation plan](product/implementation-plan.md) (phased roadmap). No code changed; the app is still unchecked in a browser.
 
