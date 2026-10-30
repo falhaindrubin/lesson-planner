@@ -94,7 +94,7 @@ Field shapes are in [backend-schema.md §3](backend-schema.md#3-runtime-objects)
 | Import | Each picked `.md` is parsed by the parser for its role (from the file name or the class file's references); a file that fails to parse is rejected and the stored copy kept; a changed rekod goes through `diffRekod` first |
 | Path resolution | Class-file paths resolve against the class file's folder; `..` above the top is dropped; a missing exact path falls back to a unique base name; two files with the same name are an error |
 | Export | One download per click (Chrome blocks several at once); the unsaved flag is cleared only for the file handed to the browser |
-| Offline | Cache name `lesson-planner-dev`; the release rewrites it to `rph-mate-<date>-<sha>`; `skipWaiting` + `clients.claim`; old caches are deleted when the new worker activates |
+| Offline | Cache name `lesson-planner-dev`; the release rewrites it to `rph-mate-<date>-<sha>`; `clients.claim` only (no `skipWaiting`: a release waits until the app windows close); old caches are deleted when the new worker activates |
 
 ## 6. Security and privacy
 
@@ -137,13 +137,9 @@ Windows notes: Git may show regenerated outputs as modified because of CRLF only
 
 | Item | Effect |
 |---|---|
-| `today` computed once at load | A tab left open overnight plans with yesterday's date |
-| IndexedDB failure after a mark not rolled back | Memory and disk can differ until reload |
-| Rejected store write during import unhandled | Unhandled promise rejection |
 | Attendance edits on future lessons revert at once | Matches the CLI (Kehadiran doesn't lock a row) |
 | Exam card prints the event twice | Cosmetic |
 | `esc` misses quotes in attributes; RPH iframe has no `sandbox` | Hardening |
-| Service worker `skipWaiting` can mix old and new modules right after a release | Rare broken load; fixed by a reload |
 | `serve.js` prefix path check; `release.js` leaves the static `<title>` | Dev and cosmetic |
 | Error paths are relative to the class file; a literal BOM char in a `util.js` regex | Readability |
 | Spec names `needMinutes/haveMinutes` vs code `need/have` | Doc drift |

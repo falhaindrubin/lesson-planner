@@ -10,7 +10,7 @@ _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; the
 - **Tests:** 13 files pass. Form-dependent values were re-derived from the pipeline output (not independently), e.g. 5S is not in an exam in M37–M38 (only Form 4 is).
 
 **Next (in order).**
-1. Deferred minors worth doing: stale `today` overnight, IndexedDB failure after a mark not rolled back, blank Status silently counted as not taught, `skipWaiting` mixing old and new modules after a release.
+1. ~~Deferred minors~~ done 2026-10-30 (see below).
 2. Release: public `rph-mate` repo, `node tools/release.js ../rph-mate`, GitHub Pages, install as PWA, check offline on the deployed URL.
 3. Real use for a week (Rekod/Output to real folders, Mula = 5S's current SP).
 4. Phase 2 (Progress) or Phase 4 (RPT in the app, for the 2027 RPTs in December): brainstorm, spec, plan.
@@ -54,7 +54,7 @@ _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; the
 **Windows quirks hit again:** bash heredocs with `
 ` or regexes mangle escapes — use the Write/Edit tools; `git diff` shows regenerated outputs as modified because of CRLF — check sameness with `git diff --exit-code --quiet <paths>`; `output/rpt-mat-t4-2026.md` shows as modified for that reason only (not committed).
 
-**Deferred minors (from the review):** `today` computed once at load (stale overnight) · IndexedDB failure after a mark is not rolled back · rejected store write during import unhandled · attendance edits on future lessons revert at once (matches CLI) · exam card prints the event twice · `esc` misses quotes in attributes, RPH iframe has no `sandbox` · service worker `skipWaiting` can mix old/new modules after a release · `serve.js` prefix path check · `release.js` does not rewrite the static `<title>` · error paths are class-file-relative · literal BOM char in a `util.js` regex (use ﻿) · spec §4.3 field names `needMinutes/haveMinutes` vs code `need/have`.
+**Deferred minors (from the review):** *(fixed 2026-10-30: stale `today`, IndexedDB failure not rolled back, unhandled store write, `skipWaiting` mixing modules)* attendance edits on future lessons revert at once (matches CLI) · exam card prints the event twice · `esc` misses quotes in attributes, RPH iframe has no `sandbox` · `serve.js` prefix path check · `release.js` does not rewrite the static `<title>` · error paths are class-file-relative · literal BOM char in a `util.js` regex (use ﻿) · spec §4.3 field names `needMinutes/haveMinutes` vs code `need/have`.
 
 ## Suggested next steps
 1. Browser check of the app (above); fix what breaks.

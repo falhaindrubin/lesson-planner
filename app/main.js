@@ -1,6 +1,6 @@
 // Start-up, top bar, banners and screen switching. Screens: Week, Classes, Files.
 import { APP_NAME } from './config.js';
-import { state, onChange, load, ready, weekInfo, recalc, setWeek, goToday, setTab } from './state.js';
+import { state, onChange, load, ready, weekInfo, recalc, setWeek, goToday, setTab, refreshToday } from './state.js';
 import { renderFiles, esc } from './inputs.js';
 import { renderWeek } from './week-view.js';
 import { renderClasses } from './classes-view.js';
@@ -37,8 +37,13 @@ ${unsaved.length ? `<span class="unsaved ${old ? 'old' : ''}">● Unsaved change
 <button data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod${unsaved.length > 1 ? ` (${unsaved.length} files)` : ''}</button>`;
 }
 
+// A rejected storage write (import, profile, class file...) would otherwise vanish into the console
+let fault = '';
+window.addEventListener('unhandledrejection', e => { fault = `Could not store that change: ${(e.reason && e.reason.message) || e.reason}`; draw(); });
+
 function renderBanner() {
   const out = [];
+  if (fault) out.push(`<p class="banner-warn">${esc(fault)}</p>`);
   if (!state.persisted) out.push('<p class="banner-warn">This browser may clear the app\'s data. Use Save rekod after each session.</p>');
   banner.innerHTML = out.join('');
 }
@@ -88,6 +93,7 @@ async function start() {
   if (info && info.todayWeek != null) state.week = info.todayWeek;
   onChange(draw);
   recalc();
+  setInterval(refreshToday, 60e3);
 }
 
 start();

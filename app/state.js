@@ -17,6 +17,11 @@ const state = {
 };
 const listeners = new Set();
 const onChange = fn => listeners.add(fn);
+// A tab left open overnight: move `today` on at midnight and plan again
+function refreshToday() {
+  const t = localToday();
+  if (t !== state.today) { state.today = t; recalc(); }
+}
 const emit = () => listeners.forEach(fn => fn());
 
 const PARSERS = {
@@ -96,7 +101,20 @@ function recalc() {
     changed = keepRekod(state.result);
   } catch (e) { state.result = null; state.error = e.message; }
   emit();
-  persist(changed).catch(e => { state.error = `Could not store the rekod: ${e.message}`; emit(); });
+  persist(changed).catch(rollback);
+}
+
+// A failed storage write: go back to what is stored, so the screen never shows a change that would be lost on reload
+async function rollback(e) {
+  const msg = `Could not store the rekod (${e.message}); showing what is saved.`;
+  try {
+    state.files = await store.allFiles();
+    state.unsaved = (await store.getSetting('unsaved')) || {};
+    refreshSetup();
+    state.result = runFor(state.week);
+    state.error = msg;
+  } catch { state.result = null; state.error = msg; }
+  emit();
 }
 
 function setWeek(n) { state.week = n; store.setSetting('week', n); recalc(); }
@@ -176,12 +194,12 @@ function mark(lesson, change) {
   if (!changed.some(([k]) => k === key)) changed.push([key, state.files.get(key)]);
   if (!state.unsaved[key]) state.unsaved[key] = state.today;
   emit();
-  persist(changed).then(() => store.setSetting('unsaved', state.unsaved))
-    .catch(e => { state.error = `Could not store the rekod: ${e.message}`; emit(); });
+  // Flag first: a failure in between leaves a harmless extra "unsaved" flag, never a hidden unsaved change
+  store.setSetting('unsaved', state.unsaved).then(() => persist(changed)).catch(rollback);
   return { ok: true };
 }
 
 export {
   state, onChange, emit, load, refreshSetup, ready, weekInfo, recalc, setWeek, goToday, setTab,
-  setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday,
+  setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday, refreshToday,
 };
