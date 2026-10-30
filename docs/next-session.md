@@ -2,6 +2,27 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
+## Session summary 2026-10-30 / 31 — read this first
+**Done (all committed and pushed to `main`):**
+1. **Offline-after-first-visit bug fixed** (page posts its loaded URLs to the service worker). Verified headless, locally and on the live site.
+2. **Deferred minors fixed** (stale `today` at midnight, rollback on a failed IndexedDB write, banner for unhandled store errors, no `skipWaiting`). The blank-Status case already warns, so no change.
+3. **Switched the sample data and tests from Matematik T4 4S to T5 5S** (new `sample/dskp-mat-t5.md`, AI-draft `kesukaran-mat-t5.md`, RPT `output/rpt-mat-t5-2026.md`; the 2026 takwim and timetable stand in for 2027; syllabus ends M25, revision M26-M27, Percubaan SPM M28-M30).
+4. **File naming convention agreed and applied** (`docs/product/backend-schema.md`, section "File naming convention"; timetable named by effective date, `<subject>-<form>` vs timetable `<code>`, reference files in `sample/ref` and `output/ref`). Source PDFs/DOCX were deleted from `sample/` by the teacher on purpose; do not restore.
+5. **Released to https://falhaindrubin.github.io/rph-mate/** (repo `falhaindrubin/rph-mate`, checkout at `../rph-mate`, release `20261030-cc0d3a1`). **Later work (UI pass 1) is NOT released yet.**
+6. **UI pass 1:** clean light theme (direction A chosen by the teacher) on every screen, and a new Today tab that opens first. See the 2026-10-31 update below.
+
+**State:** `main` clean, 13 test files pass (`node test/all.js`). The app was only checked with headless-Chrome screenshots; the teacher has not clicked through it, installed it as a PWA, or printed a week yet.
+
+**Next session, in order:**
+1. Teacher: install the live app, pick the files, try Today / Week / Print week, and say what still feels wrong. Tell Claude 5S's current SP (needed for a real week of use).
+2. Claude: release UI pass 1 (`node tools/release.js ../rph-mate`, commit and push in `rph-mate`; it applies after all app windows are closed).
+3. UI pass 2, pick one with the teacher: guided first-run setup (the Files screen is the least friendly step), phone layout, Malay labels, plainer wording than "SP". The teacher wants the interface improved step by step, not all at once.
+4. Then the next sub-project: Phase 4 (RPT in the app, for the 2027 RPTs in December) or Phase 2 (Progress). Brainstorm, spec, plan.
+
+**Open questions for the teacher:** review the draft T5 difficulty ratings (topic 8.0 gets only 0.4 weeks; pin weeks?); the 2027 school takwim and timetable; the PJPK T2 DSKP and the Google Sheets links for the history import (the links file was removed from the repo).
+
+**Working notes:** use the Write tool for scripts with quotes or regexes; bash heredocs mangled them again. A first import at today's real week starts the stored rekod at that week, so earlier weeks show no lessons (existing behaviour; matters when testing with fake dates: set the date before importing). The visual-companion mockups live in `.superpowers/` (git-ignored).
+
 ## Update 2026-10-31 — UI/UX pass 1 (clean light theme, Today screen)
 - **Direction chosen by the teacher: A (clean light)**: grey page, white rounded cards, one blue accent. All screens restyled in `app/app.css`; top bar split into a main bar (brand, tabs Today / Week / Classes / Files, class badges, Save rekod) and a week bar (prev / next / Today) shown on Week and Classes.
 - **New Today tab, opens first when today is in the takwim** (`renderToday` in `app/week-view.js`): the next lesson as a big card (Next in N min / Now, ends in N min), earlier and later lessons around it, same Taught / Postponed / Cancelled marking, attendance and notes as the Week cards. Holidays and empty days show a message and the next lesson.
