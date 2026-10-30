@@ -2,6 +2,21 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
+## Update 2026-10-30 — offline fix, switch to Matematik T5 5S
+**What happened.**
+- **Offline bug fixed and verified:** `app/main.js` posts the page's loaded URLs to the service worker once it is ready, and `app/sw.js` caches the same-origin ones. Headless Chrome, fresh profile: one online visit caches 41 files, then the server was killed and a reload worked.
+- **Sample data and tests switched from T4 4S to T5 5S** (the 4S class of 2026 becomes 5S). New `sample/dskp-mat-t5.md` (generated from `dskp-mat-t4-t5.md`, 57 SP) and `sample/kesukaran-mat-t5.md` (**AI draft ratings**). The M3 slots in both timetables are relabelled 5S, with a note. The simulation moved to `output/simulasi-5S-M3/`. The T4 files are kept for reference but unused.
+- **Form 5 on the 2026 takwim:** Percubaan SPM is M28–M30, so the syllabus ends at M25 (20–24 Jul), revision M26–M27. Topics 5.0–8.0 are squeezed into M19–M25. The 2026 takwim and timetable stand in for 2027 until the real ones exist.
+- **Tests:** 13 files pass. Form-dependent values were re-derived from the pipeline output (not independently), e.g. 5S is not in an exam in M37–M38 (only Form 4 is).
+
+**Next (in order).**
+1. Deferred minors worth doing: stale `today` overnight, IndexedDB failure after a mark not rolled back, blank Status silently counted as not taught, `skipWaiting` mixing old and new modules after a release.
+2. Release: public `rph-mate` repo, `node tools/release.js ../rph-mate`, GitHub Pages, install as PWA, check offline on the deployed URL.
+3. Real use for a week (Rekod/Output to real folders, Mula = 5S's current SP).
+4. Phase 2 (Progress) or Phase 4 (RPT in the app, for the 2027 RPTs in December): brainstorm, spec, plan.
+
+**Needs the teacher:** review the draft T5 difficulty ratings (topic 8.0 gets 0.4 weeks), the 2027 school takwim and timetable, PJPK T2 DSKP, the Sheets for history import, confirm the repo is public.
+
 ## Update 2026-10-29 — repo cleanup, textbook markdown, headless browser check
 **What happened this session.**
 - **Repo:** the workspace held a stale outer git repo with this one nested inside, so VS Code showed `lesson-planner` under `lesson-planner`. The outer `.git` and its stale copies were deleted and this repo now sits at `projects/lesson-planner`. Three loose sample files moved into `sample/`.

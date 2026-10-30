@@ -6,6 +6,8 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
 - [x] Sample data and tests switched from T4 4S to **T5 5S** (2026-10-30): `sample/dskp-mat-t5.md`, `sample/kesukaran-mat-t5.md`, 5S in the class file and timetables (2026 takwim and timetable stand in for 2027)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
+- [ ] Decide the **T5 squeeze**: topics 5.0–8.0 get only M19–M25 (topic 8.0 gets 0.4 weeks). Pin weeks for 8.0 in `sample/kesukaran-mat-t5.md`? Finish by end of July is already met (syllabus ends M25, 20–24 Jul)
+- [ ] When you have them: send the **2027 school takwim and timetable** (the T5 plan borrows the 2026 ones)
 - [ ] Check the **Matematik T5 RPT** (`output/rpt-mat-t5-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t5.md` (draft; T4 files kept for reference), then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
@@ -26,7 +28,7 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 5S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
 
 ## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
-- [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit, which Claude will fix next (details in [docs/next-session.md](docs/next-session.md)).
+- [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit. Fixed and verified 2026-10-30 (the page hands the service worker its loaded files; one online visit now caches 41 files).
 - [ ] Optional: click through it yourself (`node tools/serve.js` → http://localhost:8080/app/) and try **Print week** to a real PDF
 - [ ] Check the repo is **public** (GitHub Pages is free only for public repos) and create the public **rph-mate** repo
 - [ ] Release: `node tools/release.js ../rph-mate`, commit and push there, enable GitHub Pages, open https://falhaindrubin.github.io/rph-mate/ and install it; check it works offline
