@@ -12,7 +12,7 @@ _2026-10-25 · RPH Mate has **no server and no database backend**. "Backend" her
 | IndexedDB `lesson-planner` | A copy of every picked `.md` plus app settings | Working copy in the browser | Built |
 | Runtime objects | What `runWeek` and the parsers return | Derived, never stored | Built |
 | Google Drive store | One file in the teacher's Drive | Sync copy across devices | Planned (Phase 3) |
-| Frozen RPT snapshot | `rpt-<subject>-<year>.md` | Yardstick | Built as a file; in-app freeze Planned (Phase 4) |
+| Frozen RPT snapshot | `rpt-<subject>-<form>-<year>.md` | Yardstick | Built as a file; in-app freeze Planned (Phase 4) |
 
 ## 2. IndexedDB (browser)
 
@@ -45,7 +45,7 @@ Produced by the pure core (`src/core/`); the app and CLI only read them.
 ### 3.1 Class file → `parseClasses`
 ```js
 { year: 2026, teacher: 'FALHAIND RUBIN', takwim: 'takwim-smly-2026.md',
-  timetables: ['jwg-20260101-simulasi.md', 'jwg-20261002.md'], events: 'acara-2026.md',
+  timetables: ['jwg-20260101-simulasi.md', 'jwg-20261005.md'], events: 'acara-2026.md',
   rekod: '../output/simulasi-4S-M3', output: '../output/simulasi-4S-M3',
   classes: [ClassRow] }
 
@@ -104,14 +104,27 @@ All UTF-8, LF or CRLF, BOM tolerated. Table rows are `| a | b | … |`. Headers 
 | File | Key structure |
 |---|---|
 | `kelas-<year>.md` | Meta lines `- Tahun / Guru (optional) / Takwim / Jadual (comma list) / Acara / Rekod / Output`; table `Kelas · Nama penuh · Tingkatan · Subjek · Nama subjek · DSKP · Aktiviti · RPT · Tutorial · Bil. murid · Mula` |
-| `jwg-<yyyymmdd>.md` | `- Berkuat kuasa: yyyy-mm-dd`; table under `## Kelas`: `Hari · Waktu · Masa · Subjek · Kelas · Bilik` (one row = one lesson; Masa must match Waktu; period p starts 6:30 + 30p) |
+| `jwg-<yyyymmdd>.md` (date = **effective date**, `Berkuat kuasa`) | `- Berkuat kuasa: yyyy-mm-dd`; table under `## Kelas`: `Hari · Waktu · Masa · Subjek · Kelas · Bilik` (one row = one lesson; Masa must match Waktu; period p starts 6:30 + 30p) |
 | `takwim-<school>-<year>.md` | One row per day; `Mn` on Mondays; columns Cuti / Perayaan, Pentadbiran, Kurikulum, HEM, Kokurikulum |
 | `acara-<year>.md` | `## Hari acara`: `Tarikh · Acara · Tingkatan`; `## Batal`: `Tarikh · Sasaran · Sebab` |
-| `dskp-<subject>.md` | `## n.0 Tajuk` → `### n.n SK` → SP rows `\| n.n.n \| text \|` |
-| `kesukaran-<subject>.md` | SP → 1–3 with a reason; optional fixed weeks per topic |
+| `dskp-<subject>-<form>.md` | `## n.0 Tajuk` → `### n.n SK` → SP rows `\| n.n.n \| text \|` |
+| `kesukaran-<subject>-<form>.md` | SP → 1–3 with a reason; optional fixed weeks per topic |
 | `aktiviti-<name>.md` | Bullets under `## Permulaan`, `## Perkembangan`, `## Penutup` |
-| `rpt-<subject>-<year>.md` | Week table + `Sukatan tamat` + appendix `## Peruntukan SP`: `SP · Minggu` (3 decimals) |
-| `rekod-<class>-<subject>.md` | Header text (regenerated) + table `Minggu · Tarikh · Hari · Waktu · Masa · Jenis · Acara · SP · Status · Kehadiran · Catatan` |
+| `rpt-<subject>-<form>-<year>.md` | Week table + `Sukatan tamat` + appendix `## Peruntukan SP`: `SP · Minggu` (3 decimals) |
+| `rekod-<class>-<code>.md` | Header text (regenerated) + table `Minggu · Tarikh · Hari · Waktu · Masa · Jenis · Acara · SP · Status · Kehadiran · Catatan` |
+
+### File naming convention (decided 2026-10-30)
+
+- **Lowercase, ASCII, hyphens, no spaces.** Malay prefixes: `kelas`, `acara`, `aktiviti`, `kesukaran`, `takwim`, `jwg`, `rekod`; `dskp`, `rpt` and `rph` are the standard acronyms.
+- **`<subject>-<form>`** = a lowercase slug and the form, e.g. `mat-t5`, `ask-t1`, `sk-t4`, `pjpk-t2`. Used by DSKP, difficulty and RPT files (these are per subject and form, not per class).
+- **`<code>`** = the timetable's subject code, e.g. `M3`, `ASK`, `SK`, `PK`, `PJ`. Used by rekod and RPH files, because the timetable and the class file use it. Mapping (also noted in `kelas-<year>.md`): M3 = mat, ASK = ask, SK = sk, PK and PJ = pjpk (one DSKP serves both rows).
+- **`<class>`** = the class code from the timetable, e.g. `5S`.
+- **Year** is in the name when the content depends on the year (takwim, acara, kelas, RPT), not when it doesn't (DSKP, difficulty).
+- **Timetables** are named by their **effective date** (`jwg-20261005.md` is in force from 2026-10-05), not the print date.
+- **A source PDF/DOCX takes the name of the `.md` converted from it** (`jwg-20261005.pdf` next to `jwg-20261005.md`). An RPH sample is `rph-<subject>-<form>-<year>-m<week><version>` (`rph-ask-t1-2026-m34a.pdf`). Not converted yet: same pattern with the original extension (`dskp-sk-t4.pdf`, `rpt-sk-t4-2026.docx`).
+- **Takwim layers:** `takwim-smly-<year>.md` (school) and `takwim-kpm-<year>.md` (KPM calendar).
+- **Generated RPH:** `<year>-M<week>-<code>.html`. **Folders:** live inputs in `sample/`; superseded or reference-only files in `sample/ref/` and `output/ref/`; the simulation in `output/simulasi-<class>-<code>/`; real use in `rekod/<year>` and `output/rph`.
+- **What the code enforces:** only `kelas-*.md` and `rekod-*.md` (the app finds them by name) and the generated rekod/RPH names. Everything else is found through the class file.
 
 Example rekod row:
 ```
@@ -158,7 +171,7 @@ Sync the markdown files themselves into a Drive folder, readable by the CLI thro
 
 ## 6. Planned: RPT freeze (Phase 4)
 
-- The frozen RPT stays a markdown file (`rpt-<subject>-<year>.md`) stored in `files`, so the CLI and the app read the same thing.
+- The frozen RPT stays a markdown file (`rpt-<subject>-<form>-<year>.md`) stored in `files`, so the CLI and the app read the same thing.
 - `settings.rpt = { [subject|year]: { frozenAt, sourceHash /* DSKP+takwim+kesukaran */ } }` lets the app warn when inputs changed after freezing, without moving the RPT.
 
 ## 7. Planned: progress history (Phase 2)

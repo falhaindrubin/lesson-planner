@@ -2,7 +2,7 @@
 
 - Kurikulum: KSSM
 - Penerbit: Bahagian Pembangunan Kurikulum, KPM (Terbitan 2018)
-- Sumber: `dskp-mat-t4-t5.pdf` (DSKP KSSM Matematik Tingkatan 4 dan 5), muka surat 79–115 (Tingkatan 5 sahaja); dijana daripada `dskp-mat-t4-t5.md`
+- Sumber: `ref/dskp-mat-t4-t5.pdf` (DSKP KSSM Matematik Tingkatan 4 dan 5), muka surat 79–115 (Tingkatan 5 sahaja); dijana daripada `ref/dskp-mat-t4-t5.md`
 - Tidak disalin: pendahuluan dan kerangka kurikulum, lajur Catatan (nota dan cadangan aktiviti), dan Tingkatan 4
 
 Struktur: Tajuk (`1.0`) → Standard Kandungan, SK (`1.1`) → Standard Pembelajaran, SP (`1.1.1`). Standard Prestasi (TP1–TP6) diberi bagi setiap **tajuk** (bukan setiap SK seperti ASK).

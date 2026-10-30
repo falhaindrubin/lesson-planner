@@ -51,7 +51,7 @@ Writes `rekod-<kelas>-<subjek>.md` (one row per lesson) and `<tahun>-M<n>-<SUBJE
 
 ## RPT generator
 ```
-node src/cli/rpt.js --dskp sample/dskp-mat-t4.md --takwim sample/takwim-smly-2026.md   --difficulty sample/kesukaran-mat-t4.md --form 4 --out output/rpt-mat-t4-2026
+node src/cli/rpt.js --dskp sample/dskp-mat-t5.md --takwim sample/takwim-smly-2026.md   --difficulty sample/kesukaran-mat-t5.md --form 5 --out output/rpt-mat-t5-2026
 node test/rpt.js
 ```
 SPs are spread up to the form's final exam (PAT / UASA / Percubaan SPM), keeping the last

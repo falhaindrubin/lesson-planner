@@ -1,7 +1,7 @@
 # Kesukaran SP — Matematik Tingkatan 5
 
 - DSKP: `sample/dskp-mat-t5.md`
-- Dinilai oleh: Claude (AI), 2026-10-30 — **draf**, sila ubah nilai yang tidak sesuai (rujukan: `sample/bt-mat-t5.md`)
+- Dinilai oleh: Claude (AI), 2026-10-30 — **draf**, sila ubah nilai yang tidak sesuai (rujukan: `sample/ref/bt-mat-t5.md`)
 - Skala = masa PdP relatif: **1** ringan (konsep/istilah), **2** sederhana, **3** berat (kemahiran baharu yang perlu banyak latihan, atau penerokaan/projek)
 - Penjana RPT mengagihkan minggu PdP mengikut nisbah nilai ini. Hanya lajur Kesukaran dibaca; Sebab untuk rujukan.
 

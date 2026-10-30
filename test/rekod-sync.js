@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
 const calendar = R.buildCalendar(R.parseTakwim(read('takwim-smly-2026.md')));
-const versions = [R.parseTimetable(read('jwg-20261002.md'))];
+const versions = [R.parseTimetable(read('jwg-20261005.md'))];
 const allClasses = R.parseClasses(fs.readFileSync(__dirname + '/data/kelas-semua.md', 'utf8')).classes.map(c => ({ ...c, pupils: 30 }));
 const events = R.parseEvents(read('acara-2026.md'));
 const ask = R.parseDskp(read('dskp-ask-t1.md'));

@@ -11,7 +11,7 @@ const sample = f => fs.readFileSync(path.join(root, 'sample', f), 'utf8');
 const calendar = R.buildCalendar(R.parseTakwim(sample('takwim-smly-2026.md')));
 const plan = R.plan({ sp: R.parseDskp(sample('dskp-mat-t5.md')), difficulty: R.parseDifficulty(sample('kesukaran-mat-t5.md')), calendar, form: 5 });
 const base = () => new Map([
-  ['takwim.md', sample('takwim-smly-2026.md')], ['jwg-sim.md', sample('jwg-20260101-simulasi.md')], ['jwg.md', sample('jwg-20261002.md')],
+  ['takwim.md', sample('takwim-smly-2026.md')], ['jwg-sim.md', sample('jwg-20260101-simulasi.md')], ['jwg.md', sample('jwg-20261005.md')],
   ['acara.md', sample('acara-2026.md')], ['dskp.md', sample('dskp-mat-t5.md')], ['aktiviti.md', sample('aktiviti-umum.md')],
   ['rpt.md', R.renderMd(plan, { subject: 'Matematik', year: 2026, dskp: 'd', takwim: 't', difficulty: 'k' })],
 ]);

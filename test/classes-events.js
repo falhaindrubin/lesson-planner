@@ -11,7 +11,7 @@ const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 const K1 = R.parseClasses(read('kelas-2026.md'), 'kelas-2026.md');
 assert.strictEqual(K1.year, 2026);
 assert.strictEqual(K1.teacher, 'FALHAIND RUBIN');
-assert.deepStrictEqual(K1.timetables, ['jwg-20260101-simulasi.md', 'jwg-20261002.md']);
+assert.deepStrictEqual(K1.timetables, ['jwg-20260101-simulasi.md', 'jwg-20261005.md']);
 assert.deepStrictEqual([K1.takwim, K1.events, K1.rekod, K1.output], ['takwim-smly-2026.md', 'acara-2026.md', '../output/simulasi-5S-M3', '../output/simulasi-5S-M3']);
 assert.strictEqual(K1.classes.length, 1);
 const s4 = K1.classes[0];
@@ -22,14 +22,14 @@ assert.deepStrictEqual(
 // Simulation timetable = copy of the 5.10.2026 timetable, in force from 1 Jan
 const sim = R.parseTimetable(read('jwg-20260101-simulasi.md'));
 assert.strictEqual(sim.effectiveFrom, '2026-01-01');
-assert.deepStrictEqual(sim.slots, R.parseTimetable(read('jwg-20261002.md')).slots);
+assert.deepStrictEqual(sim.slots, R.parseTimetable(read('jwg-20261005.md')).slots);
 
 // Test data: all 7 class × subject rows (test/data/kelas-semua.md)
 const K = R.parseClasses(fs.readFileSync(__dirname + '/data/kelas-semua.md', 'utf8'), 'kelas-semua.md');
 assert.strictEqual(K.classes.length, 7);
 assert.strictEqual(K.classes.find(c => c.classCode === '4H').tutorial, 'TUTORIAL');
 // Every timetable slot has a row in the class file (Subjek or Tutorial code)
-const j = R.parseTimetable(read('jwg-20261002.md'));
+const j = R.parseTimetable(read('jwg-20261005.md'));
 for (const s of j.slots)
   assert.ok(K.classes.some(c => c.classCode === s.classCode && (c.subject === s.subject || c.tutorial === s.subject)), `${s.subject} ${s.classCode}`);
 

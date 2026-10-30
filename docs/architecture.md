@@ -68,10 +68,10 @@ Each parser turns one markdown format into plain objects. Code: [src/core/parse/
 
 | Input | Format (see sample) | Parsed into |
 |---|---|---|
-| DSKP | [sample/dskp-mat-t4.md](../sample/dskp-mat-t4.md): `## 1.0 Tajuk` → `### 1.1 SK` → SP table rows `\| 1.1.1 \| text \|`, TP table per SK (ASK) or per topic (Matematik) | Ordered SP list, each with its topic and SK |
+| DSKP | [sample/ref/dskp-mat-t4.md](../sample/ref/dskp-mat-t4.md): `## 1.0 Tajuk` → `### 1.1 SK` → SP table rows `\| 1.1.1 \| text \|`, TP table per SK (ASK) or per topic (Matematik) | Ordered SP list, each with its topic and SK |
 | Takwim | [sample/takwim-smly-2026.md](../sample/takwim-smly-2026.md): one row per day; `Mn` on Mondays; columns Cuti / Perayaan, Pentadbiran, Kurikulum, HEM, Kokurikulum | Weeks (M1…Mn) of five weekdays + weekdays in breaks |
-| Kesukaran | [sample/kesukaran-mat-t4.md](../sample/kesukaran-mat-t4.md): SP → 1–3 with reason; optional fixed weeks per topic | `{ sp: Map, tajuk: Map }` |
-| Jadual | [sample/jwg-20261002.md](../sample/jwg-20261002.md) (**frozen format**): `Berkuat kuasa: yyyy-mm-dd` + `## Kelas` table (Hari, Waktu, Masa, Subjek, Kelas, Bilik); `## Bukan kelas` ignored. One row = one lesson | `{ effectiveFrom, slots }` — `parse/timetable.js` |
+| Kesukaran | [sample/ref/kesukaran-mat-t4.md](../sample/ref/kesukaran-mat-t4.md): SP → 1–3 with reason; optional fixed weeks per topic | `{ sp: Map, tajuk: Map }` |
+| Jadual | [sample/jwg-20261005.md](../sample/jwg-20261005.md) (**frozen format**): `Berkuat kuasa: yyyy-mm-dd` + `## Kelas` table (Hari, Waktu, Masa, Subjek, Kelas, Bilik); `## Bukan kelas` ignored. One row = one lesson | `{ effectiveFrom, slots }` — `parse/timetable.js` |
 | Kelas | `kelas-<tahun>.md`: Nama guru; one row per class × subject (Kelas, Nama penuh, Tingkatan, Subjek, DSKP, Aktiviti, RPT, Tutorial, Bil. murid, Mula = starting SP) | Class list — `parse/classes.js` |
 | Acara | `acara-<tahun>.md`: table **Hari acara** (Tarikh, Acara, Tingkatan — blank = all) and table **Batal** (Tarikh, Tingkatan/Kelas, Sebab) | Event days + known cancellations — `parse/events.js` |
 | Aktiviti | `aktiviti-<subjek>.md`: lists Permulaan / Perkembangan / Penutup | Activity template — `parse/activities.js` |
@@ -146,7 +146,7 @@ For each lesson instance, choose the SP(s) from the class's **progress queue**, 
 
 **Ahead / behind summary** (CLI only, not on the RPH): reads the frozen `rpt-<subjek>-<tahun>.md` named in the class file. Gap = (minutes of SP content taught − PdP minutes scheduled in teaching weeks so far) ÷ the class's normal weekly minutes; under half a week = ikut RPT, else n weeks ahead / behind. Measured in minutes so a short week (M20) doesn't inflate a small gap. `src/cli/simulate.js` replays the year week by week to check an undisturbed class stays on the RPT. Warns when remaining SPs exceed remaining timetabled lessons before the syllabus end.
 
-Fills the RPH layout of [sample/2026 - ASK T1 - Google Sheets M34A.pdf](../sample/): guru, subjek, minggu/tarikh/hari, tingkatan, masa, kehadiran, tajuk, SK, SP, objektif, ringkasan aktiviti (Permulaan 5 min / Perkembangan = lesson length − 10 / Penutup 5 min — fixed template per subject from `aktiviti-<subjek>.md`, AI per SP later), refleksi.
+Fills the RPH layout of [sample/rph-ask-t1-2026-m34a.pdf](../sample/): guru, subjek, minggu/tarikh/hari, tingkatan, masa, kehadiran, tajuk, SK, SP, objektif, ringkasan aktiviti (Permulaan 5 min / Perkembangan = lesson length − 10 / Penutup 5 min — fixed template per subject from `aktiviti-<subjek>.md`, AI per SP later), refleksi.
 
 **CLI:** `node src/cli/rph.js --classes sample/kelas-2026.md --week 36 [--today yyyy-mm-dd]`; `node src/cli/simulate.js --classes sample/kelas-2026.md` replays the year week by week. For each class × subject: plan any missing weeks up to that week, rebuild future untouched rows, write the rekod, render the affected weeks and print the ahead/behind summary. Output: `output/rph/<tahun>-M<n>-<SUBJEK>.html`, one RPH per A4 page. Core: `planRows`, `syncRekod`, `spTime`, `classSummary`, `parseRekod` + `renderRekod` (round-trip without changing edited rows), `parseActivities`, `renderRph`.
 

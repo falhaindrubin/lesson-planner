@@ -24,7 +24,7 @@ assert.strictEqual(R.clock24(R.periodStart(15)), '1400');
 assert.strictEqual(R.fmtDateDmy('2026-10-05'), '05/10/2026');
 
 // Timetable 5.10.2026: 12 class slots; B slots (Bukan kelas) are ignored
-const j = R.parseTimetable(read('jwg-20261002.md'), 'jwg-20261002.md');
+const j = R.parseTimetable(read('jwg-20261005.md'), 'jwg-20261005.md');
 assert.strictEqual(j.effectiveFrom, '2026-10-05');
 assert.strictEqual(j.slots.length, 12);
 assert.deepStrictEqual(j.slots[0], { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '5S', room: '' });
@@ -33,11 +33,11 @@ assert.ok(!j.slots.some(s => s.dayName === 'Jumaat' && s.periods[0] === 9)); // 
 assert.strictEqual(j.slots.filter(s => s.subject === 'TUTORIAL').length, 1);
 
 // A time that does not match the period is refused, with the line number
-const wrong = read('jwg-20261002.md').replace('| Isnin | 2–3 | 7:30–8:30 |', '| Isnin | 2–3 | 7:30–9:00 |');
+const wrong = read('jwg-20261005.md').replace('| Isnin | 2–3 | 7:30–8:30 |', '| Isnin | 2–3 | 7:30–9:00 |');
 assert.throws(() => R.parseTimetable(wrong, 'jwg.md'), /jwg\.md:\d+: Masa "7:30–9:00" does not match Waktu 2–3 \(7:30–8:30\)/);
 assert.throws(() => R.parseTimetable('# x\n## Kelas\n', 'x.md'), /x\.md: missing line "- Berkuat kuasa/);
 // CRLF (file saved on Windows) reads the same
-assert.deepStrictEqual(R.parseTimetable(read('jwg-20261002.md').replace(/\n/g, '\r\n')), j);
+assert.deepStrictEqual(R.parseTimetable(read('jwg-20261005.md').replace(/\n/g, '\r\n')), j);
 
 // Resolver: the latest version in force on the date
 const old = { effectiveFrom: '2026-08-10', slots: [{ dayName: 'Isnin', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '5S', room: '' }] };

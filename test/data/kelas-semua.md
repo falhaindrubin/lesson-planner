@@ -3,7 +3,7 @@
 - Tahun: 2026
 - Guru: FALHAIND RUBIN
 - Takwim: ../../sample/takwim-smly-2026.md
-- Jadual: ../../sample/jwg-20261002.md
+- Jadual: ../../sample/jwg-20261005.md
 - Acara: ../../sample/acara-2026.md
 - Rekod: ../rekod/2026
 - Output: ../output/rph

@@ -1,6 +1,6 @@
 # Kesukaran SP — Matematik Tingkatan 4
 
-- DSKP: `sample/dskp-mat-t4.md`
+- DSKP: `sample/ref/dskp-mat-t4.md`
 - Dinilai oleh: Claude (AI), 2026-10-02 — **draf**, sila ubah nilai yang tidak sesuai
 - Skala = masa PdP relatif: **1** ringan (konsep/istilah), **2** sederhana, **3** berat (kemahiran baharu yang perlu banyak latihan, atau penerokaan/projek)
 - Penjana RPT mengagihkan minggu PdP mengikut nisbah nilai ini. Hanya lajur Kesukaran dibaca; Sebab untuk rujukan.

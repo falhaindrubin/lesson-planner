@@ -1,5 +1,5 @@
 // RPH renderer: one A4 page per PdP, laid out like the Google Sheets RPH
-// (sample/2026 - ASK T1 - Google Sheets M34A.pdf). Cancelled PdP are not printed.
+// (sample/rph-ask-t1-2026-m34a.pdf). Cancelled PdP are not printed.
 // No "continued" mark: an SP that spans PdP is written normally on every PdP.
 // Everything printed is Malay file content and stays as it is.
 import { periodRange, range, periodStart, clock24, fmtDateDmy } from '../util.js';

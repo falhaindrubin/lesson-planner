@@ -2,8 +2,8 @@
 // and the SP difficulty file. SPs are spread by difficulty over the real PdP weeks
 // (minus holidays and that form's exams) up to the end week of the syllabus.
 //
-//   node src/cli/rpt.js --dskp sample/dskp-mat-t4.md --takwim sample/takwim-smly-2026.md \
-//     --difficulty sample/kesukaran-mat-t4.md --form 4 --out output/rpt-mat-t4-2026
+//   node src/cli/rpt.js --dskp sample/dskp-mat-t5.md --takwim sample/takwim-smly-2026.md \
+//     --difficulty sample/kesukaran-mat-t5.md --form 5 --out output/rpt-mat-t5-2026
 //
 // Default: the syllabus ends before that form's final exam (PAT / UASA; Percubaan SPM
 // for Form 5), minus the revision weeks.

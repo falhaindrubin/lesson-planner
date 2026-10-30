@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
 
 const calendar = R.buildCalendar(R.parseTakwim(read('takwim-smly-2026.md')));
-const versions = [R.parseTimetable(read('jwg-20261002.md'))];
+const versions = [R.parseTimetable(read('jwg-20261005.md'))];
 const { classes } = R.parseClasses(fs.readFileSync(__dirname + '/data/kelas-semua.md', 'utf8'));
 const events = R.parseEvents(read('acara-2026.md'));
 const week = (n, e = events) => R.lessonsForWeek({ calendar, versions, classes, events: e, week: n });

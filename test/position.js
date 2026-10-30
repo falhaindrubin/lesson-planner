@@ -32,7 +32,7 @@ assert.ok(Math.abs(total - capacity) < 1, `${total}`);
 assert.ok(Math.abs(spTime.get('5.4.2') - 39.69) < 1e-6); // one of five SPs sharing M21 (210 minutes)
 assert.ok(spTime.get('1.1.1') > spTime.get('5.4.2'));
 // No timetable before 5 Oct: early weeks use the earliest timetable, flagged as fallback
-const fallback = R.weeklyPdpMinutes({ calendar, versions: [R.parseTimetable(read('jwg-20261002.md'))], cls: s4, classes: K.classes, events });
+const fallback = R.weeklyPdpMinutes({ calendar, versions: [R.parseTimetable(read('jwg-20261005.md'))], cls: s4, classes: K.classes, events });
 assert.strictEqual(fallback(1), 210);
 assert.deepStrictEqual([fallback.usedFallback, fallback.earliest], [true, '2026-10-05']);
 

@@ -1,6 +1,6 @@
 # Aktiviti PdP — templat umum
 
-- Sumber: RPH ASK T1 M34 (`2026 - ASK T1 - Google Sheets M34A.pdf`)
+- Sumber: RPH ASK T1 M34 (`rph-ask-t1-2026-m34a.pdf`)
 - Masa tidak ditulis di sini: Permulaan 5 minit, Penutup 5 minit, Perkembangan = masa PdP − 10 minit.
 - Satu baris `- ` = satu aktiviti. Boleh disalin dan diubah untuk satu subjek (contoh `aktiviti-mat.md`), kemudian tukar lajur Aktiviti dalam fail kelas.
 

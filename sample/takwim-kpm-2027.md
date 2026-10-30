@@ -1,6 +1,6 @@
 # Takwim KPM 2027 (Kumpulan B, Sabah) — DRAF
 
-- Sumber: `kalendar-akademik-2027-kpm.pdf` (Lampiran B, Kalendar Akademik Tahun 2027, Kumpulan B) — imbasan satu muka surat, tarikh disalin dari imej
+- Sumber: `takwim-kpm-2027.pdf` (Lampiran B, Kalendar Akademik Tahun 2027, Kumpulan B) — imbasan satu muka surat, tarikh disalin dari imej
 - Lapisan 1 sahaja (KPM). Lajur aktiviti sekolah (Pentadbiran, Kurikulum, HEM, Kokurikulum) **kosong** sehingga takwim SM Lok Yuk 2027 diterima. Tiada tarikh peperiksaan lagi.
 - Minggu persekolahan: M1 = 2027-01-04 … M44 = 2027-11-29. Nombor minggu ditulis pada hari Isnin sahaja.
 

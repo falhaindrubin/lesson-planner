@@ -3,7 +3,7 @@
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
 ## Now
-- [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
+- [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/ref/dskp-mat-t4.md`)
 - [x] Sample data and tests switched from T4 4S to **T5 5S** (2026-10-30): `sample/dskp-mat-t5.md`, `sample/kesukaran-mat-t5.md`, 5S in the class file and timetables (2026 takwim and timetable stand in for 2027)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
 - [ ] Decide the **T5 squeeze**: topics 5.0–8.0 get only M19–M25 (topic 8.0 gets 0.4 weeks). Pin weeks for 8.0 in `sample/kesukaran-mat-t5.md`? Finish by end of July is already met (syllabus ends M25, 20–24 Jul)
@@ -38,7 +38,7 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## After the spec
 - [x] Convert **one of each** input to markdown and drop it in `sample/` (done early, 2026-10-02; recheck once the spec fixes the formats):
   - [x] ASK T1 DSKP → `sample/dskp-ask-t1.md`
-  - [x] Timetable 5.10.2026 → `sample/jwg-20261002.md`
+  - [x] Timetable 5.10.2026 → `sample/jwg-20261005.md`
   - [x] Takwim 2026 → `sample/takwim-smly-2026.md`
 - [ ] Review the test results, then convert the rest (other DSKPs, older timetable)
 

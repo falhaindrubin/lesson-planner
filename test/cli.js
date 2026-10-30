@@ -21,7 +21,7 @@ const plan = R.plan({ sp: R.parseDskp(read('dskp-mat-t5.md')), difficulty: R.par
 fs.writeFileSync(path.join(tmp, 'rpt-mat.md'), R.renderMd(plan, { subject: 'Matematik', year: 2026, dskp: 'd', takwim: 't', difficulty: 'k' }));
 const act = s('aktiviti-umum.md');
 fs.writeFileSync(path.join(tmp, 'kelas.md'), [
-  '- Tahun: 2026', '- Guru: FALHAIND RUBIN', `- Takwim: ${s('takwim-smly-2026.md')}`, `- Jadual: ${s('jwg-20261002.md')}`,
+  '- Tahun: 2026', '- Guru: FALHAIND RUBIN', `- Takwim: ${s('takwim-smly-2026.md')}`, `- Jadual: ${s('jwg-20261005.md')}`,
   `- Acara: ${s('acara-2026.md')}`, '- Rekod: rekod', '- Output: out', '',
   '| Kelas | Nama penuh | Tingkatan | Subjek | Nama subjek | DSKP | Aktiviti | RPT | Tutorial | Bil. murid | Mula |',
   '|---|---|---|---|---|---|---|---|---|---|---|',

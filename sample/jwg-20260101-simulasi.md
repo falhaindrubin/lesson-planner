@@ -2,7 +2,7 @@
 
 - Sekolah: SM Lok Yuk, 89058 Kudat, Sabah
 - Berkuat kuasa: 2026-01-01 (SIMULASI: salinan jadual 5.10.2026 untuk Januari – 4 Oktober 2026)
-- Sumber: salinan `jwg-20261002.md`. Bukan jadual sebenar; gantikan dengan jadual yang ditukar daripada cetakan aSc jika perlu.
+- Sumber: salinan `jwg-20261005.md`. Bukan jadual sebenar; gantikan dengan jadual yang ditukar daripada cetakan aSc jika perlu.
 - Satu waktu = 30 minit. Waktu 0 bermula 6:30.
 - Nota: kelas M3 dilabel **5S** (sebenarnya 4S pada 2026) untuk perancangan Tingkatan 5; lihat `kelas-2026.md`.
 
