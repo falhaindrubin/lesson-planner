@@ -4,13 +4,14 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 
 ## Now
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/dskp-mat-t4.md`)
+- [x] Sample data and tests switched from T4 4S to **T5 5S** (2026-10-30): `sample/dskp-mat-t5.md`, `sample/kesukaran-mat-t5.md`, 5S in the class file and timetables (2026 takwim and timetable stand in for 2027)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
-- [ ] Check the **Matematik T4 RPT** (`output/rpt-mat-t4-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t4.md`, then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
+- [ ] Check the **Matematik T5 RPT** (`output/rpt-mat-t5-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t5.md` (draft; T4 files kept for reference), then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
 - [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
-- [ ] Review the 4S Matematik simulation in `output/simulasi-4S-M3/` (`rekod-4S-M3.md`, the RPH HTML, `ringkasan.txt`)
+- [ ] Review the 5S Matematik T5 simulation in `output/simulasi-5S-M3/` (`rekod-5S-M3.md`, the RPH HTML, `ringkasan.txt`)
 - [ ] Add the other classes from `test/data/kelas-semua.md` to `sample/kelas-2026.md` with Bil. murid and Mula (ASK 1S, SK 4H, PK/PJ 2D 2J) — PK/PJ run without SP until their DSKP is added
 - [ ] Check `sample/acara-2026.md` (events) and add Batal days you already know
 - [ ] Optional: copy `sample/aktiviti-umum.md` per subject and point the Aktiviti column at it
@@ -19,10 +20,10 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## RPH pipeline (built 2026-10-03, branch `rph-pipeline`)
 - [x] Say **"go"** for the design spec — RPH pipeline spec, plan and code done ([spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md))
 - [x] `rph-pipeline` merged to `main` (PR #1)
-- [ ] Open a few files in `output/simulasi-4S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
+- [ ] Open a few files in `output/simulasi-5S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
 - [x] Decide the **next sub-project** — the **web app** (see below)
 - [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
-- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
+- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 5S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
 
 ## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
 - [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit, which Claude will fix next (details in [docs/next-session.md](docs/next-session.md)).

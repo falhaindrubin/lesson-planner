@@ -30,7 +30,7 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 | [src/core/](src/core/) | App core (pure functions): parsers, calendar engine, RPT planner, renderers |
 | [src/cli/](src/cli/) | Command-line tools over the core (RPT generator, weekly RPH, year simulation) |
 | [test/](test/) | Tests against the real files in `sample/` |
-| [output/](output/) | Generated RPTs (markdown + printable HTML), RPH pages, the 4S Matematik simulation |
+| [output/](output/) | Generated RPTs (markdown + printable HTML), RPH pages, the 5S Matematik T5 simulation |
 | [apps-script/](apps-script/) | Stopgap: Google Apps Script that generates next week's RPH tab in the existing Sheets |
 | [sample/](sample/) | Real inputs used for analysis: DSKPs, aSc timetables, RPT, RPH PDF, school takwim, KPM academic calendar |
 

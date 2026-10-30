@@ -73,20 +73,18 @@ assert.strictEqual(R.plan({ sp, difficulty: none, calendar, form: 4, revisionWee
 assert.ok(t4a.rows.find(r => r.n === 34).sp.length > 0);
 assert.ok(!t4a.rows.find(r => r.n === 35).sp.length);
 
-// Matematik T4: topics 1.0–5.0 before the PPT (M17), 10.0 fixed at 2 weeks
-const mat = R.parseDskp(read('dskp-mat-t4.md'));
-const km = R.parseDifficulty(read('kesukaran-mat-t4.md'));
-assert.strictEqual(km.sp.size, 70);
-assert.strictEqual(km.topics.get('10.0'), 2);
-const m4 = R.plan({ sp: mat, difficulty: km, calendar, form: 4 });
+// Matematik T5: topics 1.0–4.0 before the PPT (M17); the syllabus ends at M25, revision M26–M27 before Percubaan SPM (M28)
+const mat = R.parseDskp(read('dskp-mat-t5.md'));
+const km = R.parseDifficulty(read('kesukaran-mat-t5.md'));
+assert.strictEqual(km.sp.size, 57);
+assert.strictEqual(km.topics.size, 0); // no fixed-week topics
+const m4 = R.plan({ sp: mat, difficulty: km, calendar, form: 5 });
 assert.deepStrictEqual(m4.warnings, []);
-assert.deepStrictEqual([m4.midYear.start, m4.parts[0].topics], [17, ['1.0', '2.0', '3.0', '4.0', '5.0']]);
+assert.deepStrictEqual([m4.midYear.start, m4.parts[0].topics], [17, ['1.0', '2.0', '3.0', '4.0']]);
 for (const s of m4.rated) {
-  const before = Number(s.topic.code) <= 5;
-  assert.ok(s.weeks.every(n => (before ? n <= 16 : n >= 19 && n <= 34)), `${s.code} M${s.weeks}`);
+  const before = Number(s.topic.code) <= 4;
+  assert.ok(s.weeks.every(n => (before ? n <= 16 : n >= 19 && n <= 25)), `${s.code} M${s.weeks}`);
 }
-const t10 = m4.rated.filter(s => s.topic.code === '10.0').reduce((a, s) => a + s.length, 0);
-assert.ok(Math.abs(t10 - 2) < 1e-9);
 
 // Difficulty changes the spreading: a hard SP gets more weeks
 const k = R.parseDifficulty('| SP | Kesukaran | Sebab |\n|---|---|---|\n| 1.1.1 | 3 | x |\n| 1.1.2 | 1 | y |');
@@ -98,12 +96,11 @@ assert.ok(at(t1k, '1.1.1') >= at(t1, '1.1.1'));
 // The Peruntukan SP appendix: weeks of every SP, read back by parseRpt (for the RPH generator)
 const mdMat = R.renderMd(m4, { subject: 'Matematik', year: 2026, dskp: 'd', takwim: 't', difficulty: 'k' });
 const rpt = R.parseRpt(mdMat, 'rpt-mat');
-assert.strictEqual(rpt.end, 34);
-assert.strictEqual(rpt.allocation.size, 70);
-assert.strictEqual(rpt.allocation.get('10.1.2'), 1.2);
+assert.strictEqual(rpt.end, 25);
+assert.strictEqual(rpt.allocation.size, 57);
 assert.strictEqual(rpt.allocation.get('6.2.1'), Number(m4.rated.find(s => s.code === '6.2.1').length.toFixed(3)));
-assert.deepStrictEqual(rpt.weeks.find(w => w.n === 20).sp, ['6.2.1', '6.2.2']);
-assert.deepStrictEqual(rpt.weeks.find(w => w.n === 24).sp, ['7.2.2', '7.2.3', '7.2.4']); // including (samb.)
+assert.deepStrictEqual(rpt.weeks.find(w => w.n === 20).sp, ['5.2.3', '5.2.4', '5.2.5', '5.3.1']);
+assert.deepStrictEqual(rpt.weeks.find(w => w.n === 24).sp, ['7.1.2', '7.1.3', '7.2.1', '7.2.2']); // including (samb.)
 assert.deepStrictEqual(rpt.weeks.find(w => w.n === 35).sp, []);
 assert.throws(() => R.parseRpt(mdMat.split('## Peruntukan SP')[0], 'lama.md'), /lama\.md: no "## Peruntukan SP" table/);
 

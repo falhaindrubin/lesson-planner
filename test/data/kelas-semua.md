@@ -12,7 +12,7 @@ Satu baris bagi setiap kelas × subjek. **Subjek** = kod dalam jadual waktu. **T
 
 | Kelas | Nama penuh | Tingkatan | Subjek | Nama subjek | DSKP | Aktiviti | RPT | Tutorial | Bil. murid | Mula |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 4S | 4 STANFORD | 4 | M3 | MATEMATIK | dskp-mat-t4.md | aktiviti-umum.md | ../output/rpt-mat-t4-2026.md |  |  |  |
+| 5S | 5 STANFORD | 5 | M3 | MATEMATIK | dskp-mat-t5.md | aktiviti-umum.md | ../output/rpt-mat-t5-2026.md |  |  |  |
 | 1S | 1 SAPPHIRE | 1 | ASK | ASAS SAINS KOMPUTER | dskp-ask-t1.md | aktiviti-umum.md |  |  |  |  |
 | 4H | 4 HARVARD | 4 | SK | SAINS KOMPUTER |  | aktiviti-umum.md |  | TUTORIAL |  |  |
 | 2D | 2 DIAMOND | 2 | PK | PENDIDIKAN KESIHATAN |  | aktiviti-umum.md |  |  |  |  |

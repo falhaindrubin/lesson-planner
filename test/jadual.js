@@ -27,7 +27,7 @@ assert.strictEqual(R.fmtDateDmy('2026-10-05'), '05/10/2026');
 const j = R.parseTimetable(read('jwg-20261002.md'), 'jwg-20261002.md');
 assert.strictEqual(j.effectiveFrom, '2026-10-05');
 assert.strictEqual(j.slots.length, 12);
-assert.deepStrictEqual(j.slots[0], { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '4S', room: '' });
+assert.deepStrictEqual(j.slots[0], { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '5S', room: '' });
 assert.deepStrictEqual(j.slots.find(s => s.subject === 'SK' && s.dayName === 'Selasa').periods, [12, 14]);
 assert.ok(!j.slots.some(s => s.dayName === 'Jumaat' && s.periods[0] === 9)); // mark B
 assert.strictEqual(j.slots.filter(s => s.subject === 'TUTORIAL').length, 1);
@@ -40,16 +40,16 @@ assert.throws(() => R.parseTimetable('# x\n## Kelas\n', 'x.md'), /x\.md: missing
 assert.deepStrictEqual(R.parseTimetable(read('jwg-20261002.md').replace(/\n/g, '\r\n')), j);
 
 // Resolver: the latest version in force on the date
-const old = { effectiveFrom: '2026-08-10', slots: [{ dayName: 'Isnin', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '4S', room: '' }] };
+const old = { effectiveFrom: '2026-08-10', slots: [{ dayName: 'Isnin', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '5S', room: '' }] };
 const versions = [j, old]; // order in the list does not matter
 assert.strictEqual(R.versionFor(versions, '2026-10-02'), old);
 assert.strictEqual(R.versionFor(versions, '2026-10-05'), j);
 assert.strictEqual(R.versionFor(versions, '2026-12-01'), j);
 assert.throws(() => R.versionFor(versions, '2026-08-07'), /No timetable in force on 2026-08-07/);
 
-// Minutes per week: 4S M3 = 60 + 60 + 90; 4H SK = 90 + 90 (tutorial does not count)
-assert.strictEqual(R.weeklyMinutes(j, '4S', 'M3'), 210);
+// Minutes per week: 5S M3 = 60 + 60 + 90; 4H SK = 90 + 90 (tutorial does not count)
+assert.strictEqual(R.weeklyMinutes(j, '5S', 'M3'), 210);
 assert.strictEqual(R.weeklyMinutes(j, '4H', 'SK'), 180);
-assert.strictEqual(R.weeklyMinutes(old, '4S', 'M3'), 60);
+assert.strictEqual(R.weeklyMinutes(old, '5S', 'M3'), 60);
 
 console.log('jadual: all tests passed');

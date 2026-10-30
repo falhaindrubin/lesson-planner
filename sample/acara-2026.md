@@ -2,7 +2,7 @@
 
 - Sumber: takwim sekolah 2026 (`takwim-smly-2026.md`) dan senarai acara dalam `docs/discussion.md`
 - **Hari acara**: PdP tetap dijana tetapi ditandakan; saya putuskan sama ada batal. Tingkatan kosong = semua.
-- **Batal**: tiada PdP langsung pada hari itu bagi sasaran. Sasaran kosong = semua; `4` = Tingkatan 4; `4S` = kelas 4S.
+- **Batal**: tiada PdP langsung pada hari itu bagi sasaran. Sasaran kosong = semua; `4` = Tingkatan 4; `5S` = kelas 5S.
 
 ## Hari acara
 

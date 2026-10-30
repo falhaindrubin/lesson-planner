@@ -1,4 +1,4 @@
-// node test/rekod-sync.js — sync the rekod of 1S ASK and 4S M3 with the real 2026 takwim, timetable and events
+// node test/rekod-sync.js — sync the rekod of 1S ASK and 5S M3 with the real 2026 takwim, timetable and events
 import fs from 'node:fs';
 import assert from 'node:assert';
 import * as R from '../src/core/index.js';
