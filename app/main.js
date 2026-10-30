@@ -77,7 +77,12 @@ async function start() {
   if (navigator.storage && navigator.storage.persist) state.persisted = await navigator.storage.persist();
   // No service worker in development (it would serve stale files); '?sw=1' turns it on for an offline check
   const local = ['localhost', '127.0.0.1'].includes(location.hostname) && !location.search.includes('sw=1');
-  if ('serviceWorker' in navigator && !local) navigator.serviceWorker.register('sw.js');
+  if ('serviceWorker' in navigator && !local) {
+    navigator.serviceWorker.register('sw.js');
+    // First visit: the worker missed this page's own loads, so hand it the list to cache for offline
+    navigator.serviceWorker.ready.then(reg => reg.active.postMessage(
+      [location.href, ...performance.getEntriesByType('resource').map(r => r.name)]));
+  }
   // Open on the week containing today (§5.3); otherwise the last week shown
   const info = weekInfo();
   if (info && info.todayWeek != null) state.week = info.todayWeek;
