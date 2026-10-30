@@ -2,7 +2,7 @@
 import { APP_NAME } from './config.js';
 import { state, onChange, load, ready, weekInfo, recalc, setWeek, goToday, setTab, refreshToday } from './state.js';
 import { renderFiles, esc } from './inputs.js';
-import { renderWeek } from './week-view.js';
+import { renderWeek, renderToday } from './week-view.js';
 import { renderClasses } from './classes-view.js';
 import { saveRekod } from './export.js';
 import { positionWords, classLabel } from './logic/words.js';
@@ -25,17 +25,19 @@ function renderTop() {
   const unsaved = Object.values(state.unsaved);
   const oldest = unsaved.length ? unsaved.sort()[0] : null;
   const old = oldest && daysBetween(oldest, state.today) > 7;
-  const tab = (id, label) => `<button data-tab="${id}" class="${state.tab === id ? 'current' : ''}">${label}</button>`;
-  top.innerHTML = `<span class="name">${esc(APP_NAME)}</span>
-${info ? `<button data-act="prev" title="Previous week">◀</button> <b>Week ${state.week}</b> <span>${esc(weekDates())}</span>
-<button data-act="next" title="Next week">▶</button> <button data-act="today">Today</button>
-${info.todayWeek == null ? `<span class="note">Today is not in the ${info.year} takwim</span>` : ''}` : ''}
-<nav>${tab('week', 'Week')}${tab('classes', 'Classes')}${tab('files', '⚙ Files')}</nav>
+  const shown = ready() ? state.tab : 'files'; // until the setup is complete, Files is the only screen
+  const tab = (id, label) => `<button data-tab="${id}" class="${shown === id ? 'current' : ''}">${label}</button>`;
+  top.innerHTML = `<div class="topbar"><span class="name">${esc(APP_NAME)}</span>
+<nav>${tab('today', 'Today')}${tab('week', 'Week')}${tab('classes', 'Classes')}${tab('files', 'Files')}</nav>
 <span class="spacer"></span>
 ${(state.result ? state.result.classes : []).map(s => { const p = positionWords(s); return `<span class="badge tone-${p.tone}">${esc(classLabel(s))}: ${esc(p.text)}</span>`; }).join(' ')}
 ${unsaved.length ? `<span class="unsaved ${old ? 'old' : ''}">● Unsaved changes</span>` : ''}
-<button data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod${unsaved.length > 1 ? ` (${unsaved.length} files)` : ''}</button>`;
+<button class="save" data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod${unsaved.length > 1 ? ` (${unsaved.length} files)` : ''}</button></div>
+${info && ['week', 'classes'].includes(state.tab) ? `<div class="weekbar"><button data-act="prev" title="Previous week">◀</button> <span class="label">Week ${state.week}</span> <span>${esc(weekDates())}</span>
+<button data-act="next" title="Next week">▶</button> <button data-act="today">Today</button>
+${info.todayWeek == null ? `<span class="note">Today is not in the ${info.year} takwim</span>` : ''}</div>` : ''}`;
 }
+
 
 // A rejected storage write (import, profile, class file...) would otherwise vanish into the console
 let fault = '';
@@ -53,6 +55,7 @@ function draw() {
   renderBanner();
   if (state.tab === 'files' || !ready()) renderFiles(view);
   else if (state.tab === 'classes') renderClasses(view);
+  else if (state.tab === 'today') renderToday(view);
   else renderWeek(view);
 }
 
@@ -65,7 +68,10 @@ top.addEventListener('click', e => {
   // Commit a half-typed field first (its change event redraws the screen), then act
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   const info = weekInfo();
-  if (tab) setTab(tab);
+  if (tab) {
+    setTab(tab);
+    if (tab === 'today' && info && info.todayWeek != null && state.week !== info.todayWeek) goToday();
+  }
   else if (act === 'today') goToday();
   else if (act === 'save') saveRekod();
   else if (info && (act === 'prev' || act === 'next')) {
@@ -90,7 +96,7 @@ async function start() {
   }
   // Open on the week containing today (§5.3); otherwise the last week shown
   const info = weekInfo();
-  if (info && info.todayWeek != null) state.week = info.todayWeek;
+  if (info && info.todayWeek != null) { state.week = info.todayWeek; state.tab = 'today'; }
   onChange(draw);
   recalc();
   setInterval(refreshToday, 60e3);

@@ -41,7 +41,7 @@ ${state.profile ? '' : '<p class="note">No name yet: NAMA GURU will be blank on 
 ${classFiles.length ? `<select id="classFile"><option value="">Choose…</option>${classFiles.map(p => `<option ${p === state.classFile ? 'selected' : ''}>${esc(p)}</option>`).join('')}</select>` : '<p class="note">No kelas-*.md picked yet.</p>'}
 ${s.missing.map(m => `<p class="err">Missing: ${esc(m)}</p>`).join('')}
 ${s.errors.map(m => `<p class="err">${esc(m)}</p>`).join('')}
-${state.classFile && !s.missing.length && !s.errors.length ? '<p>All files found. Open the <b>Week</b> tab.</p>' : ''}</section>
+${state.classFile && !s.missing.length && !s.errors.length ? '<p>All files found. Open the <b>Today</b> tab.</p>' : ''}</section>
 ${imp ? `<section><h3>Last import</h3><p>${imp.added.length} file(s) stored.</p>
 ${imp.rejected.map(r => `<p class="err">Rejected ${esc(r.path)}: ${esc(r.error)} (the stored copy, if any, is kept)</p>`).join('')}
 ${imp.conflicts.map(conflictHtml).join('')}</section>` : ''}

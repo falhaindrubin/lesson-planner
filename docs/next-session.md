@@ -2,6 +2,13 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
+## Update 2026-10-31 — UI/UX pass 1 (clean light theme, Today screen)
+- **Direction chosen by the teacher: A (clean light)**: grey page, white rounded cards, one blue accent. All screens restyled in `app/app.css`; top bar split into a main bar (brand, tabs Today / Week / Classes / Files, class badges, Save rekod) and a week bar (prev / next / Today) shown on Week and Classes.
+- **New Today tab, opens first when today is in the takwim** (`renderToday` in `app/week-view.js`): the next lesson as a big card (Next in N min / Now, ends in N min), earlier and later lessons around it, same Taught / Postponed / Cancelled marking, attendance and notes as the Week cards. Holidays and empty days show a message and the next lesson.
+- **Teacher's wish:** the first thing they want to see on a school morning is their class and upcoming lesson of the day. Improve the interface time to time (not all at once).
+- **Not done yet (ideas for later passes):** dark mode, phone-sized layout, a first-run walkthrough for picking files, clearer wording than "SP", Malay labels option, the Files screen as a guided setup.
+- Checked with headless-Chrome screenshots (Today before / during / after the lesson, Week, Classes, Files). The visual-companion mockups are in `.superpowers/` (git-ignored). Not released to rph-mate yet.
+
 ## Update 2026-10-30 — offline fix, switch to Matematik T5 5S
 **What happened.**
 - **Offline bug fixed and verified:** `app/main.js` posts the page's loaded URLs to the service worker once it is ready, and `app/sw.js` caches the same-origin ones. Headless Chrome, fresh profile: one online visit caches 41 files, then the server was killed and a reload worked.

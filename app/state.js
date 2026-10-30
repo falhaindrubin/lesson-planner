@@ -20,7 +20,12 @@ const onChange = fn => listeners.add(fn);
 // A tab left open overnight: move `today` on at midnight and plan again
 function refreshToday() {
   const t = localToday();
-  if (t !== state.today) { state.today = t; recalc(); }
+  if (t !== state.today) {
+    state.today = t;
+    const info = weekInfo();
+    if (state.tab === 'today' && info && info.todayWeek != null) state.week = info.todayWeek;
+    recalc();
+  }
 }
 const emit = () => listeners.forEach(fn => fn());
 
