@@ -30,8 +30,9 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
 - [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit. Fixed and verified 2026-10-30 (the page hands the service worker its loaded files; one online visit now caches 41 files).
 - [ ] Optional: click through it yourself (`node tools/serve.js` → http://localhost:8080/app/) and try **Print week** to a real PDF
-- [ ] Check the repo is **public** (GitHub Pages is free only for public repos) and create the public **rph-mate** repo
-- [ ] Release: `node tools/release.js ../rph-mate`, commit and push there, enable GitHub Pages, open https://falhaindrubin.github.io/rph-mate/ and install it; check it works offline
+- [x] Repo is **public**; public **rph-mate** repo created (2026-10-30)
+- [x] Released `20261030-cc0d3a1` to https://falhaindrubin.github.io/rph-mate/ (GitHub Pages on); offline after one visit checked headless on the live URL (41 files cached)
+- [ ] **Install it as a PWA** in Chrome/Edge from https://falhaindrubin.github.io/rph-mate/, pick `sample/` and `output/`, and try it (a new release now applies after you close all app windows)
 - [ ] Decide the next sub-project: Progress (dashboard, history import) or Drive sync
 
 ## After the spec

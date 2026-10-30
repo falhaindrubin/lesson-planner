@@ -10,8 +10,8 @@ _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; the
 - **Tests:** 13 files pass. Form-dependent values were re-derived from the pipeline output (not independently), e.g. 5S is not in an exam in M37–M38 (only Form 4 is).
 
 **Next (in order).**
-1. ~~Deferred minors~~ done 2026-10-30 (see below).
-2. Release: public `rph-mate` repo, `node tools/release.js ../rph-mate`, GitHub Pages, install as PWA, check offline on the deployed URL.
+1. ~~Deferred minors~~ done 2026-10-30 (commit `cc0d3a1`: stale `today`, rollback on a failed write, unhandled store errors banner, no `skipWaiting`).
+2. ~~Release~~ done 2026-10-30: public repo `falhaindrubin/rph-mate` (checkout at `../rph-mate`), release `20261030-cc0d3a1`, Pages on, offline verified headless on the live URL. **Still to do by hand:** install as a PWA and try it. Later releases: `node tools/release.js ../rph-mate`, commit and push there.
 3. Real use for a week (Rekod/Output to real folders, Mula = 5S's current SP).
 4. Phase 2 (Progress) or Phase 4 (RPT in the app, for the 2027 RPTs in December): brainstorm, spec, plan.
 
