@@ -102,7 +102,7 @@ Pending: the visual-companion offer (screen mockups in a browser tab) was made a
 ## Suggested next steps (pick one with the teacher)
 1. Open and merge the PR; teacher reviews the simulation and prints one RPH to PDF.
 2. **Real use**: switch `sample/kelas-2026.md` to real folders and 4S's current SP; run it for a real week; fix what the teacher finds.
-3. **Sub-project 2 (Progress)**: brainstorm → spec → plan. Needs the Google Sheets for SK, MAT, PJPK (links in `sample/links.txt`) for the history import, and the PJPK DSKP.
+3. **Sub-project 2 (Progress)**: brainstorm → spec → plan. Needs the Google Sheets for SK, MAT, PJPK (links file removed from the repo 2026-10-30; ask the teacher) for the history import, and the PJPK DSKP.
 4. Optional cleanups from the deferred list (blank Status on a lesson and `--today` sanity check are the most likely to bite).
 
 ## Working notes for the next Claude session

@@ -10,7 +10,7 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] When you have them: send the **2027 school takwim and timetable** (the T5 plan borrows the 2026 ones)
 - [ ] Check the **Matematik T5 RPT** (`output/rpt-mat-t5-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t5.md` (draft; T4 files kept for reference), then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
-- [ ] Share the **Google Sheets for SK, MAT and PJPK** (links in `sample/links.txt`) for the history import
+- [ ] Share the **Google Sheets for SK, MAT and PJPK** (the links file was removed from the repo on 2026-10-30; send them again when ready) for the history import
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
 - [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
 - [ ] Review the 5S Matematik T5 simulation in `output/simulasi-5S-M3/` (`rekod-5S-M3.md`, the RPH HTML, `ringkasan.txt`)

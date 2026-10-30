@@ -121,7 +121,7 @@ All UTF-8, LF or CRLF, BOM tolerated. Table rows are `| a | b | … |`. Headers 
 - **`<class>`** = the class code from the timetable, e.g. `5S`.
 - **Year** is in the name when the content depends on the year (takwim, acara, kelas, RPT), not when it doesn't (DSKP, difficulty).
 - **Timetables** are named by their **effective date** (`jwg-20261005.md` is in force from 2026-10-05), not the print date.
-- **A source PDF/DOCX takes the name of the `.md` converted from it** (`jwg-20261005.pdf` next to `jwg-20261005.md`). An RPH sample is `rph-<subject>-<form>-<year>-m<week><version>` (`rph-ask-t1-2026-m34a.pdf`). Not converted yet: same pattern with the original extension (`dskp-sk-t4.pdf`, `rpt-sk-t4-2026.docx`).
+- **A source PDF/DOCX takes the name of the `.md` converted from it** (`jwg-20261005.pdf` for `jwg-20261005.md`). Since 2026-10-30 the source files are **not kept in the repo** (the teacher keeps them elsewhere); the `Sumber:` line at the top of each `.md` names the source. An RPH sample is `rph-<subject>-<form>-<year>-m<week><version>` (`rph-ask-t1-2026-m34a.pdf`). Not converted yet: same pattern with the original extension (`dskp-sk-t4.pdf`, `rpt-sk-t4-2026.docx`).
 - **Takwim layers:** `takwim-smly-<year>.md` (school) and `takwim-kpm-<year>.md` (KPM calendar).
 - **Generated RPH:** `<year>-M<week>-<code>.html`. **Folders:** live inputs in `sample/`; superseded or reference-only files in `sample/ref/` and `output/ref/`; the simulation in `output/simulasi-<class>-<code>/`; real use in `rekod/<year>` and `output/rph`.
 - **What the code enforces:** only `kelas-*.md` and `rekod-*.md` (the app finds them by name) and the generated rekod/RPH names. Everything else is found through the class file.
