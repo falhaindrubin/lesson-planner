@@ -2,11 +2,15 @@
 
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
-## Next session (2026-10-31 summary)
+## Next session (2026-11-02 summary)
+- [ ] **Try the live app** (RPT tab is new): check Today, Week, RPT and Print week; tell Claude what feels wrong
+- [ ] Claude: **release the red holiday colour** (committed, not released)
+
+## Earlier (2026-10-31 summary)
 - [ ] **Try the live app** (https://falhaindrubin.github.io/rph-mate/): install it as a PWA, pick `sample/` and `output/`, try Today, Week and Print week, and tell Claude what still feels wrong or confusing
 - [ ] Tell Claude **5S's current SP** (to set Mula for a real week of use)
 - [ ] Choose **UI pass 2**: guided first-run setup, phone layout, Malay labels, or plainer wording than "SP"
-- [ ] Claude: **release UI pass 1** to rph-mate (not released yet; the live site still has the old look)
+- [x] UI pass 1 released 2026-11-02
 
 ## Now
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/ref/dskp-mat-t4.md`)
@@ -39,7 +43,8 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [x] Repo is **public**; public **rph-mate** repo created (2026-10-30)
 - [x] Released `20261030-cc0d3a1` to https://falhaindrubin.github.io/rph-mate/ (GitHub Pages on); offline after one visit checked headless on the live URL (41 files cached)
 - [ ] **Install it as a PWA** in Chrome/Edge from https://falhaindrubin.github.io/rph-mate/, pick `sample/` and `output/`, and try it (a new release now applies after you close all app windows)
-- [x] UI pass 1 done 2026-10-31 (clean light theme, Today tab); committed, not yet released
+- [x] UI pass 1 done 2026-10-31 (clean light theme, Today tab); released 2026-11-02
+- [x] RPT tab (read-only topic strip and week list) released 2026-11-02
 - [ ] Decide the next sub-project: Phase 4 RPT in the app (suggested, for the 2027 RPTs) or Phase 2 Progress, then Drive sync
 
 ## After the spec

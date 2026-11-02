@@ -142,7 +142,7 @@ function drawToday(box) {
   if (!todays.length) {
     const off = r && r.days.find(x => x.date === state.today && x.holiday);
     const later = r && r.lessons.find(l => l.row.date > state.today);
-    body = `<div class="empty"><b>${off ? esc(off.holiday) : 'No lessons today'}</b>${off ? '<br>No lessons today.' : ''}
+    body = `<div class="empty${off ? ' holiday' : ''}"><b>${off ? esc(off.holiday) : 'No lessons today'}</b>${off ? '<br>No lessons today.' : ''}
 ${later ? `<p class="note">Next lesson: ${esc(dayDate(later.row.date))} · ${esc(later.row.time)} · ${esc(later.classCode)} ${esc(later.subjectName)}</p>` : ''}</div>`;
   } else {
     const l0 = nextAt >= 0 ? todays[nextAt][0] : null;

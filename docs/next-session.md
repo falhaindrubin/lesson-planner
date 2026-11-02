@@ -2,7 +2,23 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
-## Session summary 2026-10-30 / 31 — read this first
+## Session summary 2026-11-02 — read this first
+**Done:**
+1. **UI pass 1 released** to rph-mate (`20261102-beaaa90`, pushed `8f86b56`).
+2. **RPT tab** (new, read-only): a strip of topic blocks (width = weeks, current topic outlined, click scrolls to its weeks) above one row per week (dates, topic, content standard, SP text, notes). Holiday and exam weeks are greyed; the current week is highlighted and scrolled to. Parser: `app/logic/rpt-view.js` (tested in `test/app-logic.js`); view: `app/rpt-view.js`; `rptTexts()` in `app/state.js`. Mockup option C chosen by the teacher. Released as `20261102-348c611` (rph-mate `d2f31eb`).
+3. **Holiday colour (committed, NOT released):** the Today card on a holiday and the Week holiday chips are red. RPT holiday rows stay grey (exam rows share that style).
+
+**State:** `main` clean after this commit, 13 test files pass. The RPT tab was checked with a headless-Chrome harness (seeded IndexedDB, screenshots at M17 and M24), not by clicking the tab in a real session. The holiday colour was not looked at in a browser.
+
+**Next session:**
+1. Teacher: install the live app, try Today / Week / RPT / Print week, tell Claude what feels wrong and 5S's current SP.
+2. Claude: release the holiday colour (`node tools/release.js ../rph-mate`, commit and push there).
+3. UI pass 2 (pick one): guided first-run setup, phone layout, Malay labels, plainer wording than "SP".
+4. Then Phase 4 (RPT in the app: generate/pin/edit; the viewer is done) or Phase 2 (Progress).
+
+**Working notes:** headless check recipe: serve the repo (`node tools/serve.js 8099`), a throwaway harness page under `.superpowers/` (git-ignored) that seeds IndexedDB through `app/store.js` and renders a view, driven over CDP; virtual-time screenshots stayed blank, so use CDP. Bash `sed` with `#` in patterns fails; use the Edit tool.
+
+## Session summary 2026-10-30 / 31
 **Done (all committed and pushed to `main`):**
 1. **Offline-after-first-visit bug fixed** (page posts its loaded URLs to the service worker). Verified headless, locally and on the live site.
 2. **Deferred minors fixed** (stale `today` at midnight, rollback on a failed IndexedDB write, banner for unhandled store errors, no `skipWaiting`). The blank-Status case already warns, so no change.
