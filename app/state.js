@@ -80,6 +80,19 @@ function weekInfo() {
   return { weeks: cal.weeks.map(w => w.n), todayWeek: C.weekOfDate(cal, state.today), year: K.year };
 }
 
+// The RPT file of each class that has one (the same file is listed once)
+function rptTexts() {
+  if (!ready()) return [];
+  const seen = new Set(), out = [];
+  for (const c of classes().classes) {
+    const text = c.rpt && read(c.rpt);
+    if (text == null || seen.has(c.rpt)) continue;
+    seen.add(c.rpt);
+    out.push({ label: `${c.classCode} ${c.subjectName}`, text });
+  }
+  return out;
+}
+
 function runFor(week) {
   return C.runWeek({ read, classText: state.files.get(state.classFile), classFile: state.classFile, week, today: state.today, teacher: state.profile });
 }
@@ -206,5 +219,5 @@ function mark(lesson, change) {
 
 export {
   state, onChange, emit, load, refreshSetup, ready, weekInfo, recalc, setWeek, goToday, setTab,
-  setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday, refreshToday,
+  rptTexts, setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday, refreshToday,
 };

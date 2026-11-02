@@ -4,6 +4,7 @@ import { dirOf, baseName, resolvePath, findFile, importKey } from '../app/logic/
 import { STATUS_OPTIONS, statusLabel, needsReason } from '../app/logic/status.js';
 import { classLabel, positionWords, rptWeeksWords, percentDone, fitWords } from '../app/logic/words.js';
 import { applyMark } from '../app/logic/marking.js';
+import { parseRptView } from '../app/logic/rpt-view.js';
 import { diffRekod, diffSummary } from '../app/logic/rekod-diff.js';
 
 // paths
@@ -107,3 +108,20 @@ assert.strictEqual(diffRekod(rekod, futureEdited, 'f.md', '2026-10-07').length, 
 assert.strictEqual(diffRekod(rekod, rekod.replace('| 7.1.2 | diajar | 35 |  |', '| 7.1.2 | ditunda | 35 | Y |'), 'f.md', '2026-10-07').length, 1); // past rows always compared
 
 console.log('app-logic: all tests passed');
+
+// RPT view
+{
+  const md = ['## Ringkasan', '', '| Tajuk | SP | Kesukaran | Agihan (minggu) | Minggu takwim |', '|---|---|---|---|---|',
+    '| 1.0 Ubahan | 9 | 18 | 5.0 | M1–M5 |', '', '## Rancangan', '',
+    '| Minggu | Tarikh | Tajuk | Standard Kandungan | Standard Pembelajaran | Catatan |', '|---|---|---|---|---|---|',
+    '| M1 | 12–16 Jan | 1.0 Ubahan | 1.1 Ubahan Langsung | 1.1.1 A.<br>1.1.2 B. |  |',
+    '| M6 | 16–20 Feb | **CUTI — TIADA PdP** |  |  | 16 Feb: CUTI |',
+    '|  | 23–27 Mac | **CUTI PENGGAL 1** |  |  |  |'].join('\n');
+  const v = parseRptView(md);
+  assert.deepStrictEqual(v.topics, [{ name: '1.0 Ubahan', sp: 9, weeks: 5, first: 1, span: 'M1–M5' }]);
+  assert.strictEqual(v.weeks.length, 3);
+  assert.deepStrictEqual(v.weeks[0], { n: 1, dates: '12–16 Jan', off: '', topics: ['1.0 Ubahan'], standards: ['1.1 Ubahan Langsung'], sp: ['1.1.1 A.', '1.1.2 B.'], note: [] });
+  assert.strictEqual(v.weeks[1].off, 'CUTI — TIADA PdP');
+  assert.strictEqual(v.weeks[2].n, null);
+  assert.throws(() => parseRptView('# empty'), /Rancangan/);
+}

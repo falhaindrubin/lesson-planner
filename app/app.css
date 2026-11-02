@@ -98,3 +98,15 @@ table.classes tr[data-row]:hover td { background: #f8faff; }
 
 @media (max-width: 900px) { .week { flex-direction: column; } #cards { width: 100%; min-width: 0; } #previews { width: 100%; } }
 @media print { #top, #banner { display: none; } }
+
+/* RPT */
+.strip { display: flex; height: 38px; gap: 2px; margin-bottom: 14px; border-radius: 10px; overflow: hidden; }
+.strip button { border: 0; color: #fff; font-weight: 600; cursor: pointer; padding: 0; min-width: 6px; }
+.strip button.now { outline: 3px solid var(--fg); outline-offset: -3px; }
+table.rpt { border-collapse: collapse; width: 100%; background: var(--card); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+table.rpt th { text-align: left; padding: 10px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: #fafbfd; }
+table.rpt td { border-top: 1px solid var(--line); padding: 10px 14px; vertical-align: top; }
+table.rpt tr.off td { color: var(--muted); background: #f8fafc; }
+table.rpt tr.now td { background: var(--accent-soft); }
+table.rpt tr.now td:first-child { font-weight: 700; }
+table.rpt small { color: var(--muted); font-weight: 400; }
