@@ -39,7 +39,7 @@ ${state.profile ? '' : '<p class="note">No name yet: NAMA GURU will be blank on 
 <p class="note">${state.files.size} files stored.</p></section>
 <section><h3>Class file</h3>
 ${classFiles.length ? `<select id="classFile"><option value="">Choose…</option>${classFiles.map(p => `<option ${p === state.classFile ? 'selected' : ''}>${esc(p)}</option>`).join('')}</select>` : '<p class="note">No kelas-*.md picked yet.</p>'}
-${s.missing.map(m => `<p class="err">Missing: ${esc(m)}</p>`).join('')}
+${s.found.length + s.missing.length ? `<ul class="checks">${s.found.map(f => `<li class="ok">✓ ${esc(f)}</li>`).join('')}${s.missing.map(m => `<li class="err">✗ ${esc(m)} (missing)</li>`).join('')}</ul>` : ''}
 ${s.errors.map(m => `<p class="err">${esc(m)}</p>`).join('')}
 ${state.classFile && !s.missing.length && !s.errors.length ? '<p>All files found. Open the <b>Today</b> tab.</p>' : ''}</section>
 ${imp ? `<section><h3>Last import</h3><p>${imp.added.length} file(s) stored.</p>

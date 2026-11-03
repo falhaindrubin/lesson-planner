@@ -2,9 +2,10 @@
 
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
-## Next session (2026-11-02 summary)
-- [ ] **Try the live app** (RPT tab is new): check Today, Week, RPT and Print week; tell Claude what feels wrong
-- [ ] Claude: **release the red holiday colour** (committed, not released)
+## Next session (2026-11-03 summary)
+- [ ] **Try the live app** (Marks tab and the Files checklist are new): make a real `markah-<kelas>-<kod>.md` (see `test/data/markah-5S-M3.md`), pick it in Files, and tell Claude what the Marks dashboard lacks
+- [ ] Try Today, Week, RPT and Print week too; tell Claude what feels wrong
+- [x] Red holiday colour released 2026-11-03
 
 ## Earlier (2026-10-31 summary)
 - [ ] **Try the live app** (https://falhaindrubin.github.io/rph-mate/): install it as a PWA, pick `sample/` and `output/`, try Today, Week and Print week, and tell Claude what still feels wrong or confusing

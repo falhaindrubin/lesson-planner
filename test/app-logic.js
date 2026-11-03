@@ -125,3 +125,19 @@ console.log('app-logic: all tests passed');
   assert.strictEqual(v.weeks[2].n, null);
   assert.throws(() => parseRptView('# empty'), /Rancangan/);
 }
+
+// markah (Marks tab)
+import fs from 'node:fs';
+import { parseMarkah, summarise, gradeOf } from '../app/logic/markah.js';
+const mk = parseMarkah(fs.readFileSync(new URL('./data/markah-5S-M3.md', import.meta.url), 'utf8'));
+assert.deepStrictEqual(mk.tests, ['PA1', 'PPT', 'PAT']);
+assert.strictEqual(mk.students.length, 6);
+assert.deepStrictEqual(mk.students[3].marks, [60, 62, null]); // TH = no mark
+const sm = summarise(mk);
+assert.strictEqual(sm.latest, 2);
+assert.strictEqual(sm.per[2].sat, 4);
+assert.strictEqual(sm.per[0].avg, (78 + 92 + 45 + 60 + 85 + 50) / 6);
+assert.deepStrictEqual(sm.watch.map(w => w.name), ['Chong', 'Farid']); // 30 fails; 66 -> 48 is down 18
+assert.strictEqual(gradeOf(89.5) + gradeOf(90) + gradeOf(39), 'AA+G');
+assert.throws(() => parseMarkah('| Nama | PA1 |\n|---|---|\n| Ali | 101 |'), /not a mark from 0 to 100/);
+assert.throws(() => parseMarkah('nothing'), /no marks table/);

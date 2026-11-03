@@ -13,7 +13,7 @@ function localToday() {
 
 const state = {
   files: new Map(), profile: '', classFile: '', week: null, today: localToday(), tab: 'week',
-  result: null, error: '', unsaved: {}, setup: { missing: [], errors: [] }, persisted: true, lastImport: null,
+  result: null, error: '', unsaved: {}, setup: { found: [], missing: [], errors: [] }, persisted: true, lastImport: null,
 };
 const listeners = new Set();
 const onChange = fn => listeners.add(fn);
@@ -55,13 +55,14 @@ async function load() {
 
 // Missing inputs and parse errors for the chosen class file (recomputed only when files change)
 function refreshSetup() {
-  const out = { missing: [], errors: [] };
+  const out = { found: [], missing: [], errors: [] };
   if (state.classFile) {
     try {
       for (const { path, role } of C.inputsOf(classes())) {
         let key;
         try { key = keyFor(path); } catch (e) { out.errors.push(e.message); continue; }
         if (key == null) { out.missing.push(resolvePath(classDir(), path)); continue; }
+        out.found.push(key);
         try { PARSERS[role](state.files.get(key), key); } catch (e) { out.errors.push(e.message); }
       }
     } catch (e) { out.errors.push(e.message); }

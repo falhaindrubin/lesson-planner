@@ -1,10 +1,11 @@
-// Start-up, top bar, banners and screen switching. Screens: Today, Week, RPT, Classes, Files.
+// Start-up, top bar, banners and screen switching. Screens: Today, Week, RPT, Classes, Marks, Files.
 import { APP_NAME } from './config.js';
 import { state, onChange, load, ready, weekInfo, recalc, setWeek, goToday, setTab, refreshToday } from './state.js';
 import { renderFiles, esc } from './inputs.js';
 import { renderWeek, renderToday } from './week-view.js';
 import { renderClasses } from './classes-view.js';
 import { renderRpt } from './rpt-view.js';
+import { renderMarkah } from './markah-view.js';
 import { saveRekod } from './export.js';
 import { positionWords, classLabel } from './logic/words.js';
 import { daysBetween } from '../src/core/index.js';
@@ -29,7 +30,7 @@ function renderTop() {
   const shown = ready() ? state.tab : 'files'; // until the setup is complete, Files is the only screen
   const tab = (id, label) => `<button data-tab="${id}" class="${shown === id ? 'current' : ''}">${label}</button>`;
   top.innerHTML = `<div class="topbar"><span class="name">${esc(APP_NAME)}</span>
-<nav>${tab('today', 'Today')}${tab('week', 'Week')}${tab('rpt', 'RPT')}${tab('classes', 'Classes')}${tab('files', 'Files')}</nav>
+<nav>${tab('today', 'Today')}${tab('week', 'Week')}${tab('rpt', 'RPT')}${tab('classes', 'Classes')}${tab('markah', 'Marks')}${tab('files', 'Files')}</nav>
 <span class="spacer"></span>
 ${(state.result ? state.result.classes : []).map(s => { const p = positionWords(s); return `<span class="badge tone-${p.tone}">${esc(classLabel(s))}: ${esc(p.text)}</span>`; }).join(' ')}
 ${unsaved.length ? `<span class="unsaved ${old ? 'old' : ''}">● Unsaved changes</span>` : ''}
@@ -57,6 +58,7 @@ function draw() {
   if (state.tab === 'files' || !ready()) renderFiles(view);
   else if (state.tab === 'classes') renderClasses(view);
   else if (state.tab === 'rpt') renderRpt(view);
+  else if (state.tab === 'markah') renderMarkah(view);
   else if (state.tab === 'today') renderToday(view);
   else renderWeek(view);
 }

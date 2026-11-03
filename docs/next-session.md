@@ -2,7 +2,20 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
-## Session summary 2026-11-02 — read this first
+## Session summary 2026-11-03 — read this first
+**Done:**
+1. **Files screen checklist:** under the class file, every input the class file names shows a green "✓ path" (found) or red "✗ path (missing)". `state.setup.found` added next to `missing` in `refreshSetup` (`app/state.js`); markup in `app/inputs.js`.
+2. **Marks tab (new, read-only):** one `markah-<kelas>-<kod>.md` per class × subject (table: Nama, then one column per assessment, marks 0–100; `TH`, `-` or blank = no mark). Found by file name like `kelas-*`/`rekod-*`, not via the class file. Dashboard: tiles (students, latest average, pass %, students to look at), average per assessment, grade chart of the latest assessment, "to look at" list (below pass mark, or down 15+ points from the previous mark), full marks table. Parser and maths: `app/logic/markah.js` (tested in `test/app-logic.js`, data `test/data/markah-5S-M3.md`, made-up names); view: `app/markah-view.js`. The user chose to skip the brainstorming questions, so the design is my defaults: pass mark 40 for all subjects, SPM grade scale (A+ 90 … G), marks as percentages. All are constants in `app/logic/markah.js`.
+3. **Released** (with the red holiday colour from 2026-11-02) to rph-mate.
+
+**State:** `main` clean after this commit, 13 test files pass. The Marks tab and the checklist were checked by tests and `node --check` only, **not looked at in a browser**.
+
+**Next session:**
+1. Teacher: make a real `markah-*.md`, pick it in Files, say what the dashboard lacks.
+2. Possible follow-ups (not decided): type marks in the app, compare classes, per-topic results linked to the RPT, marks out of other than 100, per-subject pass mark.
+3. Still open from before: UI pass 2, then Phase 4 (RPT in the app) or Phase 2 (Progress).
+
+## Session summary 2026-11-02
 **Done:**
 1. **UI pass 1 released** to rph-mate (`20261102-beaaa90`, pushed `8f86b56`).
 2. **RPT tab** (new, read-only): a strip of topic blocks (width = weeks, current topic outlined, click scrolls to its weeks) above one row per week (dates, topic, content standard, SP text, notes). Holiday and exam weeks are greyed; the current week is highlighted and scrolled to. Parser: `app/logic/rpt-view.js` (tested in `test/app-logic.js`); view: `app/rpt-view.js`; `rptTexts()` in `app/state.js`. Mockup option C chosen by the teacher. Released as `20261102-348c611` (rph-mate `d2f31eb`).
