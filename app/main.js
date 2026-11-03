@@ -8,6 +8,7 @@ import { renderRpt } from './rpt-view.js';
 import { renderMarkah } from './markah-view.js';
 import { saveRekod } from './export.js';
 import { positionWords, classLabel } from './logic/words.js';
+import { weekChip, weekGroups } from './logic/week-pick.js';
 import { daysBetween } from '../src/core/index.js';
 
 document.title = APP_NAME;
@@ -15,11 +16,15 @@ const top = document.getElementById('top');
 const banner = document.getElementById('banner');
 const view = document.getElementById('view');
 
-function weekDates() {
-  const d = state.result && state.result.days;
-  if (!d || !d.length) return '';
-  const f = (iso, o) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { timeZone: 'UTC', ...o });
-  return `${f(d[0].date, { day: 'numeric' })}–${f(d[d.length - 1].date, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+// Week bar: "M12 · 23–27 Mar ▾" opens a panel with every week as a chip, one row per month
+let pickerOpen = false;
+function weekPicker(info) {
+  const w = info.calendarWeeks.find(x => x.n === state.week);
+  const cur = w ? weekChip(w, info.todayWeek) : { n: state.week, dates: '' };
+  const chip = c => `<button data-week="${c.n}" title="M${c.n} · ${esc(c.dates)}${c.holiday ? ' · holiday' : ''}" class="${[c.n === state.week && 'on', c.today && 'today', c.holiday && 'hol'].filter(Boolean).join(' ')}">${c.n}</button>`;
+  return `<span class="picker"><button data-act="pick" class="pick-label" aria-expanded="${pickerOpen}">M${cur.n} <span>· ${esc(cur.dates)}</span> ▾</button>
+${pickerOpen ? `<div class="pick-panel">${weekGroups(info.calendarWeeks, info.todayWeek).map(g => `<div class="pick-row"><span>${esc(g.month)}</span>${g.weeks.map(chip).join('')}</div>`).join('')}
+<p class="pick-key"><span><i class="today"></i>this week</span><span><i class="hol"></i>holiday</span></p></div>` : ''}</span>`;
 }
 
 function renderTop() {
@@ -35,7 +40,8 @@ function renderTop() {
 ${(state.result ? state.result.classes : []).map(s => { const p = positionWords(s); return `<span class="badge tone-${p.tone}">${esc(classLabel(s))}: ${esc(p.text)}</span>`; }).join(' ')}
 ${unsaved.length ? `<span class="unsaved ${old ? 'old' : ''}">● Unsaved changes</span>` : ''}
 <button class="save" data-act="save" ${unsaved.length ? '' : 'disabled'}>Save rekod${unsaved.length > 1 ? ` (${unsaved.length} files)` : ''}</button></div>
-${info && ['week', 'classes'].includes(state.tab) ? `<div class="weekbar"><button data-act="prev" title="Previous week">◀</button> <span class="label">Week ${state.week}</span> <span>${esc(weekDates())}</span>
+${info && ['week', 'classes'].includes(state.tab) ? `<div class="weekbar"><button data-act="prev" title="Previous week">◀</button>
+${weekPicker(info)}
 <button data-act="next" title="Next week">▶</button> <button data-act="today">Today</button>
 ${info.todayWeek == null ? `<span class="note">Today is not in the ${info.year} takwim</span>` : ''}</div>` : ''}`;
 }
@@ -69,6 +75,9 @@ top.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
   const { tab, act } = b.dataset;
+  if (act === 'pick') { pickerOpen = !pickerOpen; renderTop(); return; }
+  if (b.dataset.week) { pickerOpen = false; setWeek(Number(b.dataset.week)); return; }
+  pickerOpen = false;
   // Commit a half-typed field first (its change event redraws the screen), then act
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   const info = weekInfo();
@@ -83,6 +92,11 @@ top.addEventListener('click', e => {
     if (i >= 0 && i < info.weeks.length) setWeek(info.weeks[i]);
   }
 });
+
+// Close the week panel on Escape or a click anywhere outside it
+const closePicker = () => { if (pickerOpen) { pickerOpen = false; renderTop(); } };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePicker(); });
+document.addEventListener('click', e => { if (!e.target.closest('.picker')) closePicker(); });
 
 async function start() {
   try { await load(); } catch (e) {

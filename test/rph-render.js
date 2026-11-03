@@ -23,6 +23,11 @@ const row = (o = {}) => ({
 const html = pages => R.renderRph({ year: 2026, week: 34, teacher: 'FALHAIND RUBIN', pages: pages.map(r => ({ cls, row: r, sp: ask, activities: act })) });
 const text = h => h.replace(/<br>/g, '\n').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/[ \t]+/g, ' ');
 
+// Page title (the suggested PDF file name): teacher - RPH - week, two-digit week
+assert.ok(html([row()]).includes('<title>FALHAIND RUBIN - RPH - M34</title>'));
+assert.strictEqual(R.rphTitle('FALHAIND RUBIN', 1), 'FALHAIND RUBIN - RPH - M01');
+assert.strictEqual(R.rphTitle('', 7), 'RPH - M07');
+
 // Like the example RPH ASK T1 M34
 const h = text(html([row()]));
 for (const s of [

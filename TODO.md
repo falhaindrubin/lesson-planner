@@ -2,7 +2,13 @@
 
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
-## Next session (2026-11-03 summary)
+## Next session (2026-11-03, second session)
+- [ ] **Print one week to PDF** and check the suggested file name is `FALHAIND RUBIN - RPH - M..`
+- [ ] Try the **week panel** (click "M.. ▾" in the week bar) and the **Today timetable** on a school morning; say what feels wrong
+- [ ] For **ASK 1S**: tell Claude Bil. murid and the current SP, so Claude can add the row, draft the difficulty ratings and build its RPT
+- [ ] Send the new timetable when it changes (Claude makes the `jwg-<date>.md` file)
+
+## Earlier (2026-11-03 first session)
 - [ ] **Try the live app** (Marks tab and the Files checklist are new): make a real `markah-<kelas>-<kod>.md` (see `test/data/markah-5S-M3.md`), pick it in Files, and tell Claude what the Marks dashboard lacks
 - [ ] Try Today, Week, RPT and Print week too; tell Claude what feels wrong
 - [x] Red holiday colour released 2026-11-03

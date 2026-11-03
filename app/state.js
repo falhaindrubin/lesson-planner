@@ -78,7 +78,16 @@ function weekInfo() {
   const text = read(K.takwim);
   if (text !== calCache.text) calCache = { text, cal: C.buildCalendar(C.parseTakwim(text)) };
   const cal = calCache.cal;
-  return { weeks: cal.weeks.map(w => w.n), todayWeek: C.weekOfDate(cal, state.today), year: K.year };
+  return { weeks: cal.weeks.map(w => w.n), calendarWeeks: cal.weeks, todayWeek: C.weekOfDate(cal, state.today), year: K.year };
+}
+
+// The timetable version in force on a date (null if none is in force or a file is unreadable)
+function timetableOn(date) {
+  if (!ready()) return null;
+  try {
+    const versions = classes().timetables.map(f => C.parseTimetable(read(f), f));
+    return C.versionFor(versions, date);
+  } catch { return null; }
 }
 
 // The RPT file of each class that has one (the same file is listed once)
@@ -220,5 +229,5 @@ function mark(lesson, change) {
 
 export {
   state, onChange, emit, load, refreshSetup, ready, weekInfo, recalc, setWeek, goToday, setTab,
-  rptTexts, setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday, refreshToday,
+  rptTexts, timetableOn, setProfile, chooseClassFile, importFiles, confirmRekod, dropConflict, mark, localToday, refreshToday,
 };

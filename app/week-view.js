@@ -1,9 +1,10 @@
 // Week screen (layout A): lesson cards on the left, RPH preview on the right.
 // Cards redraw at once after a mark; the preview follows (W13).
-import { state, mark, setTab } from './state.js';
+import { state, mark, setTab, timetableOn } from './state.js';
 import { STATUS_OPTIONS, statusLabel, needsReason } from './logic/status.js';
 import { updatePreview, scrollToLesson } from './preview.js';
 import { positionWords } from './logic/words.js';
+import { timetableGrid, time24 } from './logic/timetable-grid.js';
 
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const dayDate = iso => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' });
@@ -16,7 +17,7 @@ let lastWeek = null, lastSp = new Map(), moved = new Set();
 // opts.today: omit the date (Today screen); opts.next: eyebrow text for the next lesson; opts.chip: position pill
 function card(l, i, opts = {}) {
   const r = l.row, k = keyOf(l);
-  const when = `<b>${opts.today ? '' : `${esc(dayDate(r.date))} · `}${esc(r.time)}</b>`;
+  const when = `<b>${opts.today ? '' : `${esc(dayDate(r.date))} · `}${esc(time24(r.time))}</b>`;
   const who = `${esc(l.classCode)} ${esc(l.subjectName)}${r.kind === 'tutorial' ? ' · Tutorial' : ''}`;
   const head = `<div class="card-head"><span>${when}</span><span class="who">${who}</span></div>${r.event ? `<div class="event">${esc(r.event)}</div>` : ''}`;
   if (r.kind === 'peperiksaan') return `<div class="card exam">${head}<div class="sp">Exam: ${esc(r.event)}</div></div>`;
@@ -143,7 +144,7 @@ function drawToday(box) {
     const off = r && r.days.find(x => x.date === state.today && x.holiday);
     const later = r && r.lessons.find(l => l.row.date > state.today);
     body = `<div class="empty${off ? ' holiday' : ''}"><b>${off ? esc(off.holiday) : 'No lessons today'}</b>${off ? '<br>No lessons today.' : ''}
-${later ? `<p class="note">Next lesson: ${esc(dayDate(later.row.date))} · ${esc(later.row.time)} · ${esc(later.classCode)} ${esc(later.subjectName)}</p>` : ''}</div>`;
+${later ? `<p class="note">Next lesson: ${esc(dayDate(later.row.date))} · ${esc(time24(later.row.time))} · ${esc(later.classCode)} ${esc(later.subjectName)}</p>` : ''}</div>`;
   } else {
     const l0 = nextAt >= 0 ? todays[nextAt][0] : null;
     const [start, end] = l0 ? span(l0.row.time) : [0, 0];
@@ -161,13 +162,39 @@ ${body}
 ${r && r.warnings.length ? `<div class="warnings">${r.warnings.map(w => `<div>⚠ ${esc(w)}</div>`).join('')}</div>` : ''}`;
 }
 
+// The week's timetable beside the Today cards (CSS grid on a time axis): today's row stands out,
+// the slot on now (or next) is outlined, today's finished slots are faded. Colour per subject code.
+const TT_COLORS = ['#3b82f6', '#16a34a', '#d97706', '#7c3aed', '#0891b2', '#e11d48', '#4f46e5', '#64748b'];
+function drawTimetable(box) {
+  const v = timetableOn(state.today);
+  if (!v) { box.innerHTML = ''; return; }
+  const g = timetableGrid(v, state.today);
+  const subjects = [...new Set(v.slots.map(s => s.subject))];
+  const d = new Date(), now = d.getHours() * 60 + d.getMinutes();
+  const todayRow = g.days.find(x => x.today);
+  const upNext = todayRow && todayRow.blocks.find(b => b.end > now);
+  const cols = `grid-template-columns: 76px repeat(${g.periods.length}, minmax(0, 1fr))`;
+  const block = (b, day) => {
+    const cls = ['blk', b === upNext && 'next', day.today && b.end <= now && 'past'].filter(Boolean).join(' ');
+    const s = b.slot;
+    return `<div class="${cls}" style="grid-column:${b.col + 1} / span ${b.span};--c:${TT_COLORS[subjects.indexOf(s.subject) % TT_COLORS.length]}" title="${esc(`${s.classCode} ${s.subject} · ${b.from}–${b.to}${s.room ? ` · ${s.room}` : ''}`)}"><b>${esc(s.classCode)} ${esc(s.subject)}</b><small>${b.from}–${b.to}${s.room ? ` · ${esc(s.room)}` : ''}</small></div>`;
+  };
+  const head = `<div class="tt-axis" style="${cols}">${g.periods.map((n, i) => `<span class="p" style="grid-column:${i + 2}">${n}</span>`).join("")}
+${g.marks.map(m => `<i style="grid-column:${Math.min(m.col, g.periods.length) + 1}" class="${m.col > g.periods.length ? 'end' : ''}">${m.time}</i>`).join('')}</div>`;
+  const rows = g.days.map(day => `<div class="tt-row${day.today ? ' on' : ''}" style="${cols}"><span class="day">${esc(day.name)}${day.today ? '<small>Today</small>' : ''}</span>
+${g.periods.map((n, i) => `<span class="cellbg" style="grid-column:${i + 2}"></span>`).join('')}${day.blocks.map(b => block(b, day)).join('')}</div>`).join('');
+  box.innerHTML = `<h3>Timetable</h3><div class="tt">${head}${rows}</div>
+<p class="note">In force from ${esc(v.effectiveFrom)}. Numbers are periods (waktu); times mark where each period starts and ends.</p>`;
+}
+
 function renderToday(view) {
   if (view.dataset.screen !== 'today') {
     view.dataset.screen = 'today';
-    view.innerHTML = '<div class="today"><section id="todaycards"></section></div>';
+    view.innerHTML = '<div class="today two"><section id="todaycards"></section><aside id="todaytt"></aside></div>';
     bindCards(view.querySelector('#todaycards'));
   }
   drawToday(view.querySelector('#todaycards'));
+  drawTimetable(view.querySelector('#todaytt'));
 }
 
 function renderWeek(view) {

@@ -2,7 +2,25 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
-## Session summary 2026-11-03 — read this first
+## Session summary 2026-11-03 (second session) — read this first
+**Done (teacher asked for each, one at a time):**
+1. **"Taught" → "Done"** on the lesson buttons (`app/logic/status.js`) and in README, PRD, app flow and UI brief. Label only; rekod still stores `diajar`.
+2. **Week jump panel** in the week bar (Week and Classes tabs): "M12 · 6–10 Apr ▾" opens a grid of week chips, one row per month (selected = blue, this week = outlined, holiday week = red). Escape or a click outside closes it. Arrows and Today kept. Logic `app/logic/week-pick.js`; markup `weekPicker` in `app/main.js`. A long native dropdown was tried first and rejected ("minimise screen travel").
+3. **RPH title / PDF name** = `FALHAIND RUBIN - RPH - M01` (`rphTitle` in `src/core/render/rph.js`; two-digit week; no subject). Print week lends the RPH title to the app page during printing, so Chrome suggests it as the file name. CLI file names unchanged; the committed `output/simulasi-5S-M3/*.html` keep the old title until the next simulation run.
+4. **Today: weekly timetable beside the lesson cards** (stacks under 1000 px). CSS grid on a time axis: one column per period, 24-hour times on the period boundaries (7:00 … 14:00), one block per slot with its time and room, colour per subject. Today's row: light blue tint, thin light outline, 10% shadow, solid blue day label; today's blocks a deeper tint with dark text; the slot on now (or next, by the clock, planned or not) has a dark-grey outline; finished slots fade their colour only. Logic `app/logic/timetable-grid.js`; view `drawTimetable` in `app/week-view.js`; `timetableOn(date)` in `app/state.js`.
+5. **24-hour times** on the Today and Week cards (`time24`; the stored aSc style "1:00" = 13:00 is unchanged).
+6. Briefed the teacher on timetable and subject changes (new jadual file with its own Berkuat kuasa added to the Jadual line; class rows added/removed; past rows kept, future untouched rows rebuilt).
+
+**Checked:** 13 test files pass (new tests for week chips, timetable grid, 24-hour times, RPH title). Today and the week panel were checked with headless-Chrome screenshots over CDP with the sample files loaded (harness `.superpowers/today-check.html` + `.superpowers/shot.mjs`, git-ignored; plain `--screenshot` stays blank). The real print dialog's suggested file name was not checked.
+
+**Teacher's UI taste (saved to memory):** soft shadows (~10%), light outlines, dark text on tinted blocks, fade colour not text, 24-hour times, compact pickers.
+
+**Next session:**
+1. Teacher: print one week to PDF and confirm the file name; try the week panel and the Today timetable on a school morning.
+2. Open from earlier: ASK 1S row + draft difficulty ratings + RPT (needs 1S Bil. murid and current SP); "you are here" vs "planned" marker on the RPT tab; add the subject to the RPH name once a second subject is planned.
+3. Then UI pass 2 or Phase 4 (RPT in the app, for the 2027 RPTs in December).
+
+## Session summary 2026-11-03 (first session)
 **Done:**
 1. **Files screen checklist:** under the class file, every input the class file names shows a green "✓ path" (found) or red "✗ path (missing)". `state.setup.found` added next to `missing` in `refreshSetup` (`app/state.js`); markup in `app/inputs.js`.
 2. **Marks tab (new, read-only):** one `markah-<kelas>-<kod>.md` per class × subject (table: Nama, then one column per assessment, marks 0–100; `TH`, `-` or blank = no mark). Found by file name like `kelas-*`/`rekod-*`, not via the class file. Dashboard: tiles (students, latest average, pass %, students to look at), average per assessment, grade chart of the latest assessment, "to look at" list (below pass mark, or down 15+ points from the previous mark), full marks table. Parser and maths: `app/logic/markah.js` (tested in `test/app-logic.js`, data `test/data/markah-5S-M3.md`, made-up names); view: `app/markah-view.js`. The user chose to skip the brainstorming questions, so the design is my defaults: pass mark 40 for all subjects, SPM grade scale (A+ 90 … G), marks as percentages. All are constants in `app/logic/markah.js`.

@@ -67,10 +67,12 @@ ${tr}
 </section>`;
 }
 
+// Page title = the PDF file name Chrome suggests: 'FALHAIND RUBIN - RPH - M01'
+const rphTitle = (teacher, week) => [teacher && teacher.trim(), 'RPH', `M${String(week).padStart(2, '0')}`].filter(Boolean).join(' - ');
+
 function renderRph({ year, week, teacher, pages }) {
-  const subject = pages.length ? pages[0].cls.subject : '';
   const body = pages.filter(p => p.row.status !== 'batal').map(p => page({ year, week, teacher, ...p })).join('\n');
-  return `<!doctype html><html lang="ms"><head><meta charset="utf-8"><title>${esc(`RPH ${year} ${subject} M${week}`)}</title>
+  return `<!doctype html><html lang="ms"><head><meta charset="utf-8"><title>${esc(rphTitle(teacher, week))}</title>
 <style>
 @page { size: A4 portrait; margin: 12mm; }
 body { font: 10pt/1.35 Arial, sans-serif; color: #000; background: #fff; margin: 16px; }
@@ -88,4 +90,4 @@ ${body}
 `;
 }
 
-export { renderRph, content };
+export { renderRph, rphTitle, content };

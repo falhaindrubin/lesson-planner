@@ -24,7 +24,13 @@ function draw(box, rph) {
       if (!b) return;
       const subject = b.dataset.print || b.dataset.open;
       const html = shown.get(subject);
-      if (b.dataset.print) { const f = frame(box, subject); f.contentWindow.focus(); f.contentWindow.print(); }
+      if (b.dataset.print) {
+        // Chrome suggests the PDF file name from a title; lend the RPH's title ("NAME - RPH - M01") to the app page too
+        const f = frame(box, subject), was = document.title;
+        document.title = (f.contentDocument && f.contentDocument.title) || was;
+        f.contentWindow.focus(); f.contentWindow.print();
+        setTimeout(() => { document.title = was; }, 1000);
+      }
       if (b.dataset.open && html) {
         const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
         window.open(url, '_blank');

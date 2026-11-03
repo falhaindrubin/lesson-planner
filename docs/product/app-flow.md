@@ -56,7 +56,7 @@ flowchart TD
   W --> R1[runWeek: sync every rekod up to this week,<br/>render RPH, summarise classes]
   R1 --> V[Cards · day strip · RPH preview · badges]
   V --> M{Anything to mark?}
-  M -- lesson taught as planned --> N[Nothing to do<br/>Taught is the default]
+  M -- lesson taught as planned --> N[Nothing to do<br/>Done is the default]
   M -- postponed/cancelled --> P[Click Postponed or Cancelled]
   P --> Q[Reason box appears, required]
   Q --> S[Type reason → Save]
@@ -107,7 +107,7 @@ sequenceDiagram
 ```
 
 Rules shown in this flow
-- **Taught** applies at once. **Postponed / Cancelled** wait for a non-empty reason.
+- **Done** applies at once. **Postponed / Cancelled** wait for a non-empty reason.
 - Editing Attendance or Notes commits when the field loses focus (change event) and goes through the same `mark` path.
 - Marking a **future** lesson is allowed (for example, cancelling ahead for an event). A changed Status or Catatan keeps that row through future runs.
 - A **postponed** lesson keeps its RPH page with "PdP ditunda kerana: <reason>"; its SPs move to the next lesson. A **cancelled** lesson has no page; its SPs also move.

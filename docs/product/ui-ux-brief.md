@@ -13,7 +13,7 @@ _2026-10-25 · For whoever designs or revisits the screens (the teacher, Claude,
 ## 2. Design principles (in priority order)
 
 1. **Responsiveness over aesthetics (W13).** A click must feel instant: cards and badges update in under 100 ms. No animations, transitions, web fonts or libraries that slow a click. The preview may follow a moment later.
-2. **Exceptions only.** Every lesson is Taught by default. The screen should make the 1–2 exceptions per week fast and leave the rest alone.
+2. **Exceptions only.** Every lesson is Done by default. The screen should make the 1–2 exceptions per week fast and leave the rest alone.
 3. **What you see is what prints.** The preview is the real RPH HTML in an iframe, not a look-alike.
 4. **Never lose work silently.** Unsaved state is always visible; errors say what failed and that nothing was changed.
 5. **Two languages, cleanly split.** Interface chrome in **English**; anything that goes on paper or into the rekod in **Malay**, unchanged (e.g. "PdP ditunda kerana: …", "PEPERIKSAAN", day names on the RPH).
@@ -23,7 +23,7 @@ _2026-10-25 · For whoever designs or revisits the screens (the teacher, Claude,
 
 | Token | Value | Meaning |
 |---|---|---|
-| `--ok` | `#2e7d32` green | Taught · On track · DSKP finished · progress bar |
+| `--ok` | `#2e7d32` green | Done · On track · DSKP finished · progress bar |
 | `--ahead` | `#1565c0` blue | Weeks ahead · drop-zone hover |
 | `--warn` | `#e65100` orange | Postponed · 1 week behind · unsaved changes |
 | `--bad` | `#c62828` red | Cancelled · 2+ weeks behind · errors · unsaved > 7 days |
@@ -32,7 +32,7 @@ _2026-10-25 · For whoever designs or revisits the screens (the teacher, Claude,
 | `--bg` / `--fg` | `#fff` / `#111` | Page |
 
 - Type: `system-ui`, 14 px / 1.4. Badges 12 px, white on colour, rounded pills.
-- Cards: dashed grey border when no status, a solid 2 px border in the status colour once Taught / Postponed / Cancelled; exam cards and holiday labels grey-filled.
+- Cards: dashed grey border when no status, a solid 2 px border in the status colour once Done / Postponed / Cancelled; exam cards and holiday labels grey-filled.
 - Theme colour `#2e7d32`; icon `app/icon.svg`.
 - **Gaps to close:** no dark mode; meaning is carried by colour plus text (badges have words), but card borders are colour-only, so keep the status word visible on the card; focus outlines are browser defaults.
 
@@ -52,7 +52,7 @@ _2026-10-25 · For whoever designs or revisits the screens (the teacher, Claude,
 │ ┌─────────────────────────────────────┐ │ │ ┌──────────────────────────────────────┐ │
 │ │ Mon 5 Oct · 7:30–8:30 · 4S Matematik│ │ │ │  A4 page, lesson 1                    │ │
 │ │ SP 6.2.1, 6.2.2  ← SPs moved …      │ │ │ │                                      │ │
-│ │ [Taught][Postponed][Cancelled]      │ │ │ └──────────────────────────────────────┘ │
+│ │ [Done][Postponed][Cancelled]      │ │ │ └──────────────────────────────────────┘ │
 │ │ Attendance [32] / 32                │ │ │ ┌──────────────────────────────────────┐ │
 │ │ Notes [optional            ]        │ │ │ │  A4 page, lesson 2 …                  │ │
 │ └─────────────────────────────────────┘ │ │                                          │

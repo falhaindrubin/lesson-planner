@@ -6,6 +6,8 @@ import { classLabel, positionWords, rptWeeksWords, percentDone, fitWords } from 
 import { applyMark } from '../app/logic/marking.js';
 import { parseRptView } from '../app/logic/rpt-view.js';
 import { diffRekod, diffSummary } from '../app/logic/rekod-diff.js';
+import { weekChip, weekGroups } from '../app/logic/week-pick.js';
+import { clock, time24, dayNameOf, timetableGrid } from '../app/logic/timetable-grid.js';
 
 // paths
 assert.strictEqual(dirOf('sample/kelas-2026.md'), 'sample');
@@ -31,7 +33,7 @@ assert.strictEqual(importKey(['x/rekod-5S-M3.md'], 'rekod-5S-M3.md'), 'x/rekod-5
 assert.strictEqual(importKey([], 'new.md'), 'new.md');
 
 // status
-assert.deepStrictEqual(STATUS_OPTIONS.map(statusLabel), ['Taught', 'Postponed', 'Cancelled']);
+assert.deepStrictEqual(STATUS_OPTIONS.map(statusLabel), ['Done', 'Postponed', 'Cancelled']);
 assert.strictEqual(statusLabel(''), '');
 assert.deepStrictEqual(STATUS_OPTIONS.map(needsReason), [false, true, true]);
 
@@ -106,6 +108,42 @@ const futureEdited = rekod + extra.replace('| diajar | 35 |  |', '| ditunda | 35
 assert.strictEqual(diffRekod(rekod + extra, futureEdited, 'f.md', '2026-10-07').length, 1); // an edited future row still differs
 assert.strictEqual(diffRekod(rekod, futureEdited, 'f.md', '2026-10-07').length, 1); // one-sided but edited
 assert.strictEqual(diffRekod(rekod, rekod.replace('| 7.1.2 | diajar | 35 |  |', '| 7.1.2 | ditunda | 35 | Y |'), 'f.md', '2026-10-07').length, 1); // past rows always compared
+
+// Week bar jump list
+{
+  const day = (date, holiday = '') => ({ date, holiday });
+  const weeks = [
+    { n: 12, days: [day('2026-03-23'), day('2026-03-27')] },
+    { n: 13, days: [day('2026-03-30'), day('2026-04-03')] },
+    { n: 14, days: [day('2026-04-06', 'Cuti'), day('2026-04-07', 'Cuti')] },
+  ];
+  assert.deepStrictEqual(weekChip(weeks[1], 13), { n: 13, dates: '30 Mar–3 Apr', holiday: false, today: true });
+  assert.deepStrictEqual(weekChip(weeks[2], 13), { n: 14, dates: '6–7 Apr', holiday: true, today: false });
+  // Grouped by the month a week starts in (M13 starts in March)
+  assert.deepStrictEqual(weekGroups(weeks, 13).map(g => [g.month, g.weeks.map(w => w.n)]), [['Mar', [12, 13]], ['Apr', [14]]]);
+}
+
+// Today timetable grid
+{
+  assert.deepStrictEqual(['2026-11-02', '2026-11-03', '2026-11-06', '2026-11-07'].map(dayNameOf), ['Isnin', 'Selasa', 'Jumaat', '']);
+  const v = { effectiveFrom: '2026-10-05', slots: [
+    { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '5S', room: '' },
+    { dayName: 'Selasa', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '5S', room: '' },
+    { dayName: 'Selasa', periods: [5, 5], time: '9:00–9:30', subject: 'PK', classCode: '2J', room: '' },
+  ] };
+  const g = timetableGrid(v, '2026-11-03');
+  assert.deepStrictEqual(g.periods, [1, 2, 3, 4, 5]);
+  // Six boundary times for five periods, 24-hour, ending at the end of the last period
+  assert.deepStrictEqual(g.marks.map(m => m.time), ['7:00', '7:30', '8:00', '8:30', '9:00', '9:30']);
+  assert.deepStrictEqual(g.days.map(d => d.today), [false, true, false, false, false]);
+  // Selasa: 1–2 one block at column 1 spanning 2, then PK at column 5; times are the real start and end
+  assert.deepStrictEqual(g.days[1].blocks.map(b => [b.col, b.span, b.from, b.to, b.slot.subject]), [[1, 2, '7:00', '8:00', 'M3'], [5, 1, '9:00', '9:30', 'PK']]);
+  // A class ending at period 14 ends at 14:00
+  assert.strictEqual(clock(840), '14:00');
+  // Card times from the aSc 12-hour style
+  assert.strictEqual(time24('12:30–2:00'), '12:30–14:00');
+  assert.strictEqual(time24('7:00–8:00'), '7:00–8:00');
+}
 
 console.log('app-logic: all tests passed');
 

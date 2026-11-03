@@ -39,7 +39,7 @@ DSKP.md ──► SP list ──(AI rates difficulty)──► RPT per subject �
 node tools/serve.js            # http://localhost:8080/app/
 node tools/release.js ../rph-mate   # copy the app into the public rph-mate checkout
 ```
-Pick your `sample/` and `output/` folders once on the Files screen and type your name in Profile. The Week tab shows the week's lessons and RPH pages; mark Taught / Postponed / Cancelled (a reason is required for the last two), print the week, and use **Save rekod** to download the updated `rekod-*.md` back into your Rekod folder. Details: [the spec](docs/superpowers/specs/2026-10-03-web-app-weekly-loop-design.md).
+Pick your `sample/` and `output/` folders once on the Files screen and type your name in Profile. The Week tab shows the week's lessons and RPH pages; mark Done / Postponed / Cancelled (a reason is required for the last two), print the week, and use **Save rekod** to download the updated `rekod-*.md` back into your Rekod folder. Details: [the spec](docs/superpowers/specs/2026-10-03-web-app-weekly-loop-design.md).
 
 ## Weekly RPH
 ```

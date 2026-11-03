@@ -26,6 +26,22 @@ button.save { background: var(--accent); color: #fff; }
 button.save:hover:not(:disabled) { background: #1d4ed8; }
 .weekbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 18px; border-top: 1px solid var(--line); background: #fafbfd; }
 .weekbar .label { font-weight: 700; font-size: 15px; }
+/* Week jump panel: one row per month, a small chip per week */
+.picker { position: relative; }
+.pick-label { font-weight: 700; font-size: 15px; }
+.pick-label span { font-weight: 400; color: var(--muted); }
+.pick-panel { position: absolute; top: calc(100% + 6px); left: 0; z-index: 5; background: var(--card); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 20px rgba(20, 30, 60, .15); padding: 10px 12px; }
+.pick-row { display: flex; align-items: center; gap: 4px; margin: 2px 0; }
+.pick-row > span { width: 34px; font-size: 12px; color: var(--muted); }
+.pick-row button { width: 34px; height: 28px; padding: 0; font-size: 13px; border-radius: 6px; }
+.pick-row button.hol { background: #fdecec; color: var(--bad); border-color: #f5c2c2; }
+.pick-row button.today { outline: 2px solid var(--accent); outline-offset: 1px; }
+.pick-row button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pick-key { margin: 8px 0 0 38px; font-size: 12px; color: var(--muted); display: flex; justify-content: flex-start; gap: 14px; }
+.pick-key span { display: inline-flex; align-items: center; gap: 6px; }
+.pick-key i { flex: none; width: 12px; height: 12px; border-radius: 3px; box-sizing: border-box; }
+.pick-key i.today { border: 2px solid var(--accent); }
+.pick-key i.hol { background: #fdecec; border: 1px solid #f5c2c2; }
 .spacer { flex: 1; }
 .badge { padding: 3px 10px; border-radius: 999px; color: #fff; font-size: 12px; font-weight: 600; }
 .tone-ok { background: var(--ok); } .tone-ahead { background: var(--ahead); } .tone-warn { background: var(--warn); } .tone-bad { background: var(--bad); } .tone-none { background: var(--muted); }
@@ -67,6 +83,37 @@ button.on.diajar { background: var(--ok); } button.on.ditunda { background: var(
 
 /* Today */
 .today { max-width: 760px; margin: 0 auto; }
+/* Today with the timetable beside it; stacked on narrow screens */
+.today.two { max-width: 1400px; display: grid; grid-template-columns: minmax(340px, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: start; }
+.today.two > aside { position: sticky; top: 120px; }
+@media (max-width: 1000px) { .today.two { grid-template-columns: 1fr; } .today.two > aside { position: static; } }
+.today aside h3 { margin: 6px 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+/* Timetable: CSS grid on a time axis (one column per period; times on the period boundaries) */
+.tt { background: var(--card); border-radius: 12px; padding: 8px 14px 10px 8px; box-shadow: var(--shadow); font-size: 12px; }
+.tt-axis, .tt-row { display: grid; column-gap: 0; }
+.tt-axis { margin-bottom: 4px; }
+.tt-axis .p { grid-row: 1; text-align: center; font-size: 10px; color: var(--muted); }
+.tt-axis i { grid-row: 2; font-style: normal; font-size: 11px; font-weight: 600; color: var(--fg); justify-self: start; transform: translateX(-50%); white-space: nowrap; }
+.tt-axis i.end { justify-self: end; transform: translateX(50%); }
+.tt-row { grid-template-rows: 44px; margin: 3px 0; border-radius: 8px; }
+.tt-row > * { grid-row: 1; }
+.tt-row .day { grid-column: 1; align-self: center; padding: 0 8px; font-weight: 600; color: var(--muted); line-height: 1.15; }
+.tt-row .day small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.tt-row .cellbg { border-left: 1px dashed var(--line); }
+.tt-row .cellbg:last-of-type { border-right: 1px dashed var(--line); }
+.tt .blk { margin: 2px 1px; padding: 3px 6px; border-radius: 6px; overflow: hidden; line-height: 1.2; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 9%, white); border-left: 3px solid color-mix(in srgb, var(--c) 40%, white); color: #6b7280; }
+.tt .blk b, .tt .blk small { display: block; overflow: hidden; text-overflow: ellipsis; }
+.tt .blk small { font-size: 10px; opacity: .8; }
+.tt .blk b { color: #1f2937; }
+/* Today: tinted row, solid day label, full-colour blocks */
+.tt-row.on { background: color-mix(in srgb, var(--accent) 8%, white); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, white), 0 2px 8px rgba(0, 0, 0, .10); grid-template-rows: 52px; }
+.tt-row.on .day { background: var(--accent); color: #fff; border-radius: 8px 0 0 8px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+.tt-row.on .cellbg { border-left-color: color-mix(in srgb, var(--accent) 25%, white); }
+.tt-row.on .blk { background: color-mix(in srgb, var(--c) 42%, white); border-left: 5px solid var(--c); color: #0b1220; font-size: 13px; }
+.tt-row.on .blk small { font-size: 11px; font-weight: 600; opacity: 1; }
+.tt-row.on .blk.next { outline: 2px solid #374151; outline-offset: 1px; }
+.tt-row.on .blk.past { background: color-mix(in srgb, var(--c) 14%, white); border-left-color: color-mix(in srgb, var(--c) 45%, white); }
 .today h2 { font-size: 24px; margin-bottom: 0; }
 .today .sub { color: var(--muted); margin: 2px 0 16px; }
 .today .section-label { margin: 20px 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
