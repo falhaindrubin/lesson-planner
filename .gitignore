@@ -8,3 +8,6 @@ graphify-out/*
 
 # visual companion mockups
 .superpowers/
+
+# real marks (private)
+markah/

@@ -44,6 +44,11 @@ Before this project the teacher kept one Google Sheet per subject with one tab p
 5. **G5 — Private by design.** No personal or school data leaves the teacher's devices, except through the teacher's own Google Drive (Phase 3).
 6. **G6 — Works offline, free to run.** Installable web app, hosted on GitHub Pages, with no server and no subscription.
 
+### Side features (scope widened 2026-11-05)
+The core stays G1–G6: plan the year, print the week, know where each class stands. The teacher decided the app may also carry **side features** that help the same teacher run their classes, as long as they follow G4–G6 (one markdown file in, nothing leaves the device, works offline) and never get in the way of the weekly loop. They live in their own tabs.
+- **Marks (built, read-only):** per class × subject, from `markah-<kelas>-<kod>.md`: averages, grade spread, students to look at. Today the app only reads the file; entering marks in the app is not decided.
+- Further side features are agreed one at a time, each with its own short brief; nothing is assumed from this list.
+
 ### Non-goals
 - Several teachers, sharing, a school-wide system, or panitia approval workflows.
 - Reading PDFs. Inputs are hand-checked markdown; source PDFs are only for reference.

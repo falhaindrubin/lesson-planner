@@ -2,7 +2,12 @@
 
 Things for **me (the teacher)** to do. Decisions and background: [docs/discussion.md](docs/discussion.md).
 
-## Next session (2026-11-03, second session)
+## Next session (2026-11-05)
+- [ ] **Read the marks design** (docs/superpowers/specs/2026-11-05-marks-entry-dashboard-design.md) and answer section 10; approve or correct it
+- [ ] Decide the 4 failing tests: restore `sample/dskp-mat-t5.md` etc. or let Claude repoint them to `sample/ref`
+- [ ] Check the new RPTs (MAT T4, ASK T1, SK T4, PJPK T2) and confirm the PK 4.0 week
+
+## Earlier (2026-11-03, second session)
 - [ ] **Print one week to PDF** and check the suggested file name is `FALHAIND RUBIN - RPH - M..`
 - [ ] Try the **week panel** (click "M.. ▾" in the week bar) and the **Today timetable** on a school morning; say what feels wrong
 - [ ] For **ASK 1S**: tell Claude Bil. murid and the current SP, so Claude can add the row, draft the difficulty ratings and build its RPT
