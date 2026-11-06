@@ -9,7 +9,7 @@ let chosen = '';
 function renderMarkah(view) {
   view.dataset.screen = 'markah';
   const files = [...state.files.keys()].filter(p => /^markah-.*\.md$/.test(baseName(p))).sort();
-  if (!files.length) { view.innerHTML = '<h2>Marks</h2><p class="empty">No marks file yet. Make <code>markah-5S-M3.md</code> (a table: Nama, then one column per assessment, marks 0–100) and pick it in Files.</p>'; return; }
+  if (!files.length) { view.innerHTML = '<h2>Marks</h2><p class="empty">No marks file yet. Make <code>markah-4S-M3.md</code> (a table: Nama, then one column per assessment, marks 0–100) and pick it in Files.</p>'; return; }
   if (!files.includes(chosen)) chosen = files[0];
   let data;
   try { data = parseMarkah(state.files.get(chosen)); } catch (e) { view.innerHTML = `<h2>Marks</h2><div class="errorbar">${esc(baseName(chosen))}: ${esc(e.message)}</div>`; return; }

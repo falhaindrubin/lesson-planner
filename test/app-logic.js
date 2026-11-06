@@ -12,24 +12,24 @@ import { clock, time24, dayNameOf, timetableGrid } from '../app/logic/timetable-
 // paths
 assert.strictEqual(dirOf('sample/kelas-2026.md'), 'sample');
 assert.strictEqual(dirOf('kelas-2026.md'), '');
-assert.strictEqual(baseName('output/simulasi-5S-M3/rekod-5S-M3.md'), 'rekod-5S-M3.md');
-assert.strictEqual(resolvePath('sample', '../output/rpt-mat-t5-2026.md'), 'output/rpt-mat-t5-2026.md');
+assert.strictEqual(baseName('output/simulasi-4S-M3/rekod-4S-M3.md'), 'rekod-4S-M3.md');
+assert.strictEqual(resolvePath('sample', '../output/rpt-mat-t4-2026.md'), 'output/rpt-mat-t4-2026.md');
 assert.strictEqual(resolvePath('sample', 'takwim-smly-2026.md'), 'sample/takwim-smly-2026.md');
 assert.strictEqual(resolvePath('sample', '..\\output\\x.md'), 'output/x.md');
 assert.strictEqual(resolvePath('', '../../x.md'), 'x.md'); // climbs above the picked folders: dropped
-const stored = ['sample/kelas-2026.md', 'output/rpt-mat-t5-2026.md', 'x/rekod-5S-M3.md', 'y/rekod-5S-M3.md', 'acara-2026.md'];
-assert.strictEqual(findFile(stored, 'output/rpt-mat-t5-2026.md'), 'output/rpt-mat-t5-2026.md');
+const stored = ['sample/kelas-2026.md', 'output/rpt-mat-t4-2026.md', 'x/rekod-4S-M3.md', 'y/rekod-4S-M3.md', 'acara-2026.md'];
+assert.strictEqual(findFile(stored, 'output/rpt-mat-t4-2026.md'), 'output/rpt-mat-t4-2026.md');
 assert.strictEqual(findFile(stored, 'sample/acara-2026.md'), 'acara-2026.md'); // dropped without a folder
 assert.strictEqual(findFile(stored, 'sample/none.md'), null);
-assert.throws(() => findFile(stored, 'z/rekod-5S-M3.md'), /More than one file named rekod-5S-M3\.md: x\/rekod-5S-M3\.md, y\/rekod-5S-M3\.md/);
-assert.strictEqual(findFile(stored, 'x/rekod-5S-M3.md'), 'x/rekod-5S-M3.md'); // exact match wins over a clash
+assert.throws(() => findFile(stored, 'z/rekod-4S-M3.md'), /More than one file named rekod-4S-M3\.md: x\/rekod-4S-M3\.md, y\/rekod-4S-M3\.md/);
+assert.strictEqual(findFile(stored, 'x/rekod-4S-M3.md'), 'x/rekod-4S-M3.md'); // exact match wins over a clash
 
 // importKey: a folder file whose name matches the only dropped (bare-name) file updates that file in place
-assert.strictEqual(importKey(['rekod-5S-M3.md'], 'output/sim/rekod-5S-M3.md'), 'rekod-5S-M3.md');
-assert.strictEqual(importKey(['rekod-5S-M3.md', 'x/rekod-5S-M3.md'], 'output/sim/rekod-5S-M3.md'), 'output/sim/rekod-5S-M3.md'); // ambiguous: keep own path
-assert.strictEqual(importKey(['output/sim/rekod-5S-M3.md'], 'output/sim/rekod-5S-M3.md'), 'output/sim/rekod-5S-M3.md');
+assert.strictEqual(importKey(['rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'rekod-4S-M3.md');
+assert.strictEqual(importKey(['rekod-4S-M3.md', 'x/rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'output/sim/rekod-4S-M3.md'); // ambiguous: keep own path
+assert.strictEqual(importKey(['output/sim/rekod-4S-M3.md'], 'output/sim/rekod-4S-M3.md'), 'output/sim/rekod-4S-M3.md');
 assert.strictEqual(importKey(['a.md'], 'sample/b.md'), 'sample/b.md');
-assert.strictEqual(importKey(['x/rekod-5S-M3.md'], 'rekod-5S-M3.md'), 'x/rekod-5S-M3.md'); // dropped file replaces the one stored copy
+assert.strictEqual(importKey(['x/rekod-4S-M3.md'], 'rekod-4S-M3.md'), 'x/rekod-4S-M3.md'); // dropped file replaces the one stored copy
 assert.strictEqual(importKey([], 'new.md'), 'new.md');
 
 // status
@@ -38,10 +38,10 @@ assert.strictEqual(statusLabel(''), '');
 assert.deepStrictEqual(STATUS_OPTIONS.map(needsReason), [false, true, true]);
 
 // words
-const S = o => ({ classCode: '5S', subject: 'M3', subjectName: 'MATEMATIK', hasDskp: true, hasRpt: true, spTotal: 70, spDone: 49,
+const S = o => ({ classCode: '4S', subject: 'M3', subjectName: 'MATEMATIK', hasDskp: true, hasRpt: true, spTotal: 70, spDone: 49,
   currentSp: '8.2.1', finished: false, rptEnd: 34, position: { status: 'onTrack', sp: '8.2.1', rptWeeks: [31, 31], weeks: 0 }, fit: null, ...o });
-assert.strictEqual(classLabel(S()), '5S Matematik');
-assert.strictEqual(classLabel(S({ subjectName: 'SAINS KOMPUTER' })), '5S Sains Komputer');
+assert.strictEqual(classLabel(S()), '4S Matematik');
+assert.strictEqual(classLabel(S({ subjectName: 'SAINS KOMPUTER' })), '4S Sains Komputer');
 assert.deepStrictEqual(positionWords(S()), { text: 'On track', tone: 'ok' });
 assert.deepStrictEqual(positionWords(S({ position: { status: 'behind', sp: 'x', rptWeeks: [1, 1], weeks: 1 } })), { text: '1 week behind', tone: 'warn' });
 assert.deepStrictEqual(positionWords(S({ position: { status: 'behind', sp: 'x', rptWeeks: [1, 1], weeks: 3 } })), { text: '3 weeks behind', tone: 'bad' });
@@ -57,11 +57,11 @@ assert.strictEqual(percentDone(S()), 70);
 assert.strictEqual(percentDone(S({ spTotal: 0, spDone: 0 })), 0);
 assert.strictEqual(fitWords(S()), null);
 assert.strictEqual(fitWords(S({ fit: { need: 1240.4, have: 1050, endWeek: 34 } })),
-  '5S Matematik: needs 1,240 min for the remaining SPs, has 1,050 min until M34 — consider combining SPs');
+  '4S Matematik: needs 1,240 min for the remaining SPs, has 1,050 min until M34 — consider combining SPs');
 
 // marking
 const rekod = [
-  '# Rekod 5S M3 2026', '',
+  '# Rekod 4S M3 2026', '',
   '| Minggu | Tarikh | Hari | Waktu | Masa | Jenis | Acara | SP | Status | Kehadiran | Catatan |',
   '|---|---|---|---|---|---|---|---|---|---|---|',
   '| M35 | 2026-10-05 | Isnin | 2–3 | 7:30–8:30 | pdp |  | 7.1.1 | diajar | 35 |  |',
@@ -127,8 +127,8 @@ assert.strictEqual(diffRekod(rekod, rekod.replace('| 7.1.2 | diajar | 35 |  |', 
 {
   assert.deepStrictEqual(['2026-11-02', '2026-11-03', '2026-11-06', '2026-11-07'].map(dayNameOf), ['Isnin', 'Selasa', 'Jumaat', '']);
   const v = { effectiveFrom: '2026-10-05', slots: [
-    { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '5S', room: '' },
-    { dayName: 'Selasa', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '5S', room: '' },
+    { dayName: 'Isnin', periods: [2, 3], time: '7:30–8:30', subject: 'M3', classCode: '4S', room: '' },
+    { dayName: 'Selasa', periods: [1, 2], time: '7:00–8:00', subject: 'M3', classCode: '4S', room: '' },
     { dayName: 'Selasa', periods: [5, 5], time: '9:00–9:30', subject: 'PK', classCode: '2J', room: '' },
   ] };
   const g = timetableGrid(v, '2026-11-03');
@@ -167,7 +167,7 @@ console.log('app-logic: all tests passed');
 // markah (Marks tab)
 import fs from 'node:fs';
 import { parseMarkah, summarise, gradeOf } from '../app/logic/markah.js';
-const mk = parseMarkah(fs.readFileSync(new URL('./data/markah-5S-M3.md', import.meta.url), 'utf8'));
+const mk = parseMarkah(fs.readFileSync(new URL('./data/markah-4S-M3.md', import.meta.url), 'utf8'));
 assert.deepStrictEqual(mk.tests, ['PA1', 'PPT', 'PAT']);
 assert.strictEqual(mk.students.length, 6);
 assert.deepStrictEqual(mk.students[3].marks, [60, 62, null]); // TH = no mark

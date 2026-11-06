@@ -5,19 +5,19 @@ import * as R from '../src/core/index.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const read = f => fs.readFileSync(__dirname + '/../sample/' + f, 'utf8');
+const read = f => { const d = __dirname + '/data/' + f; return fs.readFileSync(fs.existsSync(d) ? d : __dirname + '/../sample/' + f, 'utf8'); };
 
 // The real 2026 class file: Matematik T4, 4 Stanford only, starting at the start of the year
-const K1 = R.parseClasses(read('kelas-2026.md'), 'kelas-2026.md');
+const K1 = R.parseClasses(read('kelas-4S-awal.md'), 'kelas-2026.md');
 assert.strictEqual(K1.year, 2026);
 assert.strictEqual(K1.teacher, 'FALHAIND RUBIN');
 assert.deepStrictEqual(K1.timetables, ['jwg-20260101-simulasi.md', 'jwg-20261005.md']);
-assert.deepStrictEqual([K1.takwim, K1.events, K1.rekod, K1.output], ['takwim-smly-2026.md', 'acara-2026.md', '../output/simulasi-5S-M3', '../output/simulasi-5S-M3']);
+assert.deepStrictEqual([K1.takwim, K1.events, K1.rekod, K1.output], ['takwim-smly-2026.md', 'acara-2026.md', '../output/simulasi-4S-M3', '../output/simulasi-4S-M3']);
 assert.strictEqual(K1.classes.length, 1);
 const s4 = K1.classes[0];
 assert.deepStrictEqual(
   [s4.classCode, s4.fullName, s4.form, s4.subject, s4.subjectName, s4.dskp, s4.rpt, s4.tutorial, s4.pupils, s4.start],
-  ['5S', '5 STANFORD', 5, 'M3', 'MATEMATIK', 'dskp-mat-t5.md', '../output/rpt-mat-t5-2026.md', '', 32, '1.1.1'],
+  ['4S', '4 STANFORD', 4, 'M3', 'MATEMATIK', 'dskp-mat-t4.md', '../output/rpt-mat-t4-2026.md', '', 32, '1.1.1'],
 );
 // Simulation timetable = copy of the 5.10.2026 timetable, in force from 1 Jan
 const sim = R.parseTimetable(read('jwg-20260101-simulasi.md'));

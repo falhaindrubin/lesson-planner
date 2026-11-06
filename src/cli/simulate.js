@@ -2,7 +2,7 @@
 // on the Saturday before that week, with no changes to the rekod by the teacher.
 // Prints one summary line per week and class.
 //
-//   node src/cli/simulate.js --classes sample/kelas-2026.md [--from 1] [--to 43]
+//   node src/cli/simulate.js --classes sample/kelas-2026-sebenar.md [--from 1] [--to 43]
 
 import fs from 'node:fs';
 import path from 'node:path';

@@ -212,3 +212,11 @@ Pending: the visual-companion offer (screen mockups in a browser tab) was made a
 - Windows quirks: heredocs with `$`/backticks and Node one-liners with regexes lose escapes in Git Bash; write files with the Write/Edit tools. Git warns "LF will be replaced by CRLF" — harmless. `git add` pathspecs for deleted folders fail; stage by file.
 - The user prefers Malay for generated documents and code comments, English for docs; one-line rules become general rules + a test + a discussion-log entry; ask when ambiguous; verify conversions against the source.
 - Don't commit `graphify-out/` cache files; `output/simulasi-4S-M3/` is committed on purpose (the teacher reviews it).
+
+## Update 2026-11-06 — 5S / T5 simulation retired
+- The class is **4S** (Matematik T4) everywhere. Deleted: `output/simulasi-5S-M3/`, `sample/kelas-2026.md`, `sample/jwg-20260101-simulasi.md`, `output/rpt-mat-t5-2026.*`, and the T5 files in `sample/ref/` (`dskp-mat-t5`, `kesukaran-mat-t5`, `bt-mat-t5`; they are in git history).
+- `sample/jwg-20261005.md`, `sample/kelas-2026-sebenar.md`, `sample/acara-2026.md` and the rekod (`rekod/2026/rekod-4S-M3.md`) now say 4S.
+- Tests now use 4S on the T4 DSKP: fixtures `test/data/kelas-4S-awal.md` and `test/data/jwg-20260101-simulasi.md` (the start-of-year simulation); expected values were re-derived from pipeline output. All test files pass.
+- Older entries below that mention 5S / T5 are history.
+- Session also: started the app (`node tools/serve.js`, http://localhost:8080/app/). The error `rekod-5S-M3.md:16: SP 1.2.1 is not in the DSKP` came from stale copies stored in the browser (old 5S class file and old rekod). Fix: re-pick `sample/`, `rekod/2026`, `output/rph` on Files; else clear site data for localhost:8080. The app has no way to delete one stored file.
+- Open: Marks hint now says `markah-4S-M3.md`; `rekod/` and `output/rph/` stay untracked on purpose.

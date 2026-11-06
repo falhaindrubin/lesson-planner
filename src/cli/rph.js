@@ -1,6 +1,6 @@
 // Weekly RPH for every class in the class file; updates each class × subject rekod.
 //
-//   node src/cli/rph.js --classes sample/kelas-2026.md --week 35 [--today 2026-10-03]
+//   node src/cli/rph.js --classes sample/kelas-2026-sebenar.md --week 35 [--today 2026-10-03]
 //
 // The class file names the takwim, timetables, events, rekod folder and output folder (relative to it).
 // Rekod rows up to today are never changed; later rows are rebuilt unless the teacher changed

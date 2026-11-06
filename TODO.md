@@ -4,7 +4,6 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 
 ## Next session (2026-11-05)
 - [ ] **Read the marks design** (docs/superpowers/specs/2026-11-05-marks-entry-dashboard-design.md) and answer section 10; approve or correct it
-- [ ] Decide the 4 failing tests: restore `sample/dskp-mat-t5.md` etc. or let Claude repoint them to `sample/ref`
 - [ ] Check the new RPTs (MAT T4, ASK T1, SK T4, PJPK T2) and confirm the PK 4.0 week
 
 ## Earlier (2026-11-03, second session)
@@ -14,29 +13,24 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 - [ ] Send the new timetable when it changes (Claude makes the `jwg-<date>.md` file)
 
 ## Earlier (2026-11-03 first session)
-- [ ] **Try the live app** (Marks tab and the Files checklist are new): make a real `markah-<kelas>-<kod>.md` (see `test/data/markah-5S-M3.md`), pick it in Files, and tell Claude what the Marks dashboard lacks
+- [ ] **Try the live app** (Marks tab and the Files checklist are new): make a real `markah-<kelas>-<kod>.md` (see `test/data/markah-4S-M3.md`), pick it in Files, and tell Claude what the Marks dashboard lacks
 - [ ] Try Today, Week, RPT and Print week too; tell Claude what feels wrong
 - [x] Red holiday colour released 2026-11-03
 
 ## Earlier (2026-10-31 summary)
 - [ ] **Try the live app** (https://falhaindrubin.github.io/rph-mate/): install it as a PWA, pick `sample/` and `output/`, try Today, Week and Print week, and tell Claude what still feels wrong or confusing
-- [ ] Tell Claude **5S's current SP** (to set Mula for a real week of use)
+- [ ] Tell Claude **4S's current SP** (to set Mula for a real week of use)
 - [ ] Choose **UI pass 2**: guided first-run setup, phone layout, Malay labels, or plainer wording than "SP"
 - [x] UI pass 1 released 2026-11-02
 
 ## Now
 - [x] Add the **DSKP for Matematik T4** to `sample/` (converted: `sample/ref/dskp-mat-t4.md`)
-- [x] Sample data and tests switched from T4 4S to **T5 5S** (2026-10-30): `sample/dskp-mat-t5.md`, `sample/kesukaran-mat-t5.md`, 5S in the class file and timetables (2026 takwim and timetable stand in for 2027)
 - [ ] Add the **DSKP for PJPK T2** to `sample/`
-- [ ] Decide the **T5 squeeze**: topics 5.0–8.0 get only M19–M25 (topic 8.0 gets 0.4 weeks). Pin weeks for 8.0 in `sample/kesukaran-mat-t5.md`? Finish by end of July is already met (syllabus ends M25, 20–24 Jul)
-- [ ] When you have them: send the **2027 school takwim and timetable** (the T5 plan borrows the 2026 ones)
-- [ ] Check the **Matematik T5 RPT** (`output/rpt-mat-t5-2026.html`) and fix any difficulty ratings in `sample/kesukaran-mat-t5.md` (draft; T4 files kept for reference), then re-run `node src/cli/rpt.js ...` (and re-run the RPH simulation, since RPH timing reads the RPT file)
 - [ ] Add **one week of RPH** for Matematik and PJPK (PDF or Sheet link) to check the layout matches ASK
 - [ ] Share the **Google Sheets for SK, MAT and PJPK** (the links file was removed from the repo on 2026-10-30; send them again when ready) for the history import
 - [x] Decide: **M31 → final exam** (Form 1–4) — revision before PAT is a must
 - [x] Decide: default RPT end — final exam minus **2 revision weeks**, every form
-- [ ] Review the 5S Matematik T5 simulation in `output/simulasi-5S-M3/` (`rekod-5S-M3.md`, the RPH HTML, `ringkasan.txt`)
-- [ ] Add the other classes from `test/data/kelas-semua.md` to `sample/kelas-2026.md` with Bil. murid and Mula (ASK 1S, SK 4H, PK/PJ 2D 2J) — PK/PJ run without SP until their DSKP is added
+- [ ] Add the other classes from `test/data/kelas-semua.md` to `sample/kelas-2026-sebenar.md` with Bil. murid and Mula (ASK 1S, SK 4H, PK/PJ 2D 2J) — PK/PJ run without SP until their DSKP is added
 - [ ] Check `sample/acara-2026.md` (events) and add Batal days you already know
 - [ ] Optional: copy `sample/aktiviti-umum.md` per subject and point the Aktiviti column at it
 - [ ] Optional: try the stopgap script ([apps-script/Code.gs](apps-script/Code.gs)) on the ASK Sheet for M36
@@ -44,10 +38,9 @@ Things for **me (the teacher)** to do. Decisions and background: [docs/discussio
 ## RPH pipeline (built 2026-10-03, branch `rph-pipeline`)
 - [x] Say **"go"** for the design spec — RPH pipeline spec, plan and code done ([spec](docs/superpowers/specs/2026-10-03-rph-pipeline-design.md))
 - [x] `rph-pipeline` merged to `main` (PR #1)
-- [ ] Open a few files in `output/simulasi-5S-M3/2026-M*-M3.html` and **print one to PDF**: does it match your Sheets RPH?
 - [x] Decide the **next sub-project** — the **web app** (see below)
 - [ ] Decide on the deferred minors if any bother you (list in `docs/next-session.md`): e.g. blank Status on a lesson counts as "not taught"; text typed in Kehadiran is reduced to its number
-- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 5S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026.md --week <n>`
+- [ ] Switch to real use in a new week: set Rekod/Output to `../rekod/2026` and `../output/rph`, Mula to 4S's current SP, then `node src/cli/rph.js --classes sample/kelas-2026-sebenar.md --week <n>`
 
 ## Web app (first slice built and merged to `main` 2026-10-03; details in [docs/next-session.md](docs/next-session.md))
 - [x] **Try the app in the browser**: checked headless on 2026-10-29. Everything passed except offline after a first visit. Fixed and verified 2026-10-30 (the page hands the service worker its loaded files; one online visit now caches 41 files).
