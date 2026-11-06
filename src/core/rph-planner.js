@@ -17,7 +17,7 @@ function planRows({ rows, sp, spTime = null, start = '', file = 'rekod' }) {
   const index = new Map(sp.map((s, i) => [s.code, i]));
   const topics = [...new Set(sp.map(s => s.topic.code))];
   const warnings = [];
-  let idx = start ? index.get(start) : 0;
+  let idx = /^tamat$/i.test(start) ? sp.length : start ? index.get(start) : 0; // Mula "tamat" = DSKP finished, revision only
   if (idx == null) throw new Error(`${file}: SP Mula ${start} is not in the DSKP`);
   let remaining = null;   // minutes left for sp[idx]; null = not started
   let revisions = 0;      // revision PdP so far

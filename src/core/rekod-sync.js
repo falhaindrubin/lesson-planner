@@ -11,7 +11,7 @@ const keyOf = r => `${r.date} ${periodRange(r.periods)[0]}`;
 // Edited by the teacher = Status or Catatan differs from the default. Attendance does not count:
 // future PdP has not happened, and a changed Bil. murid must not lock generated rows.
 function isEdited(r) {
-  return r.status !== (r.kind === 'peperiksaan' ? '' : 'diajar') || r.note !== '';
+  return r.status !== (r.kind === 'peperiksaan' ? '' : 'diajar') || r.note !== '' || !!r.refleksi;
 }
 
 function syncRekod({ rows, cls, classes, sp, spTime = null, calendar, versions, events, week, today, file = 'rekod' }) {

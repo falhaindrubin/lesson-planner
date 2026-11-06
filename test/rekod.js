@@ -4,14 +4,14 @@ import * as R from '../src/core/index.js';
 
 const cls = { classCode: '5S', subject: 'M3', fullName: '5 STANFORD', form: 5, subjectName: 'MATEMATIK' };
 const rows = [
-  { week: 35, date: '2026-10-05', dayName: 'Isnin', periods: '2–3', time: '7:30–8:30', minutes: 60, kind: 'pdp', event: '', sp: ['6.2.1'], status: 'diajar', attendance: 35, note: '' },
-  { week: 35, date: '2026-10-07', dayName: 'Rabu', periods: '7–9', time: '10:00–11:30', minutes: 90, kind: 'pdp', event: '', sp: ['6.2.2', '6.2.3'], status: 'ditunda', attendance: 35, note: 'Mesyuarat' },
-  { week: 37, date: '2026-10-19', dayName: 'Isnin', periods: '2–3', time: '7:30–8:30', minutes: 60, kind: 'peperiksaan', event: 'PAT TING. 4', sp: [], status: '', attendance: null, note: '' },
+  { week: 35, date: '2026-10-05', dayName: 'Isnin', periods: '2–3', time: '7:30–8:30', minutes: 60, kind: 'pdp', event: '', sp: ['6.2.1'], status: 'diajar', attendance: 35, note: '', refleksi: '' },
+  { week: 35, date: '2026-10-07', dayName: 'Rabu', periods: '7–9', time: '10:00–11:30', minutes: 90, kind: 'pdp', event: '', sp: ['6.2.2', '6.2.3'], status: 'ditunda', attendance: 35, note: 'Mesyuarat', refleksi: '' },
+  { week: 37, date: '2026-10-19', dayName: 'Isnin', periods: '2–3', time: '7:30–8:30', minutes: 60, kind: 'peperiksaan', event: 'PAT TING. 4', sp: [], status: '', attendance: null, note: '', refleksi: '' },
 ];
 const md = R.renderRekod(cls, 2026, rows);
 assert.ok(md.startsWith('# Rekod 5S M3 2026\n'));
-assert.ok(md.includes('| M35 | 2026-10-07 | Rabu | 7–9 | 10:00–11:30 | pdp |  | 6.2.2, 6.2.3 | ditunda | 35 | Mesyuarat |\n'));
-assert.ok(md.includes('| M37 | 2026-10-19 | Isnin | 2–3 | 7:30–8:30 | peperiksaan | PAT TING. 4 |  |  |  |  |\n'));
+assert.ok(md.includes('| M35 | 2026-10-07 | Rabu | 7–9 | 10:00–11:30 | pdp |  | 6.2.2, 6.2.3 | ditunda | 35 | Mesyuarat |  |\n'));
+assert.ok(md.includes('| M37 | 2026-10-19 | Isnin | 2–3 | 7:30–8:30 | peperiksaan | PAT TING. 4 |  |  |  |  |  |\n'));
 
 // Round trip: reading back = the original rows (+ line number); writing again = the same bytes
 const back = R.parseRekod(md, 'rekod-5S-M3.md');
@@ -33,6 +33,10 @@ assert.deepStrictEqual(R.spCodes('4.2.7,4.2.8'), ['4.2.7', '4.2.8']);
 assert.deepStrictEqual(R.spCodes('4.2.10 dan 4.2 Kod Arahan'), ['4.2.10']); // an SK code is not an SP
 assert.deepStrictEqual(R.spCodes('Ulang kaji 1.0'), ['1.0']);
 
+// A 12-column row (Refleksi) reads back; an old 11-column row reads Refleksi as blank
+assert.strictEqual(R.parseRekod(md.replace('| Mesyuarat |  |','| Mesyuarat | 2 |'))[1].refleksi, '2');
+assert.strictEqual(R.parseRekod(md.replace('| Mesyuarat |  |', '| Mesyuarat |'))[1].refleksi, '');
+
 // A Catatan with '|' does not break the table
 const pipe = R.renderRekod(cls, 2026, [{ ...rows[0], note: 'a | b' }]);
 assert.strictEqual(R.parseRekod(pipe)[0].note, 'a / b');
@@ -43,7 +47,7 @@ assert.throws(bad('| diajar | 35 |', '| tunda | 35 |'), /rekod-5S-M3\.md:10: Sta
 assert.throws(bad('| pdp |  | 6.2.1 |', '| kuliah |  | 6.2.1 |'), /rekod-5S-M3\.md:10: Jenis "kuliah" not recognised/);
 assert.throws(bad('| 2026-10-05 |', '| 5/10/2026 |'), /rekod-5S-M3\.md:10: Tarikh "5\/10\/2026" is not yyyy-mm-dd/);
 assert.throws(bad('| 6.2.1 | diajar |', '| 1.0, 6.2.1 | diajar |'), /rekod-5S-M3\.md:10: do not mix revision topic codes/);
-assert.throws(bad('| 35 |  |\n| M35 | 2026-10-07', '| 35 |\n| M35 | 2026-10-07'), /rekod-5S-M3\.md:10: needs 11 columns, has 10/);
+assert.throws(bad('| 35 |  |  |\n| M35 | 2026-10-07', '| 35 |\n| M35 | 2026-10-07'), /rekod-5S-M3\.md:10: needs 11 columns, has 10/);
 assert.deepStrictEqual(R.parseRekod('# Rekod kosong\n'), []);
 
 console.log('rekod: all tests passed');

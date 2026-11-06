@@ -2,7 +2,20 @@
 
 _Written 2026-10-03 at the end of the RPH pipeline session. Read this first; then [TODO.md](../TODO.md) (what the teacher must do) and [architecture.md](architecture.md) (where things live)._
 
-## Session summary 2026-11-05 — read this first
+## Session summary 2026-11-06 — read this first
+**Done:**
+1. **Refleksi choice per lesson:** the Week/Today lesson card has a Refleksi dropdown with the RPH's own presets (1 "Objektif tercapai. Semua murid…", 2 "Objektif tercapai oleh ___ orang murid sahaja…"; 3 "PdP ditunda kerana:" is automatic and locks the dropdown when the lesson is Postponed). Stored in a new optional 12th rekod column `Refleksi` (blank = 1, `2` = 2); 11-column rekod files still load. Typed Notes (Catatan) print under the REFLEKSI block as before, so type the pupil numbers there. Touches `parse/rekod.js`, `render/rekod.js`, `render/rph.js`, `rekod-sync.js` (a chosen Refleksi counts as teacher-edited), `app/logic/marking.js`, `app/week-view.js`. The card was **not looked at in a browser**.
+2. **Real classes, RPH M39 2026 (2–6 Nov, real use):** `sample/kelas-2026-sebenar.md` has all 7 class × subject rows (5S/4S Mat T4 32, 1S ASK 38, 4H SK 4 + TUTORIAL, 2J PK/PJ 37, 2D PK/PJ 36), Rekod `../rekod/2026`, Output `../output/rph`. Generated with `node src/cli/rph.js --classes sample/kelas-2026-sebenar.md --week 39 --today 2026-11-06`. Mula `tamat` (new value in `rph-planner.js`: DSKP finished, revision by topic) for every class because every RPT ends before M39 (post-exam week). PK and PJ use `rpt-pk-t2` / `rpt-pj-t2`: the combined `rpt-pjpk-t2` has no "Sukatan tamat" line and does not parse, so PJ prints revision, not the INTERCLASS GAME.
+3. **Why the app showed old files:** it works from a copy stored in the browser (IndexedDB), not the disk. Re-pick `sample` and `rekod/2026` on Files, then choose `kelas-2026-sebenar.md`. Likewise the RPT tab only lists RPTs of classes in the chosen class file.
+
+**State:** `rekod/2026/` and `output/rph/` (generated M39 files, real attendance defaults) are left untracked on purpose. rekod, rph-render, rekod-sync, app-logic tests pass; `cli`, `position`, `rpt`, `week` still fail on the moved T5 sample files; `tamat` has no test yet.
+
+**Next session:**
+1. Teacher: full class names for 1S, 4H, 2J, 2D (only 4 STANFORD is known; the others print as the code); mark M39 lessons that did not happen; decide whether PJ should print the INTERCLASS GAME (make `rpt-pjpk-t2` parseable, or add a Sukatan line).
+2. Add a test for Mula `tamat`; fix the failing-test fixtures (see 2026-11-05).
+3. Decide whether `rekod/` should be tracked or git-ignored like `markah/`.
+
+## Session summary 2026-11-05
 **Done:**
 1. **2026 simulation data** (teacher's own 2026 year stands in for testing): RPTs generated at a 30-week target for **MAT T4**, **ASK T1**, **SK T4** (`output/rpt-<subject>-<form>-2026.{md,html}`; difficulty files `sample/kesukaran-*` are AI drafts). SK T4 topic 3.0 gets 12 weeks (pin removed to honour 30 weeks).
 2. **PJ + PK T2 combined RPT** in the teacher's own order: `src/cli/rpt-susunan.js` renders `sample/susunan-pjpk-t2.md` (68 blocks from the teacher's PDF) with `sample/dskp-pj-t2.md` and `dskp-pk-t2.md` into `output/rpt-pjpk-t2-2026`; test `test/rpt-susunan.js`. The DSKP parser now also reads bullet SPs (`- **1.1.1** text`). PJ ratings are placeholders. **PK 4.0 week (27 Jul vs 20 Jul) is unconfirmed.** Unused: `kesukaran-pj/pk-t2.md`, `output/rpt-pj-t2-2026.*`, `rpt-pk-t2-2026.*`.

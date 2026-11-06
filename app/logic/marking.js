@@ -6,7 +6,7 @@ import { needsReason } from './status.js';
 // '|' would break the table; a line break would break the row
 const cell = s => String(s == null ? '' : s).replace(/\|/g, '/').replace(/\s*\r?\n\s*/g, ' ').trim();
 
-function applyMark(text, { date, periods }, { status, attendance, note }) {
+function applyMark(text, { date, periods }, { status, attendance, note, refleksi = '' }) {
   if (needsReason(status) && !cell(note)) throw new Error('A reason is required for Postponed and Cancelled');
   const first = periodRange(periods)[0];
   let found = false;
@@ -18,6 +18,7 @@ function applyMark(text, { date, periods }, { status, attendance, note }) {
     c[8] = status;
     c[9] = attendance == null ? '' : String(attendance);
     c[10] = cell(note);
+    c[11] = refleksi === '2' ? '2' : '';
     return `| ${c.join(' | ')} |`;
   });
   if (!found) throw new Error(`No lesson on ${date} at period ${first} in this rekod`);

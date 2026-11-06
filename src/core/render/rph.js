@@ -50,8 +50,8 @@ function page({ year, week, teacher, cls, row, sp, activities }) {
         'Penutup: (5 minit)', ...activities.closing.map(x => `- ${x}`),
       ]],
       ['REFLEKSI', [
-        mark(!postponed, 'Objektif tercapai. Semua murid mampu menguasai kemahiran yang dipelajari.'),
-        mark(false, 'Objektif tercapai oleh ___ orang murid sahaja. ___ orang murid diberikan latihan pengukuhan.'),
+        mark(!postponed && row.refleksi !== '2', 'Objektif tercapai. Semua murid mampu menguasai kemahiran yang dipelajari.'),
+        mark(!postponed && row.refleksi === '2','Objektif tercapai oleh ___ orang murid sahaja. ___ orang murid diberikan latihan pengukuhan.'),
         mark(postponed, `PdP ditunda kerana: ${postponed ? row.note : ''}`),
         ...(!postponed && row.note ? ['', row.note] : []),
       ]],

@@ -31,6 +31,7 @@ ${opts.next ? `<div class="eyebrow">${esc(opts.next)}</div>` : ''}${head}
 <div class="buttons">${STATUS_OPTIONS.map(btn).join('')}</div>
 <div class="fields"><label>Attendance <input type="number" min="0" data-i="${i}" data-field="attendance" value="${r.attendance ?? ''}"> / ${l.pupils ?? ''}</label>
 <label class="grow">${reason ? 'Reason (required)' : 'Notes'} <input data-i="${i}" data-field="note" value="${esc(r.note)}" ${reason ? 'placeholder="Type the reason"' : 'placeholder="optional"'}></label>
+<label class="grow">Refleksi <select data-i="${i}" data-field="refleksi" ${status === 'ditunda' ? 'disabled' : ''}><option value="">Objektif tercapai. Semua murid mampu menguasai kemahiran yang dipelajari.</option><option value="2" ${r.refleksi === '2' ? 'selected' : ''}>Objektif tercapai oleh ___ orang murid sahaja. ___ orang murid diberikan latihan pengukuhan.</option>${status === 'ditunda' ? '<option selected>PdP ditunda kerana: (Reason)</option>' : ''}</select></label>
 ${pendingReason && pendingReason.key === k ? `<button data-i="${i}" data-act="saveReason">Save</button>` : ''}</div>
 ${err}</div>`;
 }
@@ -68,6 +69,8 @@ function doMark(l, change) {
   }
 }
 
+const refl = cardEl => cardEl.querySelector('[data-field="refleksi"]').value;
+
 function onClick(e) {
   const b = e.target.closest('button');
   const cardEl = e.target.closest('.card[data-i]');
@@ -86,12 +89,12 @@ function onClick(e) {
       return;
     }
     pendingReason = null;
-    doMark(l, { status: s, attendance, note: noteInput.value });
+    doMark(l, { status: s, attendance, note: noteInput.value, refleksi: refl(cardEl) });
     return;
   }
   if (b && b.dataset.act === 'toWeek') { setTab('week'); return; }
   if (b && b.dataset.act === 'saveReason') {
-    doMark(l, { status: pendingReason.status, attendance, note: noteInput.value });
+    doMark(l, { status: pendingReason.status, attendance, note: noteInput.value, refleksi: refl(cardEl) });
     return;
   }
   if (!b && !e.target.closest('input')) {
@@ -111,7 +114,7 @@ function onChangeField(e) {
   const cardEl = input.closest('.card');
   if (pendingReason && pendingReason.key === keyOf(l)) return; // saved with the Save button
   const att = cardEl.querySelector('[data-field="attendance"]').value;
-  doMark(l, { status: l.row.status, attendance: att === '' ? null : Number(att), note: cardEl.querySelector('[data-field="note"]').value });
+  doMark(l, { status: l.row.status, attendance: att === '' ? null : Number(att), note: cardEl.querySelector('[data-field="note"]').value, refleksi: refl(cardEl) });
 }
 
 // Redraw whichever lesson list is on screen

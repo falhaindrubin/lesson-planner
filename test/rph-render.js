@@ -60,6 +60,11 @@ assert.ok(h2.includes('CATATAN Hari acara: X-Break'));
 assert.ok(h2.includes('☐ Objektif tercapai. Semua murid') && h2.includes('☑ PdP ditunda kerana: Mesyuarat guru'));
 assert.ok(h2.includes('Murid aktif'));
 
+// Refleksi 2 (only some pupils met the objective) ticks the second box instead of the first
+const h2b = text(html([row({ refleksi: '2', note: '5 orang perlu pengukuhan' })]));
+assert.ok(h2b.includes('☐ Objektif tercapai. Semua murid') && h2b.includes('☑ Objektif tercapai oleh ___ orang'));
+assert.ok(h2b.includes('5 orang perlu pengukuhan'));
+
 // Exam: tajuk PEPERIKSAAN, no SP / activities / reflection
 const h3 = text(html([row({ kind: 'peperiksaan', event: 'PAT TING.4/UASA', sp: [], status: '', attendance: null })]));
 assert.ok(h3.includes('CATATAN Peperiksaan: PAT TING.4/UASA') && h3.includes('TAJUK PEPERIKSAAN'));

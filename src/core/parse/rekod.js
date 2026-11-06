@@ -18,8 +18,9 @@ function parseRekod(md, file = 'rekod') {
     if (!/^\| *M\d+ *\|/.test(line)) return;
     const at = `${file}:${i + 1}`;
     const c = cells(line);
-    if (c.length !== COLUMNS) throw new Error(`${at}: needs ${COLUMNS} columns, has ${c.length}`);
-    const [w, date, dayName, periodsText, time, kindText, event, sp, statusText, attended, note] = c;
+    // 12th column (Refleksi) is optional so older rekod files still load
+    if (c.length !== COLUMNS && c.length !== COLUMNS + 1) throw new Error(`${at}: needs ${COLUMNS} columns, has ${c.length}`);
+    const [w, date, dayName, periodsText, time, kindText, event, sp, statusText, attended, note, refleksi = ''] = c;
     const kind = kindText.toLowerCase(), status = statusText.toLowerCase();
     if (!/^\d{4}-\d\d-\d\d$/.test(date)) throw new Error(`${at}: Tarikh "${date}" is not yyyy-mm-dd`);
     if (!KINDS.includes(kind)) throw new Error(`${at}: Jenis "${kindText}" not recognised (${KINDS.join(' / ')})`);
@@ -32,7 +33,7 @@ function parseRekod(md, file = 'rekod') {
     const a = attended.match(/^\d+/);
     rows.push({
       week: Number(w.trim().slice(1)), date, dayName, periods: periodsText, time, minutes: periodMinutes(p), kind, event,
-      sp: codes, status, attendance: a ? Number(a[0]) : null, note, line: i + 1,
+      sp: codes, status, attendance: a ? Number(a[0]) : null, note, refleksi, line: i + 1,
     });
   });
   return rows;
